@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Golden Hall</title>
+
+  <!-- FONTES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+
+    /* =========================
+       VARIÁVEIS
+    ========================== */
+
+    :root{
+
+      --bg:#f5f5f5;
+      --bg-secondary:#ffffff;
+
+      --text:#111111;
+      --text-light:#444444;
+
+      --gold:#d4a437;
+      --gold-light:#f5d26a;
+
+      --border:rgba(0,0,0,0.1);
+
+      --shadow:rgba(0,0,0,0.08);
+
+    }
+
+    body.dark{
+
+      --bg:#050505;
+      --bg-secondary:#0c0c0c;
+
+      --text:#ffffff;
+      --text-light:#c9c9c9;
+
+      --border:rgba(255,215,0,0.15);
+
+      --shadow:rgba(255,215,0,0.10);
+
+    }
+
+    /* =========================
+       RESET
+    ========================== */
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+
+      background:var(--bg);
+      color:var(--text);
+
+      font-family:'Poppins', sans-serif;
+
+      transition:0.4s;
+      overflow-x:hidden;
+
+    }
+
+    a{
+      text-decoration:none;
+      color:var(--text);
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    header{
+
+      width:100%;
+
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      padding:20px 60px;
+
+      border-bottom:1px solid var(--border);
+
+      position:sticky;
+      top:0;
+
+      background:var(--bg);
+
+      z-index:1000;
+
+      transition:0.4s;
+
+    }
+
+    .logo{
+
+      display:flex;
+      align-items:center;
+      gap:15px;
+
+    }
+
+    .logo-circle{
+
+      width:60px;
+      height:60px;
+
+      border:2px solid var(--gold);
+
+      border-radius:50%;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      font-family:'Cinzel', serif;
+      font-size:28px;
+      font-weight:bold;
+
+      color:var(--gold);
+
+    }
+
+    .logo-text h1{
+
+      font-family:'Cinzel', serif;
+      color:var(--gold);
+
+      font-size:34px;
+
+    }
+
+    .logo-text p{
+
+      font-size:12px;
+      letter-spacing:4px;
+
+      color:var(--gold);
+
+    }
+
+    nav{
+
+      display:flex;
+      gap:35px;
+
+    }
+
+    nav a{
+
+      font-size:17px;
+      position:relative;
+
+    }
+
+    nav a.active::after{
+
+      content:"";
+
+      width:100%;
+      height:2px;
+
+      background:var(--gold);
+
+      position:absolute;
+
+      bottom:-10px;
+      left:0;
+
+    }
+
+    .header-buttons{
+
+      display:flex;
+      align-items:center;
+      gap:15px;
+
+    }
+
+    .btn{
+
+      padding:12px 28px;
+
+      border-radius:10px;
+
+      cursor:pointer;
+
+      transition:0.3s;
+
+      font-weight:500;
+
+    }
+
+    .btn-outline{
+
+      border:1px solid var(--gold);
+
+      background:transparent;
+      color:var(--gold);
+
+    }
+
+    .btn-gold{
+
+      border:none;
+
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+
+      color:black;
+
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    /* =========================
+       BOTÃO TEMA
+    ========================== */
+
+    .theme-toggle{
+
+      width:55px;
+      height:55px;
+
+      border-radius:50%;
+
+      border:none;
+
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+
+      cursor:pointer;
+
+      font-size:22px;
+
+      transition:0.3s;
+
+    }
+
+    .theme-toggle:hover{
+
+      transform:rotate(180deg);
+
+    }
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero{
+
+      width:100%;
+
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      gap:60px;
+
+      padding:70px 60px;
+
+    }
+
+    .hero-text{
+
+      width:50%;
+
+    }
+
+    .hero-text h2{
+
+      font-size:72px;
+
+      line-height:1.1;
+
+      font-family:'Cinzel', serif;
+
+      margin-bottom:25px;
+
+    }
+
+    .gold{
+      color:var(--gold);
+    }
+
+    .line{
+
+      width:180px;
+      height:2px;
+
+      background:var(--gold);
+
+      margin:30px 0;
+
+    }
+
+    .hero-text p{
+
+      color:var(--text-light);
+
+      line-height:1.8;
+
+      font-size:20px;
+
+      margin-bottom:35px;
+
+    }
+
+    .search-btn{
+
+      border:none;
+
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+
+      color:black;
+
+      padding:18px 35px;
+
+      border-radius:12px;
+
+      font-size:18px;
+      font-weight:600;
+
+      cursor:pointer;
+
+      transition:0.3s;
+
+    }
+
+    .search-btn:hover{
+
+      transform:scale(1.05);
+
+    }
+
+    .hero-image{
+
+      width:50%;
+
+    }
+
+    .hero-image img{
+
+      width:100%;
+
+      border-radius:25px;
+
+      border:1px solid var(--border);
+
+      box-shadow:0 0 30px var(--shadow);
+
+    }
+
+    /* =========================
+       INFO
+    ========================== */
+
+    .info{
+
+      display:flex;
+      flex-wrap:wrap;
+
+      gap:50px;
+
+      padding:20px 60px 70px;
+
+    }
+
+    .info-card h3{
+
+      color:var(--gold);
+
+      margin-bottom:10px;
+
+    }
+
+    .info-card p{
+
+      color:var(--text-light);
+
+      max-width:220px;
+
+      line-height:1.6;
+
+    }
+
+    /* =========================
+       LINHA
+    ========================== */
+
+    .wave{
+
+      width:100%;
+      height:120px;
+
+      position:relative;
+      overflow:hidden;
+
+    }
+
+    .wave::before{
+
+      content:"";
+
+      position:absolute;
+
+      width:200%;
+      height:200px;
+
+      border-top:4px solid var(--gold);
+
+      border-radius:50%;
+
+      left:-50%;
+      top:30px;
+
+      box-shadow:0 0 20px var(--gold);
+
+    }
+
+    /* =========================
+       BUSCA
+    ========================== */
+
+    .search-section{
+
+      padding:20px 60px;
+
+    }
+
+    .search-section h2{
+
+      font-size:50px;
+
+      font-family:'Cinzel', serif;
+
+      color:var(--gold);
+
+      margin-bottom:30px;
+
+    }
+
+    .filters{
+
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+
+      margin-bottom:40px;
+
+    }
+
+    .filters input,
+    .filters select{
+
+      background:var(--bg-secondary);
+
+      border:1px solid var(--border);
+
+      padding:18px;
+
+      border-radius:10px;
+
+      color:var(--text);
+
+      width:240px;
+
+      font-size:16px;
+
+    }
+
+    .filters button{
+
+      border:none;
+
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+
+      color:black;
+
+      padding:18px 35px;
+
+      border-radius:10px;
+
+      font-weight:600;
+
+      cursor:pointer;
+
+    }
+
+    /* =========================
+       CARDS
+    ========================== */
+
+    .cards{
+
+      display:grid;
+
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+      gap:30px;
+
+      margin-bottom:80px;
+
+    }
+
+    .card{
+
+      background:var(--bg-secondary);
+
+      border-radius:18px;
+
+      overflow:hidden;
+
+      border:1px solid var(--border);
+
+      transition:0.3s;
+
+    }
+
+    .card:hover{
+
+      transform:translateY(-8px);
+
+      box-shadow:0 0 25px var(--shadow);
+
+    }
+
+    .card img{
+
+      width:100%;
+      height:220px;
+
+      object-fit:cover;
+
+    }
+
+    .card-content{
+
+      padding:20px;
+
+    }
+
+    .card-content h3{
+
+      font-size:30px;
+
+      font-family:'Cinzel', serif;
+
+      margin-bottom:15px;
+
+    }
+
+    .card-content p{
+
+      color:var(--text-light);
+
+      margin-bottom:10px;
+
+    }
+
+    .price{
+
+      font-size:38px;
+      font-weight:bold;
+
+      color:var(--gold);
+
+      margin:20px 0;
+
+    }
+
+    .card button{
+
+      width:100%;
+
+      padding:15px;
+
+      border-radius:10px;
+
+      border:1px solid var(--gold);
+
+      background:transparent;
+
+      color:var(--gold);
+
+      cursor:pointer;
+
+      transition:0.3s;
+
+    }
+
+    .card button:hover{
+
+      background:var(--gold);
+
+      color:black;
+
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer{
+
+      width:100%;
+
+      position:fixed;
+      bottom:0;
+
+      background:var(--bg);
+
+      border-top:1px solid var(--border);
+
+      padding:25px;
+
+      display:flex;
+      justify-content:space-around;
+
+    }
+
+    footer a{
+
+      color:var(--gold);
+
+      font-size:18px;
+
+    }
+
+    /* =========================
+       RESPONSIVO
+    ========================== */
+
+    @media(max-width:1100px){
+
+      .hero{
+
+        flex-direction:column;
+
+      }
+
+      .hero-text,
+      .hero-image{
+
+        width:100%;
+
+      }
+
+      .hero-text h2{
+
+        font-size:52px;
+
+      }
+
+      header{
+
+        flex-direction:column;
+        gap:20px;
+
+      }
+
+    }
+
+    @media(max-width:700px){
+
+      header,
+      .hero,
+      .search-section,
+      .info{
+
+        padding:20px;
+
+      }
+
+      .hero-text h2{
+
+        font-size:40px;
+
+      }
+
+      .filters input,
+      .filters select{
+
+        width:100%;
+
+      }
+
+    }
+
+  </style>
+</head>
+
+<body class="dark">
+
+  <!-- ================= HEADER ================= -->
+
+  <header>
+
+    <div class="logo">
+
+      <div class="logo-circle">
+        GH
+      </div>
+
+      <div class="logo-text">
+
+        <h1>GOLDEN HALL</h1>
+        <p>SALÃO DE FESTAS</p>
+
+      </div>
+
+    </div>
+
+    <nav>
+
+      <a href="#" class="active">Início</a>
+      <a href="#">Como funciona</a>
+      <a href="#">Dúvidas</a>
+
+    </nav>
+
+    <div class="header-buttons">
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        🌙
+      </button>
+
+      <button class="btn btn-outline">
+        Entrar
+      </button>
+
+      <button class="btn btn-gold">
+        Criar conta
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <h2>
+
+        Encontre o espaço perfeito para o seu
+        <span class="gold">evento</span>
+
+      </h2>
+
+      <div class="line"></div>
+
+      <p>
+
+        Salões de festas incríveis para aniversários,
+        casamentos, confraternizações e muito mais.
+
+      </p>
+
+      <button class="search-btn">
+        🔍 Buscar espaços
+      </button>
+
+    </div>
+
+    <div class="hero-image">
+
+      <img src="./goldenhall.png">
+
+    </div>
+
+  </section>
+
+  <!-- ================= INFO ================= -->
+
+  <section class="info">
+
+    <div class="info-card">
+      <h3>Diversos espaços</h3>
+      <p>Encontre o lugar ideal para o seu evento</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Reserva segura</h3>
+      <p>Processo rápido e confiável</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Melhores preços</h3>
+      <p>Compare valores e escolha o melhor</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Avaliações reais</h3>
+      <p>Veja opiniões de outros clientes</p>
+    </div>
+
+  </section>
+
+  <div class="wave"></div>
+
+  <!-- ================= BUSCA ================= -->
+
+  <section class="search-section">
+
+    <h2>Busque o espaço ideal</h2>
+
+    <div class="filters">
+
+      <input type="text" placeholder="Digite o tipo de evento...">
+
+      <select>
+        <option>Tipo de evento</option>
+      </select>
+
+      <select>
+        <option>Capacidade</option>
+      </select>
+
+      <select>
+        <option>Faixa de preço</option>
+      </select>
+
+      <button>
+        Buscar
+      </button>
+
+    </div>
+
+    <!-- ================= CARDS ================= -->
+
+    <div class="cards">
+
+      <!-- CARD 1 -->
+
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Salão Golden Luxo</h3>
+
+          <p>Casamento</p>
+
+          <p>Até 300 pessoas</p>
+
+          <div class="price">
+            R$ 2.500
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 2 -->
+
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Chácara Golden</h3>
+
+          <p>Aniversário</p>
+
+          <p>Até 150 pessoas</p>
+
+          <div class="price">
+            R$ 1.800
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 3 -->
+
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Espaço Premium</h3>
+
+          <p>Confraternização</p>
+
+          <p>Até 200 pessoas</p>
+
+          <div class="price">
+            R$ 2.000
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 4 -->
+
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Golden Kids</h3>
+
+          <p>Infantil</p>
+
+          <p>Até 100 pessoas</p>
+
+          <div class="price">
+            R$ 1.200
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <a href="#">🏠 Início</a>
+    <a href="#">🔍 Buscar</a>
+    <a href="#">❤️ Favoritos</a>
+    <a href="#">📅 Reservas</a>
+    <a href="#">👤 Perfil</a>
+
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script>
+
+    function toggleTheme(){
+
+      const body = document.body;
+
+      body.classList.toggle("dark");
+
+      const button = document.querySelector(".theme-toggle");
+
+      if(body.classList.contains("dark")){
+
+        button.innerHTML = "🌙";
+
+      }else{
+
+        button.innerHTML = "☀️";
+
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
