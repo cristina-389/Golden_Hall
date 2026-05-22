@@ -107,28 +107,15 @@
 
       display:flex;
       align-items:center;
-      gap:15px;
 
     }
 
-    .logo-circle{
+    .logo img{
 
-      width:60px;
-      height:60px;
+      width:90px;
 
-      border:2px solid var(--gold);
+      object-fit: contain;
 
-      border-radius:50%;
-
-      display:flex;
-      align-items:center;
-      justify-content:center;
-
-      font-family:'Cinzel', serif;
-      font-size:28px;
-      font-weight:bold;
-
-      color:var(--gold);
 
     }
 
@@ -709,8 +696,10 @@
 
     <div class="logo">
 
-      <div class="logo-circle">
-        GH
+      <div class="logo">
+        
+        <img src="./Imagens/logo.png" alt="Logo Golden Hall">
+
       </div>
 
       <div class="logo-text">
@@ -818,27 +807,6 @@
 
     <h2>Busque o espaço ideal</h2>
 
-    <div class="filters">
-
-      <input type="text" placeholder="Digite o tipo de evento...">
-
-      <select>
-        <option>Tipo de evento</option>
-      </select>
-
-      <select>
-        <option>Capacidade</option>
-      </select>
-
-      <select>
-        <option>Faixa de preço</option>
-      </select>
-
-      <button>
-        Buscar
-      </button>
-
-    </div>
 
     <!-- ================= CARDS ================= -->
 
@@ -951,20 +919,6 @@
     </div>
 
   </section>
-
-  <!-- ================= FOOTER ================= -->
-
-  <footer>
-
-    <a href="#">🏠 Início</a>
-    <a href="#">🔍 Buscar</a>
-    <a href="#">❤️ Favoritos</a>
-    <a href="#">📅 Reservas</a>
-    <a href="#">👤 Perfil</a>
-
-  </footer>
-
-  <!-- ================= JAVASCRIPT ================= -->
 
   <script>
 
