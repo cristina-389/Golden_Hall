@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Golden Hall</title>
+
+  <!-- FONTES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body class="dark">
+
+  <!-- ================= HEADER ================= -->
+
+  <header>
+
+    <div class="logo">
+
+      <img src="./Imagens/logo.png" alt="Logo Golden Hall">
+
+      <div class="logo-text">
+
+        <h1>GOLDEN HALL</h1>
+        <p>SALÃO DE FESTAS</p>
+
+      </div>
+
+    </div>
+
+    <nav>
+
+      <a href="index.html" class="active">Início</a>
+      <a href="como-funciona.html">Como funciona</a>
+      <a href="duvidas.html">Dúvidas</a>
+      
+    </nav>
+
+    <div class="header-buttons">
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        🌙
+      </button>
+
+      <button class="btn btn-outline">
+        Entrar
+      </button>
+
+      <button class="btn btn-gold">
+        Criar conta
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <h2>
+
+        Encontre o espaço perfeito para o seu
+        <span class="gold">evento</span>
+
+      </h2>
+
+      <div class="line"></div>
+
+      <p>
+
+        Salões de festas incríveis para aniversários,
+        casamentos, confraternizações e muito mais.
+
+      </p>
+
+      <button class="search-btn">
+        Buscar espaços
+      </button>
+
+    </div>
+
+    <div class="hero-image">
+
+      <img
+      id="heroImg"
+      src="./Imagens/goldenhall-dark.png"
+      alt="Golden Hall">
+
+    </div>
+
+  </section>
+
+  <!-- ================= INFO ================= -->
+
+  <section class="info">
+
+    <div class="info-card">
+      <h3>Diversos espaços</h3>
+      <p>Encontre o lugar ideal para o seu evento</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Reserva segura</h3>
+      <p>Processo rápido e confiável</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Melhores preços</h3>
+      <p>Compare valores e escolha o melhor</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Avaliações reais</h3>
+      <p>Veja opiniões de outros clientes</p>
+    </div>
+
+  </section>
+
+  <div class="wave"></div>
+
+  <!-- ================= BUSCA ================= -->
+
+<section class="search-section">
+
+    <h2>Busque o espaço ideal</h2>
+    <p class="section-subtitle">
+      Descubra salões, chácaras e espaços exclusivos para transformar o seu evento em um momento inesquecível.
+    </p>
+
+    <!-- ================= CARDS ================= -->
+
+    <div class="cards">
+
+      <!-- CARD 1 -->
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Salão Golden Luxo</h3>
+
+          <p>Casamento</p>
+
+          <p>Até 300 pessoas</p>
+
+          <div class="price">
+            R$ 2.500
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Chácara Golden</h3>
+
+          <p>Aniversário</p>
+
+          <p>Até 150 pessoas</p>
+
+          <div class="price">
+            R$ 1.800
+          </div>
+
+          <button>
+            Ver detalhes
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+          <h3>Espaço Premium</h3>
+
+          <p>Confraternização</p>
+
+          <p>Até 200 pessoas</p>
+
+          <div class="price">R$ 2.000</div>
+
+          <button>Ver detalhes</button>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 4 -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop" alt="Espaço Elegance">
+
+      <div class="card-content">
+
+        <h3>Espaço Elegance</h3>
+
+        <p>Formaturas</p>
+
+        <p>Até 250 pessoas</p>
+
+        <div class="price">
+          R$ 2.200
+        </div>
+
+        <button>
+          Ver detalhes
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1200&auto=format&fit=crop" alt="Villa Imperial">
+
+      <div class="card-content">
+
+        <h3>Villa Imperial</h3>
+
+        <p>Casamentos</p>
+
+        <p>Até 400 pessoas</p>
+
+        <div class="price">
+          R$ 3.500
+        </div>
+
+        <button>
+          Ver detalhes
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- CARD 6 -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop" alt="Jardim das Flores">
+
+      <div class="card-content">
+
+        <h3>Jardim das Flores</h3>
+
+        <p>Festas ao ar livre</p>
+
+        <p>Até 180 pessoas</p>
+
+        <div class="price">
+          R$ 1.950
+        </div>
+
+        <button>
+         Ver detalhes
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+  <footer>
+    <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
+  </footer>
+  
+  <!-- JS -->
+  <script src="./js/script.js"></script>
+
+</body>
+
+</html>
