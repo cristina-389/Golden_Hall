@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Golden Hall</title>
+
+  <!-- FONTES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!--icones dourados-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body class="dark">
+
+  <!-- ================= HEADER ================= -->
+
+  <header>
+
+    <div class="logo">
+
+      <img src="./Imagens/logo.png" alt="Logo Golden Hall">
+
+      <div class="logo-text">
+
+        <h1>GOLDEN HALL</h1>
+        <p>SALÃO DE FESTAS</p>
+
+      </div>
+
+    </div>
+
+    <div class="header-buttons">
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        🌙
+      </button>
+
+      <button class="btn btn-gold-outline" onclick="confirmarSaida()">Sair</button>
+
+    </div>
+
+  </header>
+  
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <h2>
+
+        Encontre o espaço perfeito para o seu
+        <span class="gold">evento</span>
+
+      </h2>
+
+      <div class="line"></div>
+
+      <p>
+
+        Salões de festas incríveis para aniversários,
+        casamentos, confraternizações e muito mais.
+
+      </p>
+
+      <button class="search-btn">
+        Buscar espaços
+      </button>
+
+    </div>
+
+    <div class="hero-image">
+
+      <img
+      id="heroImg"
+      src="./Imagens/goldenhall-dark.png"
+      alt="Golden Hall">
+
+    </div>
+
+  </section>
+
+  <!-- ================= INFO ================= -->
+
+  <section class="info">
+
+    <div class="info-card">
+      <h3>Diversos espaços</h3>
+      <p>Encontre o lugar ideal para o seu evento</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Reserva segura</h3>
+      <p>Processo rápido e confiável</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Melhores preços</h3>
+      <p>Compare valores e escolha o melhor</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Avaliações reais</h3>
+      <p>Veja opiniões de outros clientes</p>
+    </div>
+
+  </section>
+
+  <div class="wave"></div>
+
+</section>
+
+<nav class="barra-navegacao-inferior">
+    <a href="#inicio" class="item-nav ativo">
+        <span class="material-icons-round icone">home</span>
+        <span class="texto">Início</span>
+    </a>
+    <a href="#buscar" class="item-nav">
+        <span class="material-icons-round icone">search</span>
+        <span class="texto">Buscar</span>
+    </a>
+    <a href="#favoritos" class="item-nav">
+        <span class="material-icons-round icone">favorite</span>
+        <span class="texto">Favoritos</span>
+    </a>
+    <a href="#reservas" class="item-nav">
+        <span class="material-icons-round icone">calendar_month</span>
+        <span class="texto">Reservas</span>
+    </a>
+    <a href="#perfil" class="item-nav">
+        <span class="material-icons-round icone">person</span>
+        <span class="texto">Perfil</span>
+    </a>
+</nav>
+
+  <!--=======Cadrastro==========-->
+  <div id="container-modal-cadastro"></div>
+  <div id="container-modal-login"></div>
+  
+  <!-- JS -->
+  <script src="./js/script.js"></script>
+
+</body>
+
+</html>

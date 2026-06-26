@@ -1,0 +1,30 @@
+<div id="modal-login" class="modal-overlay">
+    <div class="modal-box">
+        <button class="fechar-modal" onclick="fecharModalLogin()">&times;</button>
+        
+        <h2>Acessar sua Conta</h2>
+        <div class="linha-dourada-form"></div>
+        <p class="subtitulo-form">Insira suas credenciais para entrar no Golden Hall.</p>
+        
+        <form action="#" method="POST" id="form-login">
+            <div class="form-grid">
+                
+                <div class="input-grupo col-total">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" name="email" placeholder="seuemail@gmail.com" required>
+                </div>
+
+                <div class="input-grupo col-total">
+                    <label for="login-senha">Senha</label>
+                    <input type="password" id="login-senha" name="senha" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-bloco">Entrar</button>
+            </div>
+        </form>
+
+        <p class="alternativa-form">
+            Ainda não tem uma conta? <a href="#" onclick="alternarParaCadastro()">Cadastre-se aqui</a>
+        </p>
+    </div>
+</div>

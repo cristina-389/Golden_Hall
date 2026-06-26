@@ -117,7 +117,7 @@
   
     color:var(--gold);
   
-    font-size:34px;
+    font-size:30px;
   
   }
   
@@ -271,7 +271,7 @@
   
   .hero-text h2{
   
-    font-size:72px;
+    font-size:60px;
   
     line-height:1.1;
   
@@ -1183,4 +1183,343 @@ body.dark .localizacao-mapa iframe{
 
   }
 
+}
+
+/* ============== Parte do cadastro ============
+/* Container que cobre a tela toda */
+/* ==================== MODAL PRESTÍGIO GOLDEN HALL ==================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75); /* Fundo um pouco mais denso para destacar o desfoque */
+  backdrop-filter: blur(12px);           /* Desfoque mais profundo e elegante */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;                        
+  opacity: 0;
+  pointer-events: none;                 
+  transition: opacity 0.4s ease;
+}
+
+.modal-overlay.ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Caixa do Modal - Estilo Minimalista e Luxuoso */
+.modal-box {
+    background-color: var(--modal-bg, #111111);
+    color: var(--modal-text, #ffffff);
+    padding: 30px 40px;
+    border-radius: 20px; 
+    width: 95%;
+    max-width: 580px;   
+    text-align: center;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+    overflow: hidden; 
+
+    /* ========================================================= */
+    /* BRILHO DOURADO LUXUOSO INTENSIFICADO NAS LATERAIS */
+    /* ========================================================= */
+    border: 1px solid rgba(255, 215, 0, 0.6); /* Borda dourada sutil */
+    
+    /* Três camadas de sombra: 
+       1ª: Um foco de luz intenso bem rente à borda (0 0 15px)
+       2ª: Uma expansão média marcante (0 0 40px)
+       3ª: Um nevoeiro de luz que se espalha mais pelas laterais (0 0 70px) */
+       box-shadow: 0 0 15px hsla(46, 100%, 60%, 0.5), 
+       0 0 40px hsla(46, 100%, 55%, 0.45), 
+       0 0 70px hsla(46, 100%, 50%, 0.25);
+/* ========================================================= */
+}
+
+/* Adaptação Automática de Temas (Claro / Escuro) */
+.body.dark, body.dark {
+  --modal-bg: #111111;
+  --modal-text: #ffffff;
+  --input-bg: #1a1a1a;
+  --input-border: #333333;
+}
+body:not(.dark) {
+  --modal-bg: #fcfbf7; /* Branco pérola luxuoso */
+  --modal-text: #1a1a1a;
+  --input-bg: #ffffff;
+  --input-border: #dddddd;
+}
+
+.modal-overlay.ativo .modal-box {
+  transform: translateY(0);
+}
+
+/* Botão Fechar Minimalista */
+.fechar-modal {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.fechar-modal:hover {
+  color: #d4af37;
+}
+
+.modal-box h2 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 2px;
+  font-size: 24px;
+  margin-bottom: 0px;
+}
+
+.linha-dourada-form {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  margin: 12px auto;
+}
+
+.subtitulo-form {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 25px;
+}
+
+/* GRID EM DUAS COLUNAS - O segredo para sumir com a barra lateral */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Divide em 2 colunas iguais */
+  gap: 15px 20px;                /* Espaçamento elegante entre os campos */
+}
+
+.input-grupo {
+  text-align: left;
+}
+
+.input-grupo.col-total {
+  grid-column: span 2; /* Faz o campo ocupar as duas colunas se necessário */
+}
+
+.input-grupo label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #d4af37;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.input-grupo input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  color: var(--modal-text);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-grupo input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+/* Alinhamento dos Termos e Botão */
+.checkbox-grupo {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 5px 0;
+}
+.checkbox-grupo input {
+  accent-color: #d4af37;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.checkbox-grupo label {
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+}
+
+.btn-bloco {
+  grid-column: span 2;
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.alternativa-form {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #777;
+}
+.alternativa-form a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Adicione o seletor do login junto ao do cadastro para aplicar o efeito de exibição */
+.modal-overlay.ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Cabeçalho da Área Logada Ajustado (Mais Fino) */
+.header-logado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* Reduzimos o espaçamento de 20px para 10px (cima/baixo) */
+  padding: 50px 4%; 
+  
+  /* Definimos uma altura fixa confortável para não esticar */
+  height: 50px; 
+  
+  position: sticky;
+  top: 0;
+  background-color: var(--header-bg);
+  z-index: 100;
+  
+  /* Uma linha sutil embaixo do cabeçalho para separar do conteúdo */
+  border-bottom: 1px solid rgba(255, 204, 0, 0.1); 
+  box-sizing: border-box;
+}
+
+/* Força a sua logo a diminuir para não esticar o cabeçalho */
+.logo img {
+  height: 70px; /* Ajuste esse valor para o tamanho ideal da sua logo */
+  width: auto;  /* Mantém a proporção da imagem sem distorcer */
+  display: block;
+}
+
+/* Ajuste no botão de Darkmode para acompanhar o tamanho menor */
+.btn-darkmode-toggle {
+  background: none;
+  border: 1px solid rgba(255, 204, 0, 0.3);
+  width: 32px;  /* Diminuído de 40px para 36px */
+  height: 32px; /* Diminuído de 40px para 36px */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+/* ==================== BARRA INFERIOR ADAPTÁVEL DE LUXO ==================== */
+
+/* Definição de cores para cada tema */
+body.dark {
+  --barra-bg: #0d0d0d;
+  --barra-border: rgba(255, 204, 0, 0.3);
+  --item-nav-cor: #888888;
+  --item-nav-sombra: rgba(0, 0, 0, 0.8);
+}
+
+body:not(.dark) {
+  --barra-bg: #fcfbf7; /* O mesmo branco pérola luxuoso do fundo */
+  --barra-border: rgba(212, 175, 55, 0.3); /* Linha dourada mais suave */
+  --item-nav-cor: #666666; /* Cinza mais visível para o fundo claro */
+  --item-nav-sombra: rgba(0, 0, 0, 0.05); /* Sombra bem levinha */
+}
+
+/* Aplicando as variáveis no container da barra */
+.barra-navegacao-inferior {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  background-color: var(--barra-bg);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+  
+  /* Linha divisória e sombra inteligentes */
+  border-top: 1px solid var(--barra-border);
+  box-shadow: 0 -10px 30px var(--item-nav-sombra);
+  padding: 0 10px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Itens individuais da barra */
+.item-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  
+  /* Usa a cor cinza da variável para os itens desativados */
+  color: var(--item-nav-cor); 
+  
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  transition: all 0.3s ease;
+  gap: 2px;
+}
+
+/* Configuração do Ícone (Tratado como texto puro) */
+.item-nav .icone {
+  font-size: 22px; /* Tamanho perfeito para ícones de menu */
+  color: inherit;  /* Faz o ícone herdar a cor cinza do item-nav por padrão */
+  transition: transform 0.3s ease;
+}
+
+/* Quando o botão estiver ATIVO ou com o MOUSE em cima, tudo vira Ouro Puro */
+.item-nav.ativo, .item-nav:hover {
+  color: #d4af37; /* O dourado luxuoso do Golden Hall */
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Efeito de subir de leve o ícone ativo */
+.item-nav.ativo .icone, .item-nav:hover .icone {
+  transform: translateY(-2px);
+}
+
+/* Botão Sair idêntico ao botão "Entrar" do print */
+.btn-gold-outline {
+  background: transparent;                /* Fundo transparente igual ao "Entrar" */
+  color: #e1bc26bf;                         /* Texto dourado */
+  border: 1px solid #ebbf0d54;              /* Borda dourada fina */
+  
+  /* Arredondamento idêntico ao do print */
+  border-radius: 12px;                    
+  
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 24px;                      /* Espaçamento interno confortável */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Efeito sutil ao passar o mouse para manter o toque de luxo */
+.btn-gold-outline:hover {
+  background-color: rgba(255, 204, 0, 0.05); /* Um brilho dourado de fundo bem leve */
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); /* Aura de luz de fundo */
 }
