@@ -1,6 +1,27 @@
+/* ==========================================================================
+   GOLDEN HALL - MAESTRO DE ESTILOS CENTRALIZADO
+   ========================================================================== */
+
+/* 1. CONFIGURAÇÕES BASE E INTERFACES GLOBAIS */
+@import url('componentes/global.css');
+@import url('componentes/navegacao.css');
+@import url('componentes/modal-login.css');
+
+/* 2. ESTILOS DE PÁGINAS INDIVIDUAIS */
+@import url('paginas/index.css');
+@import url('paginas/index-logado.css');
+@import url('paginas/detalhe.css');
+@import url('paginas/perfil.css');
+
+/* 3. ARQUIVOS RESERVADOS PARA AS PRÓXIMAS ETAPAS (Deixe em branco por enquanto) */
+/* @import url('paginas/buscar.css'); */
+/* @import url('paginas/favoritos.css'); */
+/* @import url('paginas/reservas.css'); */
+
+
 /* =========================
    VARIÁVEIS
-========================= */
+========================= *
 
 :root{
 
@@ -19,7 +40,7 @@
   
   }
   
-  /* TEMA ESCURO */
+  /* TEMA ESCURO *
   
   body.dark{
   
@@ -37,7 +58,7 @@
   
   /* =========================
      RESET
-  ========================= */
+  ========================= *
   
   *{
     margin:0;
@@ -68,7 +89,7 @@
   
   /* =========================
      HEADER
-  ========================= */
+  ========================= *
   
   header{
   
@@ -92,7 +113,7 @@
   
   }
   
-  /* LOGO */
+  /* LOGO *
   
   .logo{
   
@@ -131,7 +152,7 @@
   
   }
   
-  /* MENU */
+  /* MENU *
   
   nav{
   
@@ -165,7 +186,7 @@
   
   }
   
-  /* BOTÕES */
+  /* BOTÕES *
   
   .header-buttons{
   
@@ -216,7 +237,7 @@
   
   }
   
-  /* BOTÃO TEMA */
+  /* BOTÃO TEMA *
   
   .theme-toggle{
   
@@ -245,7 +266,7 @@
   
   /* =========================
      HERO
-  ========================= */
+  ========================= *
   
   .hero{
   
@@ -261,7 +282,7 @@
   
   }
   
-  /* TEXTO */
+  /* TEXTO *
   
   .hero-text{
   
@@ -310,7 +331,7 @@
   
   }
   
-  /* BOTÃO HERO */
+  /* BOTÃO HERO *
   
   .search-btn{
   
@@ -339,7 +360,7 @@
   
   }
   
-  /* IMAGEM HERO */
+  /* IMAGEM HERO *
   
   .hero-image{
   
@@ -361,7 +382,7 @@
   
   /* =========================
      INFO
-  ========================= */
+  ========================= *
   
   .info{
   
@@ -394,7 +415,7 @@
   
   /* =========================
      WAVE
-  ========================= */
+  ========================= *
   
   .wave{
   
@@ -427,7 +448,7 @@
   
   /* =========================
      SEARCH
-  ========================= */
+  ========================= *
   
   .search-section {
     max-width: 1400px;
@@ -454,7 +475,7 @@
   
   /* =========================
      CARDS
-  ========================= */
+  ========================= *
   
   .cards{
     max-width: 1400px;
@@ -579,7 +600,7 @@
   
   /* =========================
      FOOTER
-  ========================= */
+  ========================= *
   
   footer{
   
@@ -598,7 +619,7 @@
   
   /* =========================
      RESPONSIVO
-  ========================= */
+  ========================= *
   
   @media(max-width:1100px){
   
@@ -696,14 +717,14 @@
   
   }
 
-  /* Tablet */
+  /* Tablet *
   @media (max-width: 992px) {
   .cards {
       grid-template-columns: repeat(2, 1fr);
   }
   }
 
-  /* Celular */
+  /* Celular *
   @media (max-width: 600px) {
   .cards {
       grid-template-columns: 1fr;
@@ -712,7 +733,7 @@
 
   /* ========================= */
 /* PÁGINA DE DETALHES */
-/* ========================= */
+/* ========================= *
 
 .detalhe-page{
   max-width:1200px;
@@ -856,7 +877,7 @@
   }
 
 }
-/* Título decorativo */
+/* Título decorativo *
 .section-title{
   display: flex;
   align-items: center;
@@ -950,18 +971,18 @@
   transform: scale(1.2);
 }
 
-/* Cabeçalho menor para as páginas de detalhes */
+/* Cabeçalho menor para as páginas de detalhes *
 .header-detalhes {
   padding: 12px 40px;
   min-height: 70px;
 }
 
-/* Logo menor */
+/* Logo menor *
 .header-detalhes .logo img {
   width: 55px;
 }
 
-/* Nome do site menor */
+/* Nome do site menor *
 .header-detalhes .logo-text h1 {
   font-size: 1.4rem;
 }
@@ -970,19 +991,19 @@
   font-size: 0.75rem;
 }
 
-/* Menu */
+/* Menu *
 .header-detalhes nav a {
   font-size: 0.95rem;
 }
 
-/* Botões */
+/* Botões *
 .header-detalhes .btn,
 .header-detalhes .theme-toggle {
   padding: 8px 16px;
   font-size: 0.9rem;
 }
 
-/* ================= LOCALIZAÇÃO ================= */
+/* ================= LOCALIZAÇÃO ================= *
 
 .localizacao-section{
 
@@ -1109,9 +1130,7 @@
 
 }
 
-/* ==================== DESIGN DA SEÇÃO DE PERFIL ==================== */
-
-/* ================= TEMA CLARO ================= */
+/* ================= TEMA CLARO ================= *
 
 body:not(.dark) .localizacao-section{
 
@@ -1131,7 +1150,7 @@ body:not(.dark) .vantagem-card{
 
 }
 
-/* ================= TEMA ESCURO ================= */
+/* ================= TEMA ESCURO ================= *
 
 body.dark .localizacao-section{
 
@@ -1161,7 +1180,7 @@ body.dark .localizacao-mapa iframe{
 
 }
 
-/* ================= RESPONSIVO ================= */
+/* ================= RESPONSIVO ================= *
 
 @media(max-width:900px){
 
@@ -1189,7 +1208,7 @@ body.dark .localizacao-mapa iframe{
 
 /* ============== Parte do cadastro ============
 /* Container que cobre a tela toda */
-/* ==================== MODAL PRESTÍGIO GOLDEN HALL ==================== */
+/* ==================== MODAL PRESTÍGIO GOLDEN HALL ==================== *
 
 .modal-overlay {
   position: fixed;
@@ -1197,8 +1216,8 @@ body.dark .localizacao-mapa iframe{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75); /* Fundo um pouco mais denso para destacar o desfoque */
-  backdrop-filter: blur(12px);           /* Desfoque mais profundo e elegante */
+  background-color: rgba(0, 0, 0, 0.75); /* Fundo um pouco mais denso para destacar o desfoque *
+  backdrop-filter: blur(12px);           /* Desfoque mais profundo e elegante *
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1213,7 +1232,7 @@ body.dark .localizacao-mapa iframe{
   pointer-events: auto;
 }
 
-/* Caixa do Modal - Estilo Minimalista e Luxuoso */
+/* Caixa do Modal - Estilo Minimalista e Luxuoso *
 .modal-box {
     background-color: var(--modal-bg, #111111);
     color: var(--modal-text, #ffffff);
@@ -1229,20 +1248,20 @@ body.dark .localizacao-mapa iframe{
 
     /* ========================================================= */
     /* BRILHO DOURADO LUXUOSO INTENSIFICADO NAS LATERAIS */
-    /* ========================================================= */
-    border: 1px solid rgba(255, 215, 0, 0.6); /* Borda dourada sutil */
+    /* ========================================================= *
+    border: 1px solid rgba(255, 215, 0, 0.6); /* Borda dourada sutil *
     
     /* Três camadas de sombra: 
        1ª: Um foco de luz intenso bem rente à borda (0 0 15px)
        2ª: Uma expansão média marcante (0 0 40px)
-       3ª: Um nevoeiro de luz que se espalha mais pelas laterais (0 0 70px) */
+       3ª: Um nevoeiro de luz que se espalha mais pelas laterais (0 0 70px) *
        box-shadow: 0 0 15px hsla(46, 100%, 60%, 0.5), 
        0 0 40px hsla(46, 100%, 55%, 0.45), 
        0 0 70px hsla(46, 100%, 50%, 0.25);
-/* ========================================================= */
+/* ========================================================= *
 }
 
-/* Adaptação Automática de Temas (Claro / Escuro) */
+/* Adaptação Automática de Temas (Claro / Escuro) *
 .body.dark, body.dark {
   --modal-bg: #111111;
   --modal-text: #ffffff;
@@ -1250,7 +1269,7 @@ body.dark .localizacao-mapa iframe{
   --input-border: #333333;
 }
 body:not(.dark) {
-  --modal-bg: #fcfbf7; /* Branco pérola luxuoso */
+  --modal-bg: #fcfbf7; /* Branco pérola luxuoso *
   --modal-text: #1a1a1a;
   --input-bg: #ffffff;
   --input-border: #dddddd;
@@ -1260,7 +1279,7 @@ body:not(.dark) {
   transform: translateY(0);
 }
 
-/* Botão Fechar Minimalista */
+/* Botão Fechar Minimalista *
 .fechar-modal {
   position: absolute;
   top: 20px;
@@ -1296,11 +1315,11 @@ body:not(.dark) {
   margin-bottom: 25px;
 }
 
-/* GRID EM DUAS COLUNAS - O segredo para sumir com a barra lateral */
+/* GRID EM DUAS COLUNAS - O segredo para sumir com a barra lateral *
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Divide em 2 colunas iguais */
-  gap: 15px 20px;                /* Espaçamento elegante entre os campos */
+  grid-template-columns: 1fr 1fr; /* Divide em 2 colunas iguais *
+  gap: 15px 20px;                /* Espaçamento elegante entre os campos *
 }
 
 .input-grupo {
@@ -1308,7 +1327,7 @@ body:not(.dark) {
 }
 
 .input-grupo.col-total {
-  grid-column: span 2; /* Faz o campo ocupar as duas colunas se necessário */
+  grid-column: span 2; /* Faz o campo ocupar as duas colunas se necessário *
 }
 
 .input-grupo label {
@@ -1338,7 +1357,7 @@ body:not(.dark) {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
 }
 
-/* Alinhamento dos Termos e Botão */
+/* Alinhamento dos Termos e Botão *
 .checkbox-grupo {
   grid-column: span 2;
   display: flex;
@@ -1380,22 +1399,22 @@ body:not(.dark) {
   font-weight: 600;
 }
 
-/* Adicione o seletor do login junto ao do cadastro para aplicar o efeito de exibição */
+/* Adicione o seletor do login junto ao do cadastro para aplicar o efeito de exibição *
 .modal-overlay.ativo {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Cabeçalho da Área Logada Ajustado (Mais Fino) */
+/* Cabeçalho da Área Logada Ajustado (Mais Fino) *
 .header-logado {
   display: flex;
   justify-content: space-between;
   align-items: center;
   
-  /* Reduzimos o espaçamento de 20px para 10px (cima/baixo) */
+  /* Reduzimos o espaçamento de 20px para 10px (cima/baixo) *
   padding: 50px 4%; 
   
-  /* Definimos uma altura fixa confortável para não esticar */
+  /* Definimos uma altura fixa confortável para não esticar *
   height: 50px; 
   
   position: sticky;
@@ -1403,24 +1422,24 @@ body:not(.dark) {
   background-color: var(--header-bg);
   z-index: 100;
   
-  /* Uma linha sutil embaixo do cabeçalho para separar do conteúdo */
+  /* Uma linha sutil embaixo do cabeçalho para separar do conteúdo *
   border-bottom: 1px solid rgba(255, 204, 0, 0.1); 
   box-sizing: border-box;
 }
 
-/* Força a sua logo a diminuir para não esticar o cabeçalho */
+/* Força a sua logo a diminuir para não esticar o cabeçalho *
 .logo img {
-  height: 70px; /* Ajuste esse valor para o tamanho ideal da sua logo */
-  width: auto;  /* Mantém a proporção da imagem sem distorcer */
+  height: 70px; /* Ajuste esse valor para o tamanho ideal da sua logo *
+  width: auto;  /* Mantém a proporção da imagem sem distorcer *
   display: block;
 }
 
-/* Ajuste no botão de Darkmode para acompanhar o tamanho menor */
+/* Ajuste no botão de Darkmode para acompanhar o tamanho menor *
 .btn-darkmode-toggle {
   background: none;
   border: 1px solid rgba(255, 204, 0, 0.3);
-  width: 32px;  /* Diminuído de 40px para 36px */
-  height: 32px; /* Diminuído de 40px para 36px */
+  width: 32px;  /* Diminuído de 40px para 36px *
+  height: 32px; /* Diminuído de 40px para 36px *
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -1430,9 +1449,9 @@ body:not(.dark) {
   transition: all 0.3s ease;
 }
 
-/* ==================== BARRA INFERIOR ADAPTÁVEL DE LUXO ==================== */
+/* ==================== BARRA INFERIOR ADAPTÁVEL DE LUXO ==================== *
 
-/* Definição de cores para cada tema */
+/* Definição de cores para cada tema *
 body.dark {
   --barra-bg: #0d0d0d;
   --barra-border: rgba(255, 204, 0, 0.3);
@@ -1441,13 +1460,13 @@ body.dark {
 }
 
 body:not(.dark) {
-  --barra-bg: #fcfbf7; /* O mesmo branco pérola luxuoso do fundo */
-  --barra-border: rgba(212, 175, 55, 0.3); /* Linha dourada mais suave */
-  --item-nav-cor: #666666; /* Cinza mais visível para o fundo claro */
-  --item-nav-sombra: rgba(0, 0, 0, 0.05); /* Sombra bem levinha */
+  --barra-bg: #fcfbf7; /* O mesmo branco pérola luxuoso do fundo *
+  --barra-border: rgba(212, 175, 55, 0.3); /* Linha dourada mais suave *
+  --item-nav-cor: #666666; /* Cinza mais visível para o fundo claro *
+  --item-nav-sombra: rgba(0, 0, 0, 0.05); /* Sombra bem levinha *
 }
 
-/* Aplicando as variáveis no container da barra */
+/* Aplicando as variáveis no container da barra *
 .barra-navegacao-inferior {
   position: fixed;
   bottom: 0;
@@ -1460,7 +1479,7 @@ body:not(.dark) {
   align-items: center;
   z-index: 999;
   
-  /* Linha divisória e sombra inteligentes */
+  /* Linha divisória e sombra inteligentes *
   border-top: 1px solid var(--barra-border);
   box-shadow: 0 -10px 30px var(--item-nav-sombra);
   padding: 0 10px;
@@ -1468,7 +1487,7 @@ body:not(.dark) {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Itens individuais da barra */
+/* Itens individuais da barra *
 .item-nav {
   display: flex;
   flex-direction: column;
@@ -1476,7 +1495,7 @@ body:not(.dark) {
   justify-content: center;
   text-decoration: none;
   
-  /* Usa a cor cinza da variável para os itens desativados */
+  /* Usa a cor cinza da variável para os itens desativados *
   color: var(--item-nav-cor); 
   
   font-family: 'Poppins', sans-serif;
@@ -1485,55 +1504,57 @@ body:not(.dark) {
   gap: 2px;
 }
 
-/* Configuração do Ícone (Tratado como texto puro) */
+/* Configuração do Ícone (Tratado como texto puro) *
 .item-nav .icone {
-  font-size: 22px; /* Tamanho perfeito para ícones de menu */
-  color: inherit;  /* Faz o ícone herdar a cor cinza do item-nav por padrão */
+  font-size: 22px; /* Tamanho perfeito para ícones de menu *
+  color: inherit;  /* Faz o ícone herdar a cor cinza do item-nav por padrão *
   transition: transform 0.3s ease;
 }
 
-/* Quando o botão estiver ATIVO ou com o MOUSE em cima, tudo vira Ouro Puro */
+/* Quando o botão estiver ATIVO ou com o MOUSE em cima, tudo vira Ouro Puro *
 .item-nav.ativo, .item-nav:hover {
-  color: #d4af37; /* O dourado luxuoso do Golden Hall */
+  color: #d4af37; /* O dourado luxuoso do Golden Hall *
   text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
-/* Efeito de subir de leve o ícone ativo */
+/* Efeito de subir de leve o ícone ativo *
 .item-nav.ativo .icone, .item-nav:hover .icone {
   transform: translateY(-2px);
 }
 
-/* Botão Sair idêntico ao botão "Entrar" do print */
+/* Botão Sair idêntico ao botão "Entrar" do print *
 .btn-gold-outline {
-  background: transparent;                /* Fundo transparente igual ao "Entrar" */
-  color: #e1bc26bf;                         /* Texto dourado */
-  border: 1px solid #ebbf0d54;              /* Borda dourada fina */
+  background: transparent;                /* Fundo transparente igual ao "Entrar" *
+  color: #e1bc26bf;                         /* Texto dourado *
+  border: 1px solid #ebbf0d54;              /* Borda dourada fina *
   
-  /* Arredondamento idêntico ao do print */
+  /* Arredondamento idêntico ao do print *
   border-radius: 12px;                    
   
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  padding: 8px 24px;                      /* Espaçamento interno confortável */
+  padding: 8px 24px;                      /* Espaçamento interno confortável *
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Efeito sutil ao passar o mouse para manter o toque de luxo */
+/* Efeito sutil ao passar o mouse para manter o toque de luxo *
 .btn-gold-outline:hover {
-  background-color: rgba(255, 204, 0, 0.05); /* Um brilho dourado de fundo bem leve */
-  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); /* Aura de luz de fundo */
+  background-color: rgba(255, 204, 0, 0.05); /* Um brilho dourado de fundo bem leve *
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); /* Aura de luz de fundo *
 }
+
+/* ==================== DESIGN DA SEÇÃO DE PERFIL ==================== *
 
 .secao-perfil {
   max-width: 1100px;
-  margin: 80px auto 40px; /* Aumentamos de 40px para 80px no topo para dar um respiro chique */
+  margin: 80px auto 40px; /* Aumentamos de 40px para 80px no topo para dar um respiro chique *
   padding: 20px;
   animation: fadeIn 0.8s ease;
 }
 
-/* Header do Perfil */
+/* Header do Perfil *
 .perfil-header {
   text-align: center;
   margin-bottom: 50px;
@@ -1588,7 +1609,7 @@ body:not(.dark) {
   border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* Grid de Cards */
+/* Grid de Cards *
 .perfil-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1618,7 +1639,7 @@ body:not(.dark) {
   margin-bottom: 25px;
 }
 
-/* Campos de Input Estilizados */
+/* Campos de Input Estilizados *
 .campo-grupo {
   margin-bottom: 15px;
 }
@@ -1642,7 +1663,7 @@ body:not(.dark) {
   outline: none;
 }
 
-/* Botões de ajuste dentro do card */
+/* Botões de ajuste dentro do card *
 .btn-ajuste {
   background: transparent;
   border: 1px solid #d4af37;
@@ -1660,7 +1681,7 @@ body:not(.dark) {
   color: #000;
 }
 
-/* Barra de Progresso VIP */
+/* Barra de Progresso VIP *
 .barra-progresso {
   background: rgba(255, 255, 255, 0.1);
   height: 8px;
@@ -1695,15 +1716,15 @@ body:not(.dark) {
   color: #22c55e;
 }
 
-/* Container para centralizar o botão abaixo dos cards */
+/* Container para centralizar o botão abaixo dos cards *
 .perfil-actions {
   display: flex;
   justify-content: center;
-  margin-top: 50px;       /* Afasta o botão dos cartões de cima */
-  margin-bottom: 60px;    /* Dá um respiro para não cobrir a barra inferior dourada */
+  margin-top: 50px;       /* Afasta o botão dos cartões de cima *
+  margin-bottom: 60px;    /* Dá um respiro para não cobrir a barra inferior dourada *
 }
 
-/* Ajuste fino do botão com o ícone de logout */
+/* Ajuste fino do botão com o ícone de logout *
 .btn-sair-perfil {
   display: flex;
   align-items: center;

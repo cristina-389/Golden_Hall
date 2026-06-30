@@ -35,11 +35,11 @@
 
         <div class="header-buttons">
 
-            <button class="btn btn-outline">
+            <button class="btn btn-outline" onclick="abrirModalLogin()">
                 Entrar
             </button>
 
-            <button class="btn btn-gold">
+            <button class="btn btn-gold" onclick="abrirModal()">
                 Criar conta
             </button>
 
@@ -263,7 +263,7 @@
 
         <section class="acoes">
 
-            <button class="btn btn-gold">
+            <button class="btn btn-gold" onclick="abrirModal()">
                 Reservar este espaço
             </button>
         
@@ -276,7 +276,14 @@
 
     </main>
 
-    <script src="../../js/script.js"></script>
+    <!--=======Cadrastro==========-->
+  <div id="container-modal-cadastro"></div>
+  <div id="container-modal-login"></div>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/modais.js"></script>
+    <script src="/frontend/js/paginas/detalhes.js"></script>
+
 
 </body>
 

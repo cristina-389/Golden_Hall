@@ -1,0 +1,136 @@
+/* ==========================================================================
+   GOLDEN HALL - BARRA INFERIOR, BOTÕES GLOBAIS E ELEMENTOS DE NAVEGAÇÃO
+   ========================================================================== */
+
+/* BARRA INFERIOR ADAPTÁVEL DE LUXO */
+body.dark {
+    --barra-bg: #0d0d0d;
+    --barra-border: rgba(255, 204, 0, 0.3);
+    --item-nav-cor: #888888;
+    --item-nav-sombra: rgba(0, 0, 0, 0.8);
+}
+
+body:not(.dark) {
+    --barra-bg: #fcfbf7; 
+    --barra-border: rgba(212, 175, 55, 0.3); 
+    --item-nav-cor: #666666; 
+    --item-nav-sombra: rgba(0, 0, 0, 0.05); 
+}
+
+.barra-navegacao-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background-color: var(--barra-bg);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 999;
+    border-top: 1px solid var(--barra-border);
+    box-shadow: 0 -10px 30px var(--item-nav-sombra);
+    padding: 0 10px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.item-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--item-nav-cor); 
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    transition: all 0.3s ease;
+    gap: 2px;
+}
+
+.item-nav .icone {
+    font-size: 22px; 
+    color: inherit;  
+    transition: transform 0.3s ease;
+}
+
+.item-nav.ativo, .item-nav:hover {
+    color: #d4af37; 
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.item-nav.ativo .icone, .item-nav:hover .icone {
+    transform: translateY(-2px);
+}
+
+/* BOTÕES REUTILIZÁVEIS */
+.btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.btn-outline {
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+}
+
+.btn-gold {
+    border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: black;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-gold-outline {
+    background: transparent;                
+    color: #e1bc26bf;                         
+    border: 1px solid #ebbf0d54;              
+    border-radius: 12px;                    
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 24px;                      
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-gold-outline:hover {
+    background-color: rgba(255, 204, 0, 0.05); 
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); 
+}
+
+.theme-toggle {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    cursor: pointer;
+    font-size: 22px;
+    transition: 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg);
+}
+
+.btn-darkmode-toggle {
+    background: none;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    width: 32px;  
+    height: 32px; 
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}

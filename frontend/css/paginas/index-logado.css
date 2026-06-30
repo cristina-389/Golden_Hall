@@ -1,0 +1,23 @@
+/* ==========================================================================
+   GOLDEN HALL - INTERFACE EXCLUSIVA DO PAINEL DO USUÁRIO LOGADO
+   ========================================================================== */
+
+   .header-logado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 4%; 
+    height: 50px; 
+    position: sticky;
+    top: 0;
+    background-color: var(--bg);
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 204, 0, 0.1); 
+    box-sizing: border-box;
+}
+
+.header-logado .logo img {
+    height: 70px; 
+    width: auto;  
+    display: block;
+}

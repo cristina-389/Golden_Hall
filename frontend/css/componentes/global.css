@@ -1,0 +1,49 @@
+/* ==========================================================================
+   GOLDEN HALL - VARIÁVEIS, RESET E CONFIGURAÇÕES GLOBAIS
+   ========================================================================== */
+
+   :root {
+    --bg: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --text: #111111;
+    --text-light: #444444;
+    --gold: #d4a437;
+    --gold-light: #f5d26a;
+    --border: rgba(0, 0, 0, 0.1);
+    --shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* TEMA ESCURO */
+body.dark {
+    --bg: #050505;
+    --bg-secondary: #0c0c0c;
+    --text: #ffffff;
+    --text-light: #c9c9c9;
+    --border: rgba(255, 215, 0, 0.15);
+    --shadow: rgba(255, 215, 0, 0.10);
+}  
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    transition: 0.4s;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+/* Utilitários Comuns de Animação */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
