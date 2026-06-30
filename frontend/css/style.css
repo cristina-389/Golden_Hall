@@ -1109,6 +1109,8 @@
 
 }
 
+/* ==================== DESIGN DA SEÇÃO DE PERFIL ==================== */
+
 /* ================= TEMA CLARO ================= */
 
 body:not(.dark) .localizacao-section{
@@ -1522,4 +1524,190 @@ body:not(.dark) {
 .btn-gold-outline:hover {
   background-color: rgba(255, 204, 0, 0.05); /* Um brilho dourado de fundo bem leve */
   box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); /* Aura de luz de fundo */
+}
+
+.secao-perfil {
+  max-width: 1100px;
+  margin: 80px auto 40px; /* Aumentamos de 40px para 80px no topo para dar um respiro chique */
+  padding: 20px;
+  animation: fadeIn 0.8s ease;
+}
+
+/* Header do Perfil */
+.perfil-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.avatar-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+}
+
+.avatar-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d4af37;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+}
+
+.btn-edit-foto {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #d4af37;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  color: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perfil-nome {
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  margin-bottom: 5px;
+  color: var(--texto-principal);
+}
+
+.status-badge {
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* Grid de Cards */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.perfil-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 204, 0, 0.1);
+  border-radius: 15px;
+  padding: 30px;
+  transition: transform 0.3s ease;
+}
+
+.perfil-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.perfil-card h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  color: #d4af37;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+/* Campos de Input Estilizados */
+.campo-grupo {
+  margin-bottom: 15px;
+}
+
+.campo-grupo label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.campo-grupo input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--texto-principal);
+  padding: 8px 0;
+  font-size: 15px;
+  outline: none;
+}
+
+/* Botões de ajuste dentro do card */
+.btn-ajuste {
+  background: transparent;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+.btn-ajuste:hover {
+  background: #d4af37;
+  color: #000;
+}
+
+/* Barra de Progresso VIP */
+.barra-progresso {
+  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.progresso-preenchido {
+  background: linear-gradient(90deg, #d4af37, #ffcc00);
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
+
+.lista-beneficios {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.lista-beneficios li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.lista-beneficios li span {
+  font-size: 16px;
+  color: #22c55e;
+}
+
+/* Container para centralizar o botão abaixo dos cards */
+.perfil-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;       /* Afasta o botão dos cartões de cima */
+  margin-bottom: 60px;    /* Dá um respiro para não cobrir a barra inferior dourada */
+}
+
+/* Ajuste fino do botão com o ícone de logout */
+.btn-sair-perfil {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 30px;
+  font-size: 15px;
 }

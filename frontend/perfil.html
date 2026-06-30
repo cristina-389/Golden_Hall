@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Meu Perfil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+<body class="logado-layout dark">
+
+    <main>
+        <section class="secao-perfil">
+            <div class="perfil-header">
+                <div class="avatar-container">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" alt="Foto de Perfil">
+                    <button class="btn-edit-foto"><span class="material-icons-round">edit</span></button>
+                </div>
+                <h2 class="perfil-nome">Marcos Aurélio</h2>
+                <span class="status-badge">Membro Gold ⚜️</span>
+            </div>
+
+            <div class="perfil-grid">
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">person</span> Dados Pessoais</h3>
+                    <div class="campo-grupo">
+                        <label>Nome Completo</label>
+                        <input type="text" value="Marcos Aurélio de Castro" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>E-mail</label>
+                        <input type="email" value="marvis.castro@goldenhall.com" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>WhatsApp</label>
+                        <input type="text" value="+55 (11) 99876-5432" readonly>
+                    </div>
+                    <button class="btn-ajuste">Editar Dados</button>
+                </div>
+
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">security</span> Segurança</h3>
+                    <div class="campo-grupo">
+                        <label>Senha Atual</label>
+                        <input type="password" value="********" readonly>
+                    </div>
+                    <p class="info-texto" style="font-size: 12px; color: #666; margin-top: 5px;">Última alteração: há 3 meses</p>
+                    <button class="btn-ajuste">Alterar Senha</button>
+                </div>
+
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">star</span> Golden Club</h3>
+                    <div class="clube-progresso">
+                        <p style="font-size: 14px; color: #aaa;">Você está a <strong>2 reservas</strong> do nível Platinum!</p>
+                        <div class="barra-progresso">
+                            <div class="progresso-preenchido" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                    <ul class="lista-beneficios" style="list-style: none; padding: 0; margin-top: 15px;">
+                        <li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #777; margin-bottom: 5px;">
+                            <span class="material-icons-round" style="color: #22c55e; font-size: 16px;">check_circle</span> Prioridade em datas festivas
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #777;">
+                            <span class="material-icons-round" style="color: #22c55e; font-size: 16px;">check_circle</span> Consultoria de decoração gratuita
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="perfil-actions">
+                <button class="btn-gold-outline btn-sair-perfil" onclick="confirmarSaida()">
+                    <span class="material-icons-round">logout</span> Sair da Conta
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="index-logado.html" class="item-nav">
+            <span class="material-icons-round icone">home</span>
+            <span class="texto">Início</span>
+        </a>
+        <a href="#buscar" class="item-nav">
+            <span class="material-icons-round icone">search</span>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="#favoritos" class="item-nav">
+            <span class="material-icons-round icone">favorite</span>
+            <span class="texto">Favoritos</span>
+        </a>
+        <a href="#reservas" class="item-nav">
+            <span class="material-icons-round icone">calendar_month</span>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="perfil.html" class="item-nav ativo">
+            <span class="material-icons-round icone">person</span>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
