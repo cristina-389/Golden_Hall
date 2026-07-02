@@ -13,6 +13,76 @@
 @import url('paginas/detalhe.css');
 @import url('paginas/perfil.css');
 
+/* --- CONTAINER PRINCIPAL --- */
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 40px; /* Mais espaço entre eles como na imagem */
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 20px;
+  flex-wrap: wrap;
+}
+
+/* O CARD (Sem caixas de fundo, tudo centralizado) */
+.info-card {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza tudo na vertical */
+  text-align: center;
+  background: transparent !important; /* Remove qualquer fundo cinza */
+  border: none !important; /* Remove qualquer borda externa */
+  box-shadow: none !important; /* Remove sombras das caixas */
+  padding: 10px;
+}
+
+/* O CÍRCULO VAZADO COM LINHA FINA DOURADA */
+.icone-contorno {
+  width: 65px;
+  height: 65px;
+  border: 1px solid #D4AF37; /* Linha fina dourada circular */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: transparent;
+}
+
+/* ÍCONE INTERNO LINHA FINA */
+.icone-contorno .material-icons-round {
+  color: #D4AF37;
+  font-size: 28px !important;
+}
+
+/* TÍTULOS (Sempre dourados conforme a sua referência) */
+.info-card h3 {
+  color: #D4AF37 !important; 
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+/* --- TEXTO DESCRITIVO ADAPTÁVEL AOS TEMAS --- */
+.info-card p {
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+/* Se o tema for Escuro (Dark) -> Texto de descrição fica cinza claro */
+body.dark .info-card p {
+  color: #aaaaaa;
+}
+
+/* Se o tema for Claro (Light) -> Texto de descrição fica cinza escuro */
+body:not(.dark) .info-card p {
+  color: #444444;
+}
+
 /* 3. ARQUIVOS RESERVADOS PARA AS PRÓXIMAS ETAPAS (Deixe em branco por enquanto) */
 /* @import url('paginas/buscar.css'); */
 /* @import url('paginas/favoritos.css'); */

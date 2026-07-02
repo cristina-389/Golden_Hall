@@ -1,96 +1,365 @@
 /* ==========================================================================
-   GOLDEN HALL - DESIGN DA CENTRAL DE BUSCA AVANÇADA
+   GOLDEN HALL - DESIGN ADAPTÁVEL (DARK / LIGHT)
    ========================================================================== */
 
-   .central-busca {
-    margin-top: 40px;
-    margin-bottom: 50px;
-    animation: fadeIn 0.8s ease;
-}
-
-.central-busca h2 {
+/* Container Principal Centralizado */
+.central-busca {
+    margin: 50px auto 30px auto;
     text-align: center;
+    max-width: 1000px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- TÍTULO (Adaptável) --- */
+.central-busca h2 {
     font-family: 'Cinzel', serif;
-    font-size: 36px;
-    color: var(--gold);
-    margin-bottom: 30px;
+    font-size: 38px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: color 0.3s ease;
 }
 
-/* Bloco centralizado contendo os filtros */
+/* Cor do título no modo escuro */
+body.dark .central-busca h2 {
+    color: #ffffff;
+}
+
+/* Cor do título no modo claro (Evita sumir no fundo branco) */
+body:not(.dark) .central-busca h2 {
+    color: #111111;
+}
+
+.central-busca h2 .gold-text {
+    color: #c59b27;
+}
+
+.section-subtitle {
+    font-size: 15px;
+    color: #888888;
+    margin-bottom: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- BARRA DE PESQUISA PRINCIPAL (Sempre Branca) --- */
 .busca-container-box {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px var(--shadow);
+    background: #ffffff !important;
+    border-radius: 50px;
+    padding: 5px 25px;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    border: 1px solid #e0e0e0;
 }
 
-/* Campo de digitação de texto */
+body.dark .busca-container-box {
+    border: 1px solid transparent;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
 .busca-linha-principal {
     display: flex;
     align-items: center;
-    background: transparent;
-    border-bottom: 2px solid var(--gold);
-    padding: 10px 5px;
-    margin-bottom: 30px;
-}
-
-.icone-busca {
-    color: var(--gold);
-    font-size: 22px;
-    margin-right: 15px;
+    gap: 15px;
+    width: 100%;
 }
 
 .busca-linha-principal input {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: #000000 !important; /* Texto sempre preto na barra branca */
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    padding: 14px 0;
+}
+
+.busca-linha-principal input::placeholder {
+    color: #999999;
+}
+
+.icone-busca { color: #888888; font-size: 18px; }
+.icone-limpar { color: #888888; font-size: 16px; cursor: pointer; }
+
+/* Botão Dourado de Busca */
+.btn-buscar-principal {
+    background: #c59b27 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 14px 50px;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 35px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(197, 155, 39, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.btn-buscar-principal:hover { background: #b0871e !important; }
+
+/* Link de Filtros */
+.filtros-trigger {
+    color: #aaaaaa;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+body:not(.dark) .filtros-trigger {
+    color: #555555;
+}
+.filtros-trigger:hover { color: #c59b27; }
+
+/* --- PAINEL FLUTUANTE DOS FILTROS (Adaptável) --- */
+.painel-filtros-avancados {
+    max-height: 0;
+    overflow: hidden;
+    border-radius: 12px;
     width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 18px;
+    max-width: 950px;
+    margin: 30px auto 0 auto;
+    padding: 0 25px;
+    text-align: left;
+    transition: all 0.4s ease;
+    box-sizing: border-box;
 }
 
-/* Grid com os 4 filtros seletores */
-.busca-filtros-grid {
+/* Cores do painel no Modo Escuro */
+body.dark .painel-filtros-avancados {
+    background: #0d0d0d;
+    border: 1px solid transparent;
+}
+body.dark .painel-filtros-avancados.ativo {
+    border: 1px solid #222222;
+}
+
+/* Cores do painel no Modo Claro */
+body:not(.dark) .painel-filtros-avancados {
+    background: #f9f9f9;
+    border: 1px solid transparent;
+}
+body:not(.dark) .painel-filtros-avancados.ativo {
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.painel-filtros-avancados.ativo {
+    max-height: 500px;
+    padding: 30px 25px;
+}
+
+.filtros-grid-inputs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 20px;
+    margin-bottom: 25px;
 }
 
-.filtro-campo {
+.campo-filtro {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.filtro-campo label {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: var(--text-light);
-    font-weight: 500;
-    letter-spacing: 1px;
-}
-
-.filtro-campo select, 
-.filtro-campo input[type="date"] {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    color: var(--text);
+.campo-filtro label {
+    font-size: 13px;
     font-family: 'Poppins', sans-serif;
+}
+body.dark .campo-filtro label { color: #888888; }
+body:not(.dark) .campo-filtro label { color: #444444; }
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 12px;
+    color: #c59b27;
+    font-size: 15px;
+}
+
+/* Caixas de Texto internas dos filtros */
+.input-wrapper input {
+    width: 100%;
+    border-radius: 6px;
+    padding: 12px 12px 12px 38px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
     outline: none;
+    transition: all 0.3s;
+}
+
+/* Inputs no Modo Escuro */
+body.dark .input-wrapper input {
+    background: #141414 !important;
+    border: 1px solid #222222 !important;
+    color: #ffffff !important;
+}
+
+/* Inputs no Modo Claro */
+body:not(.dark) .input-wrapper input {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #111111 !important;
+}
+body:not(.dark) .input-wrapper input:focus {
+    border-color: #c59b27 !important;
+}
+
+/* Botões do Painel */
+.painel-filtros-botoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    border-top: 1px solid #222222;
+    padding-top: 20px;
+}
+body:not(.dark) .painel-filtros-botoes {
+    border-top-color: #e0e0e0;
+}
+
+.btn-limpar-filtros {
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: border-color 0.3s;
+    font-size: 14px;
 }
+body.dark .btn-limpar-filtros { color: #666666; }
+body.dark .btn-limpar-filtros:hover { color: #ffffff; }
 
-.filtro-campo select:focus, 
-.filtro-campo input[type="date"]:focus {
-    border-color: var(--gold);
-}
+body:not(.dark) .btn-limpar-filtros { color: #888888; }
+body:not(.dark) .btn-limpar-filtros:hover { color: #000000; }
 
-/* Tema escuro específico para os selects aparecerem corretos */
-body.dark .filtro-campo select option {
-    background-color: #0c0c0c;
+.btn-aplicar-filtros {
+    background: #c59b27;
     color: #ffffff;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Informações de Resultados */
+.barra-resultados-info {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.resultados-texto { font-size: 16px; font-family: 'Poppins', sans-serif; }
+body.dark .resultados-texto { color: #ffffff; }
+body:not(.dark) .resultados-texto { color: #111111; }
+
+/* Esconde os resultados e as informações por padrão */
+.barra-resultados-info,
+.resultados-busca {
+    display: none;
+}
+
+/* --- ALERTA DE BUSCA VAZIA (IDÊNTICO À FOTO) --- */
+.alerta-busca-vazia {
+    max-width: 950px;
+    margin: 40px auto;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.alerta-vazio-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px 35px;
+    border-radius: 16px;
+    text-align: left;
+    transition: 0.3s, border-color 0.3s;
+}
+
+/* Ajuste de cores conforme o Tema Ativo */
+body.dark .alerta-vazio-container {
+    background: #111111;
+    border: 1px solid #1a1a1a;
+}
+body:not(.dark) .alerta-vazio-container {
+    background: #f4eee1; /* Tom pastel suave da imagem */
+    border: 1px solid #e8dfcd;
+}
+
+/* Ícone da Lupa Redonda */
+.alerta-vazio-icone {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #c59b27;
+    border: 1px solid rgba(197, 155, 39, 0.3);
+    background: rgba(197, 155, 39, 0.05);
+}
+
+.alerta-vazio-texto {
+    flex: 1;
+}
+
+.alerta-vazio-texto h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+body.dark .alerta-vazio-texto h3 { color: #ffffff; }
+body:not(.dark) .alerta-vazio-texto h3 { color: #111111; }
+
+.alerta-vazio-texto p {
+    font-size: 14px;
+    color: #888888;
+    margin: 0;
+}
+
+/* Botão Nova Busca */
+.btn-nova-busca {
+    background: #c59b27;
+    color: #ffffff;
+    border: none;
+    padding: 12px 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:  0.2s;
+}
+.btn-nova-busca:hover {
+    background: #b0871e;
+}
+
+/* Opcional: faz o X interagir dinamicamente */
+.icone-limpar {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.busca-linha-principal input:not(:placeholder-shown) ~ .icone-limpar {
+    opacity: 1;
+    pointer-events: auto;
 }
