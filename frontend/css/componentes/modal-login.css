@@ -394,3 +394,128 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     transform: scale(1.1);
     filter: invert(65%) sepia(70%) saturate(550%) hue-rotate(5deg) brightness(98%) contrast(90%);
 }
+
+/* Modais de Alerta e Confirmação */
+.modal-alerta-box {
+    max-width: 420px;
+    text-align: center;
+    padding: 28px 24px;
+  }
+  
+  .icone-alerta-dourado {
+    font-size: 3rem;
+    color: #d4af37;
+    margin-bottom: 10px;
+  }
+  
+  .icone-sucesso-dourado {
+    font-size: 3.2rem;
+    color: #d4af37;
+    margin-bottom: 10px;
+  }
+  
+  .lista-termos-cancelamento {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+    margin: 18px 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #444;
+  }
+  
+  body.dark .lista-termos-cancelamento {
+    color: #ddd;
+  }
+  
+  .lista-termos-cancelamento li {
+    margin-bottom: 10px;
+  }
+  
+  .pergunta-ciente {
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  body.dark .pergunta-ciente {
+    color: #bbb;
+  }
+  
+  /* Grupo de Botões do Alerta */
+  .botoes-alerta-grupo {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .btn-cancelar-alerta {
+    flex: 1;
+    background: transparent;
+    border: 1px solid #aaa;
+    color: #666;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-cancelar-alerta:hover {
+    background: #f0f0f0;
+    color: #333;
+  }
+  
+  body.dark .btn-cancelar-alerta {
+    border-color: #555;
+    color: #ccc;
+  }
+  
+  .btn-confirmar-alerta {
+    flex: 1.8;
+    background: #d4af37;
+    border: none;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-confirmar-alerta:hover {
+    background: #b59228;
+  }
+  
+  /* Card Informativo do Email */
+  .card-aviso-email {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  body.dark .card-aviso-email {
+    color: #ccc;
+  }
+
+
+  /* Estilo unificado para os Títulos dos Modais de Alerta e Sucesso */
+.modal-alerta-box h3 {
+    font-family: 'Cinzel', serif; /* A mesma fonte elegante do "Solicitar Reserva" */
+    font-size: 1.15rem;
+    letter-spacing: 2px;          /* Espaçamento elegante entre as letras */
+    text-transform: uppercase;   /* Garante que fique em maiúsculas */
+    font-weight: 600;
+    color: var(--modal-text, #ffffff);
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
