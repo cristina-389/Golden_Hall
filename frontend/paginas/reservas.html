@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Suas Reservas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/paginas/reservas.css">
+</head>
+<body class="logado-layout dark">
+
+    <main class="page-content">
+        
+        <section class="banner-reservas">
+            <div class="overlay-banner"></div>
+            <div class="conteudo-banner">
+                <span class="badge-gold"><i class="bi bi-shield-check"></i> Gestão de Agendamentos</span>
+                <h2>Suas <span class="gold-text">Reservas</span></h2>
+                <p>Acompanhe todos os detalhes dos seus momentos inesquecíveis no Golden Hall</p>
+            </div>
+        </section>
+
+        <section class="container-principal-reservas">
+            
+            <div class="estatisticas-grid">
+                <div class="card-estatistica">
+                    <div class="icone-estatistica"><i class="bi bi-calendar-event"></i></div>
+                    <div class="info-estatistica">
+                        <span class="label">Total de Reservas</span>
+                        <h4 id="stat-total">0</h4>
+                    </div>
+                </div>
+                <div class="card-estatistica">
+                    <div class="icone-estatistica pendente"><i class="bi bi-hourglass-split"></i></div>
+                    <div class="info-estatistica">
+                        <span class="label">Aguardando Aprovação</span>
+                        <h4 id="stat-pendentes">0</h4>
+                    </div>
+                </div>
+                <div class="card-estatistica">
+                    <div class="icone-estatistica aprovado"><i class="bi bi-check-circle"></i></div>
+                    <div class="info-estatistica">
+                        <span class="label">Reservas Confirmadas</span>
+                        <h4 id="stat-aprovadas">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secao-titulo-grid">
+                <h3>Meus Agendamentos</h3>
+                <a href="buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
+            </div>
+
+            <div id="lista-reservas" class="grid-reservas">
+                </div>
+
+        </section>
+    </main>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="../index-logado.html" class="item-nav">
+            <span class="material-icons-round icone">home</span>
+            <span class="texto">Início</span>
+        </a>
+        <a href="buscar.html" class="item-nav">
+            <span class="material-icons-round icone">search</span>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="#favoritos" class="item-nav">
+            <span class="material-icons-round icone">favorite</span>
+            <span class="texto">Favoritos</span>
+        </a>
+        <a href="reservas.html" class="item-nav ativo">
+            <span class="material-icons-round icone">calendar_month</span>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="perfil.html" class="item-nav">
+            <span class="material-icons-round icone">person</span>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/paginas/reservas.js"></script>
+</body>
+</html>
