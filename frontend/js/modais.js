@@ -365,7 +365,7 @@ function confirmarReservaFinal() {
 
 // PASSO 3: Botão de ir para Minhas Reservas no Modal de Sucesso
 function irParaMinhasReservas() {
-    window.location.href = 'reservas.html';
+    window.location.href = '../reservas.html';
 }
 
 
