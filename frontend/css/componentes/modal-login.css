@@ -1,29 +1,36 @@
 /* ==========================================================================
    GOLDEN HALL - SISTEMA DE MODAL DE ACESSO (LOGIN / CADASTRO)
+   Este arquivo estiliza a "caixinha" genérica de modal usada por TODOS os
+   modais do site (login, cadastro, agenda e reserva) - a lógica de
+   quando abrir/fechar cada um fica em js/modais.js, aqui é só o visual.
    ========================================================================== */
 
-   .modal-overlay {
+/* Camada escura que cobre a tela toda por trás do modal (o "overlay").
+   Por padrão fica invisível e "atrás" do clique (pointer-events: none);
+   quando o JS adiciona a classe "ativo", ela aparece com uma transição suave. */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75); 
-    backdrop-filter: blur(12px);           
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px); /* desfoca o conteúdo por trás do overlay */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;                        
+    z-index: 10000; /* fica por cima de tudo no site */
     opacity: 0;
-    pointer-events: none;                 
+    pointer-events: none; /* enquanto invisível, cliques "atravessam" o overlay */
     transition: opacity 0.4s ease;
 }
 
 .modal-overlay.ativo {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: auto; /* agora visível, passa a bloquear cliques no conteúdo de trás */
 }
 
+/* A caixa branca/preta central do modal, com a borda e o brilho dourado */
 .modal-box {
     background-color: var(--modal-bg, #111111);
     color: var(--modal-text, #ffffff);
@@ -42,6 +49,8 @@
                 0 0 70px hsla(46, 100%, 50%, 0.25);
 }
 
+/* Variáveis de cor específicas do modal, uma versão para cada tema
+   (usadas no .modal-box e nos inputs do formulário aqui dentro) */
 .body.dark, body.dark {
     --modal-bg: #111111;
     --modal-text: #ffffff;
@@ -50,16 +59,19 @@
 }
 
 body:not(.dark) {
-    --modal-bg: #fcfbf7; 
+    --modal-bg: #fcfbf7;
     --modal-text: #1a1a1a;
     --input-bg: #ffffff;
     --input-border: #dddddd;
 }
 
+/* Quando o modal está ativo, a caixa "sobe" pro lugar (de +20px pra 0) -
+   é isso que dá aquele efeito de entrada suave */
 .modal-overlay.ativo .modal-box {
     transform: translateY(0);
 }
 
+/* Botão "X" no canto superior direito do modal, pra fechar */
 .fechar-modal {
     position: absolute;
     top: 20px;
@@ -96,18 +108,21 @@ body:not(.dark) {
     margin-bottom: 25px;
 }
 
+/* Organiza os campos do formulário (nome, email, senha, etc.) em 2 colunas */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px 20px;                
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
 }
 
 .input-grupo {
     text-align: left;
 }
 
+/* Campos que precisam ocupar a largura toda (as duas colunas), como
+   observações/textarea, em vez de dividir espaço com outro campo ao lado */
 .input-grupo.col-total {
-    grid-column: span 2; 
+    grid-column: span 2;
 }
 
 .input-grupo label {
@@ -183,6 +198,8 @@ body:not(.dark) {
 
 /* ==========================================================================
    EXTENSÃO - MODAIS DE RESERVA E AGENDA (CALENDÁRIO)
+   Tudo a partir daqui é estilo específico dos modais de "Consulte as
+   datas" (calendário) e "Solicitar Reserva" (formulário).
    ========================================================================== */
 
 /* Suporte para Select e Textarea com o mesmo estilo dos seus Inputs */
@@ -216,20 +233,6 @@ body:not(.dark) {
 
 .input-com-icone input {
     padding-right: 40px;
-}
-
-.btn-icone-agenda {
-    position: absolute;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.btn-icone-agenda:hover {
-    transform: scale(1.2);
 }
 
 /* --------------------------------------------------------------------------
@@ -299,8 +302,11 @@ body:not(.dark) {
     color: #111111;
 }
 
-/* Grids do Calendário */
-.grid-dias-semana, 
+/* Grids do Calendário: 7 colunas (uma pra cada dia da semana).
+   .grid-dias-semana mostra só os cabeçalhos (Dom, Seg, Ter...) e
+   .grid-dias-mes é preenchida pelo JS (gerarCalendario() em modais.js)
+   com uma célula .dia-celula pra cada dia do mês. */
+.grid-dias-semana,
 .grid-dias-mes {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -363,8 +369,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: auto;
 }
 
-/* Estilização do botão com o ícone dourado elegante */
+/* Botão de ícone (calendário) dentro do campo de data - fica posicionado
+   dentro de .input-com-icone (definido mais acima) */
 .btn-icone-agenda {
+    position: absolute;
+    right: 10px;
     background: transparent;
     border: none;
     color: #d4af37; /* Dourado Golden Hall */
@@ -374,11 +383,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-icone-agenda:hover {
     color: #b59228;
+    transform: scale(1.2);
 }
 
 /* 1. Muda a cor do ícone de relógio nativo do navegador para Dourado */
@@ -395,7 +405,9 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     filter: invert(65%) sepia(70%) saturate(550%) hue-rotate(5deg) brightness(98%) contrast(90%);
 }
 
-/* Modais de Alerta e Confirmação */
+/* Modais de Alerta e Confirmação - usados no fluxo de reserva: primeiro o
+   modal-alerta-cancelamento (avisa da política de cancelamento) e depois
+   o modal-sucesso-reserva (confirma que a reserva foi salva) */
 .modal-alerta-box {
     max-width: 420px;
     text-align: center;
@@ -519,3 +531,83 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     margin-top: 10px;
     margin-bottom: 0;
   }
+
+/* --------------------------------------------------------------------------
+   MODAL DE GALERIA DE FOTOS ("Ver todas as fotos" nas páginas de detalhes)
+   -------------------------------------------------------------------------- */
+
+/* Caixa um pouco mais larga que o modal padrão (580px), pra foto ficar
+   confortável */
+.modal-galeria-box {
+    max-width: 700px;
+}
+
+/* Foto grande + setas de navegação dos lados */
+.galeria-foto-grande {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.galeria-foto-grande img {
+    flex: 1;
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+/* Reaproveita a classe ".seta" (já usada no carrossel de avaliações), só
+   ajustando o tamanho pra ficar proporcional ao lado da foto */
+.galeria-foto-grande .seta {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.contador-galeria {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 16px;
+}
+
+/* Fileira de miniaturas clicáveis embaixo da foto grande */
+.miniaturas-galeria {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.miniaturas-galeria img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.55;
+    border: 2px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.miniaturas-galeria img:hover {
+    opacity: 0.85;
+}
+
+/* Miniatura da foto que está sendo exibida no momento (classe adicionada via JS) */
+.miniaturas-galeria img.ativa {
+    opacity: 1;
+    border-color: #d4af37;
+}
+
+/* Em telas pequenas, encolhe a foto e some com as setas grandes ao lado
+   pra caber melhor (a navegação continua funcionando pelas miniaturas) */
+@media (max-width: 480px) {
+    .galeria-foto-grande img {
+        height: 220px;
+    }
+    .galeria-foto-grande .seta {
+        font-size: 18px;
+    }
+}

@@ -1,3 +1,13 @@
+<!--
+  GOLDEN HALL - PÁGINA DE DETALHES: CHÁCARA GOLDEN
+  Esta página segue exatamente a mesma estrutura das outras 5 páginas em
+  paginas/detalhes/ (só o texto/fotos/valores mudam) - ver o comentário
+  no topo de css/paginas/detalhe.css para o que cada seção faz.
+  O atributo data-espaco="chacara-golden" no <body> é o que identifica
+  este espaço para o JS: é usado pra buscar as avaliações certas em
+  bancoAvaliacoes (detalhes.js), saber quais datas já estão reservadas
+  (modais.js) e montar o item de favorito certo (inicializarBotaoFavoritoDetalhe).
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -78,6 +88,14 @@
             </div>
 
             <div class="hero-foto">
+
+                <button id="btn-favoritar-detalhe" class="btn-favoritar-detalhe" title="Adicionar aos favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <button class="btn-galeria-detalhe" onclick="abrirModalGaleria()" title="Ver todas as fotos">
+                    <i class="bi bi-images"></i> Ver fotos
+                </button>
 
                 <img
                  src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=1200&auto=format&fit=crop">
@@ -240,6 +258,8 @@
         
         </section>
 
+        <!-- O texto/autor aqui dentro (#texto-avaliacao / #autor-avaliacao) é
+             preenchido e trocado via JS - ver bancoAvaliacoes em detalhes.js -->
         <section class="avaliacoes">
 
             <h2>Avaliações dos Clientes</h2>
@@ -291,7 +311,8 @@
 
     </main>
 
-      <!--=======Cadrastro==========-->
+      <!-- Gavetas onde o modais.js injeta o HTML dos modais via fetch()
+           (cadastro/login/agenda/reserva/galeria) - ficam vazias até serem usadas -->
   <div id="container-modal-cadastro"></div>
   <div id="container-modal-login"></div>
 
@@ -299,6 +320,7 @@
     <!--=========reserva e agenda=========-->
     <div id="container-modal-agenda"></div>
     <div id="container-modal-reserva"></div>
+    <div id="container-modal-galeria"></div>
 
   <script src="/frontend/js/global.js"></script>
   <script src="/frontend/js/modais.js"></script>

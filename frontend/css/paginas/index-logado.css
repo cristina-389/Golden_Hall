@@ -1,23 +1,30 @@
 /* ==========================================================================
    GOLDEN HALL - INTERFACE EXCLUSIVA DO PAINEL DO USUÁRIO LOGADO
+   Usado por index-logado.html: só o cabeçalho fino do topo, já que a
+   navegação de quem está logado é feita pela barra inferior dourada
+   (essa fica em componentes/navegacao.css, não aqui).
    ========================================================================== */
 
-   .header-logado {
+/* Cabeçalho fino e fixo no topo (fica "colado" mesmo rolando a página,
+   por causa do position: sticky) */
+.header-logado {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 4%; 
-    height: 50px; 
+    padding: 10px 4%;
+    height: 50px;
     position: sticky;
     top: 0;
     background-color: var(--bg);
     z-index: 100;
-    border-bottom: 1px solid rgba(255, 204, 0, 0.1); 
+    border-bottom: 1px solid rgba(255, 204, 0, 0.1);
     box-sizing: border-box;
 }
 
+/* Logo um pouco menor aqui do que no cabeçalho padrão do site, pra caber
+   dentro dos 50px de altura do cabeçalho logado */
 .header-logado .logo img {
-    height: 70px; 
-    width: auto;  
+    height: 70px;
+    width: auto;
     display: block;
 }

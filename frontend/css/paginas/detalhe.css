@@ -1,19 +1,26 @@
 /* ==========================================================================
    GOLDEN HALL - DESIGN DA PÁGINA INTERNA DE DETALHES DO SALÃO
+   Usado pelas 6 páginas em paginas/detalhes/*.html (chacara-golden,
+   salao-golden-luxo, eventos-royal, jardim-das-flores, villa-imperial e
+   espaco-premium), que são idênticas em estrutura, só trocando o
+   conteúdo (texto, fotos, valores).
    ========================================================================== */
 
-   .detalhe-page {
+.detalhe-page {
     max-width: 1200px;
     margin: auto;
     padding: 50px 20px;
 }
 
+/* Link "← Voltar para a página inicial" no topo da página */
 .voltar {
     text-decoration: none;
     color: #cfa53a;
     font-weight: 600;
 }
 
+/* Topo da página: foto grande de um lado, título + descrição do outro,
+   lado a lado em telas largas (vira 1 coluna só no celular, ver @media no fim) */
 .hero-detalhe {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -33,6 +40,8 @@
     line-height: 1.8;
 }
 
+/* Divisor decorativo "✦" com uma linha fina dourada de cada lado,
+   usado embaixo dos títulos de várias seções */
 .linha-elegante {
     display: flex;
     align-items: center;
@@ -54,6 +63,10 @@
     font-size: 18px;
 }
 
+.hero-foto {
+    position: relative; /* necessário para os botões de favoritar/galeria (abaixo) ficarem "flutuando" sobre a foto */
+}
+
 .hero-foto img {
     width: 100%;
     border-radius: 24px;
@@ -61,6 +74,66 @@
     box-shadow: 0 8px 30px hsla(46, 92%, 60%, 0.758);
 }
 
+/* Botão de coração no canto da foto principal, pra favoritar o espaço direto da página de detalhes */
+.btn-favoritar-detalhe {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.btn-favoritar-detalhe:hover {
+    background: #d4af37;
+    color: #111111;
+    transform: scale(1.1);
+}
+
+/* Botão "Ver fotos" no canto oposto (inferior esquerdo) da foto principal,
+   abre o modal-galeria com todas as fotos do espaço */
+.btn-galeria-detalhe {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 30px;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.btn-galeria-detalhe:hover {
+    background: #d4af37;
+    color: #111111;
+    transform: translateY(-2px);
+}
+
+/* Classe adicionada via JS (global.js) quando o espaço já está favoritado */
+.btn-favoritar-detalhe.favoritado {
+    color: #d4af37;
+}
+
+/* Fileira com os 3 cartõezinhos: Capacidade, Valor e Disponibilidade */
 .info-rapida {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -99,12 +172,14 @@
 .box ul { padding-left: 22px; }
 .box li { margin-bottom: 10px; }
 
+/* Duas colunas lado a lado: "Eventos permitidos" e "Benefícios" */
 .grid-box {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px;
 }
 
+/* Fileira dos botões "Reservar este espaço" / "Fale Conosco" no final da página */
 .acoes {
     display: flex;
     justify-content: center;
@@ -113,6 +188,7 @@
     flex-wrap: wrap;
 }
 
+/* Cabeçalho decorativo usado antes de "Sobre o espaço" (linha - losango ✦ - linha) */
 .section-title {
     display: flex;
     align-items: center;
@@ -148,6 +224,7 @@
     font-size: 1.1rem;
 }
 
+/* Seção do carrossel de avaliações (o texto muda via JS, ver mostrarAvaliacao() em detalhes.js) */
 .avaliacoes {
     margin: 80px 0;
     text-align: center;
@@ -160,6 +237,7 @@
     margin-bottom: 30px;
 }
 
+/* Caixa com a seta "❮", o texto/autor da avaliação no meio, e a seta "❯" */
 .avaliacao-card {
     display: flex;
     align-items: center;
@@ -186,6 +264,8 @@
 
 .seta:hover { transform: scale(1.2); }
 
+/* Cabeçalho mais fino/compacto especificamente nas páginas de detalhes
+   (o cabeçalho "padrão" do site é maior - aqui reduzimos tudo um pouco) */
 .header-detalhes { padding: 12px 40px; min-height: 70px; }
 .header-detalhes .logo img { width: 55px; }
 .header-detalhes .logo-text h1 { font-size: 1.4rem; }
@@ -193,7 +273,8 @@
 .header-detalhes nav a { font-size: 0.95rem; }
 .header-detalhes .btn, .header-detalhes .theme-toggle { padding: 8px 16px; font-size: 0.9rem; }
 
-/* MAPA E LOCALIZAÇÃO */
+/* MAPA E LOCALIZAÇÃO - seção com o texto do endereço de um lado e o
+   iframe do Google Maps do outro */
 .localizacao-section {
     max-width: 1400px;
     margin: 80px auto;
@@ -245,8 +326,10 @@ body.dark .localizacao-info { color: #f5f5f5; }
 body.dark .vantagem-card { background: #1b1b1b; border: 1px solid rgba(212, 175, 55, .2); }
 body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
 
+/* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
+   a ter só 1 coluna, ficando uma embaixo da outra. */
 @media(max-width:900px) {
-    .hero-detalhes, .grid-box, .info-rapida, .localizacao-section, .vantagens-grid { grid-template-columns: 1fr; }
+    .hero-detalhe, .grid-box, .info-rapida, .localizacao-section, .vantagens-grid { grid-template-columns: 1fr; }
     .hero-info h1 { font-size: 40px; }
     .localizacao-section { padding: 25px; }
     .localizacao-mapa iframe { height: 350px; }

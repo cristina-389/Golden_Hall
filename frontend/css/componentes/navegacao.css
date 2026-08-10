@@ -2,21 +2,26 @@
    GOLDEN HALL - BARRA INFERIOR, BOTÕES GLOBAIS E ELEMENTOS DE NAVEGAÇÃO
    ========================================================================== */
 
-/* BARRA INFERIOR ADAPTÁVEL DE LUXO */
+/* BARRA INFERIOR ADAPTÁVEL DE LUXO
+   Variáveis próprias da barra de navegação inferior (a que fica fixa no
+   rodapé das páginas "logadas", com os ícones de Início/Buscar/Favoritos/
+   Reservas/Perfil), uma cor pra cada tema. */
 body.dark {
     --barra-bg: #0d0d0d;
     --barra-border: rgba(255, 204, 0, 0.3);
-    --item-nav-cor: #888888;
+    --item-nav-cor: #888888;             /* cor dos ícones/textos que NÃO estão ativos */
     --item-nav-sombra: rgba(0, 0, 0, 0.8);
 }
 
 body:not(.dark) {
-    --barra-bg: #fcfbf7; 
-    --barra-border: rgba(212, 175, 55, 0.3); 
-    --item-nav-cor: #666666; 
-    --item-nav-sombra: rgba(0, 0, 0, 0.05); 
+    --barra-bg: #fcfbf7;
+    --barra-border: rgba(212, 175, 55, 0.3);
+    --item-nav-cor: #666666;
+    --item-nav-sombra: rgba(0, 0, 0, 0.05);
 }
 
+/* A barra em si: fica fixa colada no rodapé da tela (position: fixed +
+   bottom: 0), por cima de todo o resto do conteúdo (z-index alto) */
 .barra-navegacao-inferior {
     position: fixed;
     bottom: 0;
@@ -35,13 +40,14 @@ body:not(.dark) {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Cada item da barra (ícone + texto pequeno embaixo, ex: "Início", "Buscar") */
 .item-nav {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: var(--item-nav-cor); 
+    color: var(--item-nav-cor);
     font-family: 'Poppins', sans-serif;
     font-size: 11px;
     transition: all 0.3s ease;
@@ -49,13 +55,15 @@ body:not(.dark) {
 }
 
 .item-nav .icone {
-    font-size: 22px; 
-    color: inherit;  
+    font-size: 22px;
+    color: inherit; /* o ícone herda a cor do .item-nav (cinza normal ou dourado quando ativo) */
     transition: transform 0.3s ease;
 }
 
+/* Quando o item é o da página atual (classe "ativo", definida no HTML) ou
+   está com o mouse por cima: vira dourado e o ícone sobe um pouquinho */
 .item-nav.ativo, .item-nav:hover {
-    color: #d4af37; 
+    color: #d4af37;
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
@@ -63,7 +71,8 @@ body:not(.dark) {
     transform: translateY(-2px);
 }
 
-/* BOTÕES REUTILIZÁVEIS */
+/* BOTÕES REUTILIZÁVEIS - classes genéricas (.btn, .btn-outline, .btn-gold)
+   usadas em vários lugares do site, não só na navegação */
 .btn {
     padding: 12px 28px;
     border-radius: 10px;
@@ -106,6 +115,7 @@ body:not(.dark) {
     box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); 
 }
 
+/* Botão redondo de sol/lua que troca o tema (onclick="toggleTheme()" no global.js) */
 .theme-toggle {
     width: 55px;
     height: 55px;
@@ -118,9 +128,10 @@ body:not(.dark) {
 }
 
 .theme-toggle:hover {
-    transform: rotate(180deg);
+    transform: rotate(180deg); /* gira o ícone ao passar o mouse, só um efeito visual */
 }
 
+/* Versão menor do botão de tema, usada no cabeçalho das páginas "logadas" */
 .btn-darkmode-toggle {
     background: none;
     border: 1px solid rgba(255, 204, 0, 0.3);

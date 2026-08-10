@@ -1,3 +1,8 @@
+<!--
+  GOLDEN HALL - PÁGINA DE DETALHES: JARDIM DAS FLORES
+  Mesma estrutura das outras 5 páginas em paginas/detalhes/ (ver comentário
+  no topo de css/paginas/detalhe.css).
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -73,6 +78,14 @@
             </div>
 
             <div class="hero-foto">
+
+                <button id="btn-favoritar-detalhe" class="btn-favoritar-detalhe" title="Adicionar aos favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <button class="btn-galeria-detalhe" onclick="abrirModalGaleria()" title="Ver todas as fotos">
+                    <i class="bi bi-images"></i> Ver fotos
+                </button>
 
                 <img 
                 src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop" alt="Jardim das Flores">
@@ -233,6 +246,8 @@
 
         <section class="avaliacoes">
 
+            <!-- O texto/autor aqui dentro é preenchido e trocado via JS - ver
+                 bancoAvaliacoes em detalhes.js -->
             <h2>Avaliações dos Clientes</h2>
         
             <div class="avaliacao-card">
@@ -278,6 +293,7 @@
 
     </main>
 
+    <!-- Gavetas onde o modais.js injeta o HTML dos modais via fetch() -->
     <!--=======Cadrastro==========-->
   <div id="container-modal-cadastro"></div>
   <div id="container-modal-login"></div>
@@ -285,6 +301,7 @@
     <!--=========reserva e agenda=========-->
     <div id="container-modal-agenda"></div>
     <div id="container-modal-reserva"></div>
+    <div id="container-modal-galeria"></div>
 
     <script src="/frontend/js/global.js"></script>
     <script src="/frontend/js/modais.js"></script>

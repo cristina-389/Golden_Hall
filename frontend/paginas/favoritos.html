@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Meus Favoritos</title>
+
+    <!-- FONTES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- ÍCONES (Bootstrap Icons + Material Icons, mesmo padrão das outras páginas) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- CSS: o style.css traz as variáveis globais/tema, o favoritos.css é só desta página -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/paginas/favoritos.css">
+</head>
+<body class="logado-layout dark">
+
+    <main class="page-content-favoritos">
+
+        <!-- ================= BANNER COM FOTO DE FUNDO =================
+             Mesmo padrão do banner-reservas em reservas.html:
+             foto full-bleed (ocupa a tela toda) + camada escura/clara por cima (.overlay-favoritos)
+             para o texto continuar legível em qualquer tema. -->
+        <section class="banner-favoritos">
+
+            <!-- Camada de escurecimento/clareamento sobre a foto (cor muda via CSS conforme o tema) -->
+            <div class="overlay-favoritos"></div>
+
+            <!-- Conteúdo que fica por cima da foto (z-index maior que a overlay) -->
+            <div class="conteudo-favoritos-banner">
+
+                <!-- Título + linha decorativa dourada + subtítulo -->
+                <section class="cabecalho-favoritos">
+                    <h2>Meus Espaços Favoritos</h2>
+                    <div class="linha-elegante"><span>✦</span></div>
+                    <p class="section-subtitle">Seus lugares preferidos estão guardados para você encontrar quando quiser.</p>
+                </section>
+
+                <!-- ============ ESTADO VAZIO (coração + texto + botão) ============
+                     Fica ESCONDIDO por padrão (style="display:none").
+                     O favoritos.js decide se mostra ou esconde isso,
+                     dependendo se existe algum favorito salvo no localStorage. -->
+                <div id="favoritos-vazio-hero" class="favoritos-vazio-hero" style="display:none;">
+
+                    <!-- Ícone de coração com ramos de louro, feito em SVG puro (não precisa de imagem externa) -->
+                    <svg viewBox="0 0 220 220" class="icone-favoritos-vazio" xmlns="http://www.w3.org/2000/svg">
+                        <!-- círculo dourado ao redor -->
+                        <circle cx="110" cy="95" r="72" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <!-- o coração no meio -->
+                        <path d="M110 130 C 95 115, 75 105, 75 85 C 75 72, 85 63, 97 63 C 103 63, 108 66, 110 71 C 112 66, 117 63, 123 63 C 135 63, 145 72, 145 85 C 145 105, 125 115, 110 130 Z" fill="currentColor"/>
+                        <!-- ramo de louro do lado esquerdo -->
+                        <g fill="currentColor">
+                            <path d="M60 150 C 50 140, 45 125, 48 110" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                            <ellipse cx="49" cy="112" rx="6" ry="3" transform="rotate(-40 49 112)"/>
+                            <ellipse cx="47" cy="124" rx="6" ry="3" transform="rotate(-20 47 124)"/>
+                            <ellipse cx="50" cy="136" rx="6" ry="3" transform="rotate(0 50 136)"/>
+                            <ellipse cx="57" cy="146" rx="6" ry="3" transform="rotate(25 57 146)"/>
+                        </g>
+                        <!-- ramo de louro do lado direito (espelhado) -->
+                        <g fill="currentColor">
+                            <path d="M160 150 C 170 140, 175 125, 172 110" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                            <ellipse cx="171" cy="112" rx="6" ry="3" transform="rotate(40 171 112)"/>
+                            <ellipse cx="173" cy="124" rx="6" ry="3" transform="rotate(20 173 124)"/>
+                            <ellipse cx="170" cy="136" rx="6" ry="3" transform="rotate(0 170 136)"/>
+                            <ellipse cx="163" cy="146" rx="6" ry="3" transform="rotate(-25 163 146)"/>
+                        </g>
+                    </svg>
+
+                    <h3>Sua lista de favoritos ainda está vazia.</h3>
+                    <p class="desc">Descubra espaços incríveis e adicione aqueles que combinam com a celebração dos seus sonhos.</p>
+
+                    <!-- Manda a pessoa direto pra página de busca -->
+                    <a href="buscar.html" class="btn-explorar-favoritos"><i class="bi bi-stars"></i> Explorar Espaços</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= ÁREA ABAIXO DO BANNER =================
+             Aqui dentro (#lista-favoritos) o favoritos.js coloca:
+             - os 4 cards de "benefícios" (quando a lista está vazia), OU
+             - os cards de verdade dos espaços favoritados (quando tem algum) -->
+        <section class="container-favoritos">
+            <div class="grid-favoritos" id="lista-favoritos">
+                <!-- Preenchido via JS (favoritos.js) -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= BARRA DE NAVEGAÇÃO INFERIOR =================
+         Igual em todas as páginas logadas, só muda qual link tem a classe "ativo" -->
+    <nav class="barra-navegacao-inferior">
+        <a href="../index-logado.html" class="item-nav">
+            <span class="material-icons-round icone">home</span>
+            <span class="texto">Início</span>
+        </a>
+        <a href="buscar.html" class="item-nav">
+            <span class="material-icons-round icone">search</span>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="favoritos.html" class="item-nav ativo">
+            <span class="material-icons-round icone">favorite</span>
+            <span class="texto">Favoritos</span>
+        </a>
+        <a href="reservas.html" class="item-nav">
+            <span class="material-icons-round icone">calendar_month</span>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="perfil.html" class="item-nav">
+            <span class="material-icons-round icone">person</span>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <!-- global.js precisa vir ANTES do favoritos.js, porque é lá que ficam
+         as funções obterFavoritos(), salvarFavoritos() etc. que o favoritos.js usa -->
+    <script src="../js/global.js"></script>
+    <script src="../js/paginas/favoritos.js"></script>
+</body>
+</html>

@@ -1,19 +1,27 @@
 /* ==========================================================================
    GOLDEN HALL - VARIÁVEIS, RESET E CONFIGURAÇÕES GLOBAIS
+   Este arquivo é importado no style.css (que é quem toda página carrega),
+   então tudo aqui vale para o site inteiro. Define as variáveis de cor de
+   cada tema e um reset básico de CSS.
    ========================================================================== */
 
-   :root {
-    --bg: #f5f5f5;
-    --bg-secondary: #ffffff;
-    --text: #111111;
-    --text-light: #444444;
-    --gold: #d4a437;
-    --gold-light: #f5d26a;
+/* Variáveis de cor do TEMA CLARO (valores padrão, usados quando o <body>
+   NÃO tem a classe "dark"). São usadas em todo o site como var(--nome). */
+:root {
+    --bg: #f5f5f5;              /* cor de fundo da página */
+    --bg-secondary: #ffffff;    /* cor de fundo de cards/caixas sobre o fundo principal */
+    --text: #111111;            /* cor do texto principal */
+    --text-light: #444444;      /* cor de texto secundário (descrições, legendas) */
+    --gold: #d4a437;            /* dourado principal da identidade visual */
+    --gold-light: #f5d26a;      /* dourado mais claro, usado em gradientes */
     --border: rgba(0, 0, 0, 0.1);
     --shadow: rgba(0, 0, 0, 0.08);
 }
 
-/* TEMA ESCURO */
+/* TEMA ESCURO: quando o JS (global.js) adiciona a classe "dark" no <body>,
+   essas variáveis substituem as de cima automaticamente - por isso o resto
+   do CSS do site pode sempre usar var(--bg), var(--text) etc. sem precisar
+   se preocupar em qual tema está ativo. */
 body.dark {
     --bg: #050505;
     --bg-secondary: #0c0c0c;
@@ -21,8 +29,11 @@ body.dark {
     --text-light: #c9c9c9;
     --border: rgba(255, 215, 0, 0.15);
     --shadow: rgba(255, 215, 0, 0.10);
-}  
+}
 
+/* Reset básico: zera margem/espaçamento padrão do navegador em todos os
+   elementos e faz padding/border contarem DENTRO da largura definida
+   (box-sizing: border-box), pra medidas de largura/altura ficarem previsíveis */
 * {
     margin: 0;
     padding: 0;
@@ -33,16 +44,17 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Poppins', sans-serif;
-    transition: 0.4s;
-    overflow-x: hidden;
+    transition: 0.4s; /* anima a troca de cores ao alternar entre tema claro/escuro */
+    overflow-x: hidden; /* evita barra de rolagem horizontal por acidente */
 }
 
 a {
-    text-decoration: none;
-    color: var(--text);
+    text-decoration: none; /* tira o sublinhado padrão dos links */
+    color: var(--text);    /* links usam a cor do texto normal, não o azul padrão do navegador */
 }
 
-/* Utilitários Comuns de Animação */
+/* Utilitários Comuns de Animação: efeito de "aparecer suavemente subindo",
+   usado em elementos com "animation: fadeIn ..." (ex: .secao-perfil) */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }

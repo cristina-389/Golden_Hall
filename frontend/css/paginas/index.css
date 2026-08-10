@@ -1,8 +1,13 @@
 /* ==========================================================================
    GOLDEN HALL - ELEMENTOS EXCLUSIVOS DA PÁGINA HOME (VISITANTES)
+   Usado por index.html, a página inicial pública (de quem ainda não fez
+   login) - cabeçalho com "Entrar"/"Criar conta", seção de hero, cards dos
+   espaços em destaque e o rodapé.
    ========================================================================== */
 
-   header {
+/* Cabeçalho do topo: logo de um lado, menu e botões do outro. Fica fixo
+   (sticky) no topo da tela mesmo rolando a página. */
+header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -13,7 +18,7 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-}  
+}
 
 .logo {
     display: flex;
@@ -48,6 +53,7 @@ nav a {
     position: relative;
 }
 
+/* Sublinhado dourado embaixo do link do menu que está na página atual */
 nav a.active::after {
     content: "";
     width: 100%;
@@ -64,7 +70,8 @@ nav a.active::after {
     gap: 15px;
 }
 
-/* HERO SECTION */
+/* HERO SECTION: primeira seção grande da home, com o título de impacto de
+   um lado e uma foto grande do outro */
 .hero {
     width: 100%;
     display: flex;
@@ -149,6 +156,10 @@ nav a.active::after {
     line-height: 1.6;
 }
 
+/* Elemento decorativo: uma "onda" dourada feita só com CSS. O truque é um
+   círculo bem maior que o container (200% de largura), com metade dele
+   escondida (overflow: hidden) e só a borda de cima visível - o que sobra
+   parece uma curva suave. */
 .wave {
     width: 100%;
     height: 120px;
@@ -166,7 +177,7 @@ nav a.active::after {
     left: -50%;
     top: 30px;
 }
-    
+
 /* SEÇÃO DE PROCURA */
 .search-section {
     max-width: 1400px;
@@ -191,7 +202,8 @@ nav a.active::after {
     line-height: 1.6;
 }
   
-/* GRID DE SALÕES EXPOSTOS */
+/* GRID DE SALÕES EXPOSTOS: os cards de espaço em destaque na home
+   (Salão Golden Luxo, Chácara Golden, etc.) */
 .cards {
     max-width: 1400px;
     margin: 50px auto;
@@ -273,39 +285,43 @@ footer {
     justify-content: space-around;
 }
 
+/* Container de texto genérico, usado nas páginas simples de conteúdo
+   (como-funciona.html, duvidas.html) */
 .page-content {
     max-width: 1100px;
     margin: 80px auto;
     padding: 0 40px;
 }
-  
+
 .page-content h2 {
     font-family: "Cinzel", serif;
     font-size: 48px;
     color: var(--gold);
     margin-bottom: 30px;
 }
-  
+
 .page-content p,
 .page-content li {
     font-size: 18px;
     line-height: 1.8;
     color: var(--text-light);
 }
-  
+
 .page-content ul,
 .page-content ol {
     margin-left: 30px;
 }
 
-/* RESPONSIVIDADE DA HOME */
+/* RESPONSIVIDADE DA HOME: em telas médias (tablet) o hero vira 1 coluna
+   só, e em telas pequenas (celular) os espaçamentos diminuem e os cards
+   de espaço passam de várias colunas pra 2 e depois pra 1 */
 @media(max-width:1100px) {
     .hero { flex-direction: column; }
     .hero-text, .hero-image { width: 100%; }
     .hero-text h2 { font-size: 52px; }
     header { flex-direction: column; gap: 20px; }
 }
-  
+
 @media(max-width:700px) {
     header, .hero, .search-section, .info { padding: 20px; }
     .hero-text h2 { font-size: 40px; }

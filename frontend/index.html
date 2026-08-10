@@ -1,3 +1,10 @@
+<!--
+  GOLDEN HALL - PÁGINA INICIAL (PARA VISITANTES, SEM LOGIN)
+  Esta é a "porta de entrada" do site: quem ainda não criou conta ou não
+  fez login cai aqui. Depois de entrar/cadastrar (ver js/modais.js), a
+  pessoa é redirecionada para index-logado.html, a versão com a barra de
+  navegação inferior e as páginas de buscar/favoritos/reservas/perfil.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -155,7 +162,12 @@
       Descubra salões, chácaras e espaços exclusivos para transformar o seu evento em um momento inesquecível.
     </p>
 
-    <!-- ================= CARDS ================= -->
+    <!-- ================= CARDS =================
+         Os 6 espaços em destaque da home. São conteúdo fixo (escrito direto
+         no HTML, não vem de nenhum banco de dados), cada um com link pra
+         sua própria página em paginas/detalhes/. Repare que os números de
+         capacidade e preço aqui precisam bater com os da página de detalhes
+         correspondente - são digitados à mão nos dois lugares. -->
 
     <div class="cards">
 
@@ -220,12 +232,12 @@
 
           <p>Confraternização</p>
 
-          <p>Até 200 pessoas</p>
+          <p>Até 500 pessoas</p>
 
-          <div class="price">R$ 2.000</div>
+          <div class="price">R$ 4.000</div>
 
           <button>
-            <a href="../frontend/paginas/detalhes/espaco-premiul.html">Ver detalhes</a>
+            <a href="../frontend/paginas/detalhes/espaco-premium.html">Ver detalhes</a>
           </button>
 
         </div>
@@ -315,10 +327,13 @@
     <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
   </footer>
 
-  <!--=======Cadrastro==========-->
+  <!-- Divs vazias que servem de "gaveta": js/modais.js busca o HTML de
+       cadastro-modal.html / login-modal.html e injeta aqui dentro quando
+       o botão "Criar conta" / "Entrar" é clicado (ver função abrirModal()
+       e abrirModalLogin() em modais.js) -->
   <div id="container-modal-cadastro"></div>
   <div id="container-modal-login"></div>
-  
+
   <!-- JS -->
   <script src="js/global.js"></script>
   <script src="js/modais.js"></script>

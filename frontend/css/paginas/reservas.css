@@ -1,20 +1,24 @@
 /* ==========================================================================
    GOLDEN HALL - DESIGN ADAPTÁVEL E LUXUOSO PARA A PÁGINA DE RESERVAS
+   Usado por reservas.html ("Minhas Reservas"). Os cards desta página são
+   desenhados dinamicamente pelo JS (carregarMinhasReservas() em
+   js/paginas/reservas.js) a partir do que está salvo no localStorage.
    ========================================================================== */
 
-
-   /* --------------------------------------------------
+/* --------------------------------------------------
    1. BANNER SUPERIOR EM TELA CHEIA (TOPO COMPLETO)
    -------------------------------------------------- */
-   /* Zerar qualquer margem superior da página para o banner colar no topo */
-    body.logado-layout,
-    main.page-content {
+/* Zera qualquer margem superior da página para o banner colar no topo */
+body.logado-layout,
+main.page-content {
     padding-top: 0 !important;
     margin-top: 0 !important;
 }
 
-    /* Banner Imponente de Ponta a Ponta */
-    .banner-reservas {
+/* Banner "full-bleed": mesmo truque usado em .banner-favoritos (favoritos.css)
+   - 100vw de largura + margens negativas de -50vw fazem a foto ocupar a
+   tela toda, mesmo dentro de um container mais estreito */
+.banner-reservas {
     position: relative;
     width: 100vw; /* Ocupa 100% da largura da tela */
     left: 50%;
@@ -53,15 +57,6 @@ body.dark .overlay-banner {
     z-index: 2;
     max-width: 800px;
     margin: 0 auto;
-}
-
-/* Ajuste no Container abaixo do Banner */
-.container-principal-reservas {
-    max-width: 1100px;
-    margin: -40px auto 100px auto; /* Sobe os cards para sobrepor levemente o banner */
-    padding: 0 20px;
-    position: relative;
-    z-index: 3;
 }
 
 .badge-gold {
@@ -109,6 +104,8 @@ body.dark .conteudo-banner p {
 /* --------------------------------------------------
    2. CONTAINER PRINCIPAL E CARD ESTATÍSTICAS
    -------------------------------------------------- */
+/* Container abaixo do banner - a margem negativa "sobe" os cards para
+   sobrepor levemente o banner */
 .container-principal-reservas {
     max-width: 1100px;
     margin: -30px auto 100px auto;
@@ -117,6 +114,7 @@ body.dark .conteudo-banner p {
     z-index: 3;
 }
 
+/* Fileira dos 3 cartõezinhos: Total, Pendentes, Aprovadas */
 .estatisticas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -234,6 +232,8 @@ body.dark .secao-titulo-grid h3 {
 
 /* --------------------------------------------------
    4. GRID DE CARDS DE RESERVAS (TEMA CLEAR / DARK)
+   Cada ".card-reserva" aqui é criado dinamicamente pelo JS, um para cada
+   reserva salva no localStorage (ver carregarMinhasReservas() em reservas.js)
    -------------------------------------------------- */
 .grid-reservas {
     display: grid;

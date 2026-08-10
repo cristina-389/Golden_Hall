@@ -1,5 +1,9 @@
 /* ==========================================================================
-   GOLDEN HALL - DESIGN ADAPTÁVEL (DARK / LIGHT)
+   GOLDEN HALL - PÁGINA DE BUSCA (buscar.html)
+   CSS exclusivo da tela de busca de espaços: caixa de pesquisa, painel de
+   filtros avançados, os cards de resultado e o alerta de "não encontrou".
+   Muitas regras usam !important porque sobrescrevem estilos genéricos
+   (como .card e .btn-buscar-principal) definidos em outros CSS globais.
    ========================================================================== */
 
 /* Container Principal Centralizado */
@@ -350,6 +354,40 @@ body:not(.dark) .alerta-vazio-texto h3 { color: #111111; }
 }
 .btn-nova-busca:hover {
     background: #b0871e;
+}
+
+/* --- BOTÃO DE FAVORITAR (coração) NO CANTO DOS CARDS DE RESULTADO --- */
+.resultados-busca .card {
+    position: relative;
+}
+
+.resultados-busca .btn-favoritar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.resultados-busca .btn-favoritar:hover {
+    background: #d4af37;
+    color: #111111;
+    transform: scale(1.1);
+}
+
+.resultados-busca .btn-favoritar.favoritado {
+    color: #d4af37;
 }
 
 /* Opcional: faz o X interagir dinamicamente */

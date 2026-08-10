@@ -1,3 +1,9 @@
+<!--
+  GOLDEN HALL - PÁGINA INICIAL DE QUEM JÁ ESTÁ LOGADO
+  É basicamente a mesma index.html, mas sem os botões de "Entrar"/"Criar
+  conta" (troca por "Sair") e com a barra de navegação inferior (Início/
+  Buscar/Favoritos/Reservas/Perfil) no lugar do menu de topo.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -133,8 +139,6 @@
 
   <div class="wave"></div>
 
-</section>
-
 <nav class="barra-navegacao-inferior">
     <a href="#inicio" class="item-nav ativo">
         <span class="material-icons-round icone">home</span>
@@ -144,7 +148,7 @@
         <span class="material-icons-round icone">search</span>
         <span class="texto">Buscar</span>
     </a>
-    <a href="#favoritos" class="item-nav">
+    <a href="../frontend/paginas/favoritos.html" class="item-nav">
         <span class="material-icons-round icone">favorite</span>
         <span class="texto">Favoritos</span>
     </a>
@@ -158,10 +162,11 @@
     </a>
 </nav>
 
-  <!--=======Cadrastro==========-->
+  <!-- Gavetas onde o modais.js injeta o HTML de cadastro/login quando
+       necessário (mesma lógica explicada na index.html) -->
   <div id="container-modal-cadastro"></div>
   <div id="container-modal-login"></div>
-  
+
   <!-- JS -->
   <script src="js/global.js"></script>
 

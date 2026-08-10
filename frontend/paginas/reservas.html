@@ -1,3 +1,10 @@
+<!--
+  GOLDEN HALL - PÁGINA "MINHAS RESERVAS" (paginas/reservas.html)
+  Os números das estatísticas (Total/Pendentes/Aprovadas) e a lista de
+  cards dentro de #lista-reservas começam vazios/zerados no HTML - é o
+  js/paginas/reservas.js que lê o localStorage e preenche tudo isso assim
+  que a página carrega.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -59,6 +66,9 @@
                 <a href="buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
             </div>
 
+            <!-- Preenchida via JS (carregarMinhasReservas() em reservas.js) com
+                 um .card-reserva para cada reserva salva, ou com a mensagem de
+                 "nenhuma reserva ainda" quando a lista estiver vazia -->
             <div id="lista-reservas" class="grid-reservas">
                 </div>
 
@@ -74,7 +84,7 @@
             <span class="material-icons-round icone">search</span>
             <span class="texto">Buscar</span>
         </a>
-        <a href="#favoritos" class="item-nav">
+        <a href="favoritos.html" class="item-nav">
             <span class="material-icons-round icone">favorite</span>
             <span class="texto">Favoritos</span>
         </a>

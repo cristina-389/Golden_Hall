@@ -1,5 +1,14 @@
+/* ==========================================================================
+   GOLDEN HALL - PÁGINA "MINHAS RESERVAS"
+   Lê as reservas salvas no localStorage (chave "gh_reservas", a mesma usada
+   em modais.js ao confirmar uma solicitação) e desenha um card para cada
+   uma, junto com as regras de cancelamento (grátis ou com multa).
+   ========================================================================== */
+
+// Assim que a página carrega, já busca e desenha as reservas salvas
 document.addEventListener('DOMContentLoaded', carregarMinhasReservas);
 
+// Monta a lista de cards de reserva na tela (ou a mensagem de "nenhuma reserva ainda")
 function carregarMinhasReservas() {
     const container = document.getElementById('lista-reservas');
     if (!container) return;
@@ -60,6 +69,8 @@ function carregarMinhasReservas() {
     });
 }
 
+// Preenche os números do painel no topo da página (total de reservas,
+// quantas estão pendentes e quantas já foram aprovadas)
 function atualizarEstatisticas(reservas) {
     const totalEl = document.getElementById('stat-total');
     const pendentesEl = document.getElementById('stat-pendentes');
@@ -82,6 +93,9 @@ const REGRAS_CANCELAMENTO = {
     PORCENTAGEM_MULTA: 30  // Porcentagem da taxa cobrada após o prazo
 };
 
+// Botão "Cancelar Reserva" de um card: calcula quantos dias faltam pro
+// evento, avisa se vai ter multa ou não, e só remove a reserva do
+// localStorage se a pessoa confirmar no alerta.
 function cancelarReserva(idReserva) {
     let reservas = JSON.parse(localStorage.getItem('gh_reservas')) || [];
     const reserva = reservas.find(r => r.id === idReserva);
@@ -140,6 +154,8 @@ Deseja confirmar o cancelamento e gerar a taxa de multa?`;
     }
 }
 
+// Converte a data do formato guardado no localStorage (AAAA-MM-DD, o padrão
+// de <input type="date">) para o formato brasileiro DD/MM/AAAA, só pra exibição
 function formatarData(dataISO) {
     if (!dataISO) return '-';
     const partes = dataISO.split('-');

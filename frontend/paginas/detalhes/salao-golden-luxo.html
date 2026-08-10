@@ -1,3 +1,10 @@
+<!--
+  GOLDEN HALL - PÁGINA DE DETALHES: SALÃO GOLDEN LUXO
+  Mesma estrutura das outras 5 páginas em paginas/detalhes/ (ver comentário
+  no topo de css/paginas/detalhe.css). O data-espaco="salao-golden-luxo" no
+  <body> identifica este espaço pro JS (avaliações, agenda de reservas e
+  favoritos).
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -75,6 +82,14 @@
             </div>
 
             <div class="hero-foto">
+
+                <button id="btn-favoritar-detalhe" class="btn-favoritar-detalhe" title="Adicionar aos favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <button class="btn-galeria-detalhe" onclick="abrirModalGaleria()" title="Ver todas as fotos">
+                    <i class="bi bi-images"></i> Ver fotos
+                </button>
 
                 <img 
                 src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop">
@@ -238,6 +253,8 @@
         
         </section>
         
+        <!-- O texto/autor aqui dentro é preenchido e trocado via JS - ver
+             bancoAvaliacoes em detalhes.js -->
         <section class="avaliacoes">
 
             <h2>Avaliações dos Clientes</h2>
@@ -284,6 +301,7 @@
 
     </main>
 
+    <!-- Gavetas onde o modais.js injeta o HTML dos modais via fetch() -->
     <!--=======Cadrastro==========-->
   <div id="container-modal-cadastro"></div>
   <div id="container-modal-login"></div>
@@ -291,6 +309,7 @@
     <!--=========reserva e agenda=========-->
     <div id="container-modal-agenda"></div>
     <div id="container-modal-reserva"></div>
+    <div id="container-modal-galeria"></div>
 
     <script src="/frontend/js/global.js"></script>
     <script src="/frontend/js/modais.js"></script>

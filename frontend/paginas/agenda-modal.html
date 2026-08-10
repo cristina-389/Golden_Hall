@@ -1,26 +1,36 @@
+<!--
+  GOLDEN HALL - FRAGMENTO DO MODAL DE AGENDA (CALENDÁRIO)
+  Carregado via fetch() por abrirModalAgenda() (js/modais.js) e injetado em
+  #container-modal-agenda, nas páginas de detalhes. O título do mês
+  (#mes-ano-atual) e os dias (#grid-dias-mes) são preenchidos pela função
+  gerarCalendario() do mesmo modais.js - aqui só existe a "moldura" vazia.
+-->
 <div id="modal-agenda" class="modal-overlay">
     <div class="modal-box">
       <button class="fechar-modal" onclick="fecharModalAgenda()">&times;</button>
-  
+
       <h2>Disponibilidade do Espaço</h2>
       <div class="linha-dourada-form"></div>
       <p class="subtitulo-form">Dias em dourado estão disponíveis para reserva.</p>
-  
+
       <div class="legenda-agenda">
         <span class="item-legenda"><i class="cor-livre"></i> Livre</span>
         <span class="item-legenda"><i class="cor-ocupado"></i> Ocupado</span>
       </div>
-  
+
+      <!-- Botões ❮ ❯ chamam mudarMes(-1)/mudarMes(1) pra trocar de mês -->
       <div class="agenda-header">
         <button type="button" onclick="mudarMes(-1)">❮</button>
         <h3 id="mes-ano-atual">Carregando...</h3>
         <button type="button" onclick="mudarMes(1)">❯</button>
       </div>
-  
+
+      <!-- Cabeçalho fixo com os nomes dos dias da semana -->
       <div class="grid-dias-semana">
         <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
       </div>
-  
+
+      <!-- Preenchida via JS: uma célula .dia-celula para cada dia do mês -->
       <div id="grid-dias-mes" class="grid-dias-mes"></div>
     </div>
   </div>

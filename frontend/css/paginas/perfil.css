@@ -1,21 +1,24 @@
 /* ==========================================================================
    GOLDEN HALL - DESIGN PREMIUM DA PÁGINA DE PERFIL E AJUSTES DO CLIENTE
+   Usado por perfil.html. A "animation: fadeIn" do container principal usa
+   o @keyframes fadeIn definido em componentes/global.css.
    ========================================================================== */
 
-   .secao-perfil {
+.secao-perfil {
     max-width: 1100px;
-    margin: 80px auto 40px; 
+    margin: 80px auto 40px;
     padding: 20px;
-    animation: fadeIn 0.8s ease;
+    animation: fadeIn 0.8s ease; /* efeito de entrada suave ao carregar a página */
 }
 
+/* Topo: foto de perfil redonda, nome e selo de status (ex: "Cliente VIP") */
 .perfil-header {
     text-align: center;
     margin-bottom: 50px;
 }
 
 .avatar-container {
-    position: relative;
+    position: relative; /* pro botão de editar foto (abaixo) poder ficar posicionado em cima da foto */
     width: 150px;
     height: 150px;
     margin: 0 auto 20px;
@@ -62,6 +65,8 @@
     border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
+/* Grade de cartões abaixo do cabeçalho (Dados pessoais, Programa de
+   fidelidade, etc.) - quantas colunas cabem, cada uma com no mínimo 320px */
 .perfil-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -126,6 +131,9 @@
     color: #000;
 }
 
+/* Barra de progresso do "Programa de fidelidade" (ex: rumo ao próximo
+   nível VIP). .progresso-preenchido é a parte colorida por dentro, cuja
+   largura o HTML/JS ajusta com um "style width: X%" pra indicar o progresso. */
 .barra-progresso {
     background: rgba(255, 255, 255, 0.1);
     height: 8px;
@@ -171,7 +179,10 @@
     font-size: 15px;
 }
 
-/* ==================== CALIBRAÇÃO DE TEMAS (PERFIL) ==================== */
+/* ==================== CALIBRAÇÃO DE TEMAS (PERFIL) ====================
+   Ajustes finos de cor específicos desta página para cada tema (os cards
+   e textos usam cores diferentes das variáveis padrão pra melhorar o
+   contraste no tema claro). */
 
 /* TEMA ESCURO (Mantém as cores elegantes) */
 body.dark .perfil-card {
