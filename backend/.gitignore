@@ -1,0 +1,3 @@
+node_modules/
+database/golden_hall.db
+.env
