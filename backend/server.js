@@ -13,6 +13,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const path = require('node:path');
 
 // Só de dar require aqui, o código de database/db.js já roda e garante que
 // o arquivo golden_hall.db e as tabelas existem
@@ -33,6 +34,22 @@ app.use(cors());
 // cadastro), o Express não saberia ler - com isso, tudo que chegar em JSON
 // vira automaticamente um objeto JavaScript em "req.body"
 app.use(express.json());
+
+// --------------------------------------------------------------------------
+// SERVE OS ARQUIVOS DO FRONT-END
+// Em vez de precisar de um segundo servidor só pra abrir o site, o próprio
+// Express entrega os arquivos de frontend/ quando alguém acessa
+// "/frontend/...". Assim tudo (site + API) vive no mesmo endereço
+// (http://localhost:3000), sem CORS de verdade envolvido, e os caminhos
+// tipo "/frontend/js/global.js" que já existem no HTML continuam funcionando
+// (só o "backend/" nunca é exposto, porque só a pasta frontend/ é servida).
+// --------------------------------------------------------------------------
+app.use('/frontend', express.static(path.join(__dirname, '..', 'frontend')));
+
+// Quem acessar só "http://localhost:3000/" cai direto na home do site
+app.get('/', (req, res) => {
+    res.redirect('/frontend/index.html');
+});
 
 // --------------------------------------------------------------------------
 // ROTA DE TESTE
@@ -59,6 +76,11 @@ app.use('/api', require('./routes/espacos'));
 // ROTAS DE RESERVAS (criar, listar as minhas, cancelar, ver datas ocupadas)
 // --------------------------------------------------------------------------
 app.use('/api', require('./routes/reservas'));
+
+// --------------------------------------------------------------------------
+// ROTAS DE FAVORITOS (listar e alternar favorito/desfavoritar)
+// --------------------------------------------------------------------------
+app.use('/api', require('./routes/favoritos'));
 
 // --------------------------------------------------------------------------
 // LIGA O SERVIDOR

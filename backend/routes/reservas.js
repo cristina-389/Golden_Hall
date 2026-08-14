@@ -8,7 +8,7 @@
 
 const express = require('express');
 const db = require('../database/db');
-const { autenticar } = require('../middlewares/autenticacao');
+const { autenticar, exigirDono } = require('../middlewares/autenticacao');
 
 const router = express.Router();
 
@@ -118,6 +118,42 @@ router.delete('/reservas/:id', autenticar, (req, res) => {
 
     db.prepare('DELETE FROM reservas WHERE id = ?').run(req.params.id);
     res.status(204).send();
+});
+
+// --------------------------------------------------------------------------
+// PUT /api/reservas/:id/status - o DONO do espaço aprova (ou recusa) uma
+// reserva recebida. Body: { status } ("Aprovado" ou "Cancelado")
+// --------------------------------------------------------------------------
+router.put('/reservas/:id/status', autenticar, exigirDono, (req, res) => {
+    const { status } = req.body;
+
+    if (!['Aprovado', 'Cancelado'].includes(status)) {
+        return res.status(400).json({ erro: 'Status inválido.' });
+    }
+
+    // JOIN com espacos pra conferir de quem é o espaço dessa reserva -
+    // só o dono DAQUELE espaço específico pode aprovar/recusar
+    const reserva = db
+        .prepare(`
+            SELECT reservas.*, espacos.dono_id
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE reservas.id = ?
+        `)
+        .get(req.params.id);
+
+    if (!reserva) {
+        return res.status(404).json({ erro: 'Reserva não encontrada.' });
+    }
+
+    if (reserva.dono_id !== req.usuario.id) {
+        return res.status(403).json({ erro: 'Você só pode gerenciar reservas dos seus próprios espaços.' });
+    }
+
+    db.prepare('UPDATE reservas SET status = ? WHERE id = ?').run(status, req.params.id);
+
+    const reservaAtualizada = db.prepare('SELECT * FROM reservas WHERE id = ?').get(req.params.id);
+    res.json(reservaAtualizada);
 });
 
 module.exports = router;

@@ -79,6 +79,40 @@ router.get('/meus-espacos', autenticar, exigirDono, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
+// GET /api/espacos/:id/reservas - lista as reservas recebidas NESTE espaço
+// (o painel do dono usa isso pra mostrar quem quer reservar cada espaço dele)
+// --------------------------------------------------------------------------
+router.get('/espacos/:id/reservas', autenticar, exigirDono, (req, res) => {
+    const espaco = db.prepare('SELECT * FROM espacos WHERE id = ?').get(req.params.id);
+
+    if (!espaco) {
+        return res.status(404).json({ erro: 'Espaço não encontrado.' });
+    }
+
+    // Mesma checagem de autorização usada no PUT/DELETE: só o dono DESTE
+    // espaço específico pode ver as reservas dele
+    if (espaco.dono_id !== req.usuario.id) {
+        return res.status(403).json({ erro: 'Você só pode ver reservas dos seus próprios espaços.' });
+    }
+
+    // JOIN com usuarios pra trazer o nome/telefone de quem fez cada reserva
+    const reservas = db
+        .prepare(`
+            SELECT
+                reservas.*,
+                usuarios.nome AS cliente_nome,
+                usuarios.email AS cliente_email
+            FROM reservas
+            JOIN usuarios ON usuarios.id = reservas.usuario_id
+            WHERE reservas.espaco_id = ?
+            ORDER BY reservas.data ASC
+        `)
+        .all(req.params.id);
+
+    res.json(reservas);
+});
+
+// --------------------------------------------------------------------------
 // POST /api/espacos - cria um espaço novo (só donos logados)
 // --------------------------------------------------------------------------
 router.post('/espacos', autenticar, exigirDono, (req, res) => {

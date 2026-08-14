@@ -53,12 +53,17 @@ function fecharModal() {
 }
 
 // Liga o evento de "enviar formulário" do modal de cadastro: confere se as
-// duas senhas digitadas são iguais e, se forem, simula a criação da conta
-// (esse projeto não tem back-end, então é só um alert + redirecionamento)
+// duas senhas digitadas são iguais e, se forem, manda os dados pra API criar
+// a conta de verdade no banco (POST /api/cadastro).
+//
+// "async function" quer dizer que essa função PODE usar "await" - ou seja,
+// pausar e esperar uma Promise (como o fetch dentro de chamarAPI) terminar
+// antes de continuar pra próxima linha, em vez de sair executando tudo de
+// uma vez sem esperar a resposta do servidor chegar.
 function adicionarValidacaoSenha() {
     const form = document.getElementById('form-cadastro');
     if (form) {
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', async function(event) {
             event.preventDefault();
             const senha = document.getElementById('senha').value;
             const confirmarSenha = document.getElementById('confirmar-senha').value;
@@ -68,15 +73,34 @@ function adicionarValidacaoSenha() {
                 return;
             }
 
-            fecharModal();
-            alert('Conta criada com sucesso no Golden Hall!');
-            
-            if (window.location.pathname.includes('/detalhes/')) {
-                window.location.href = '../../index-logado.html';
-            } else if (window.location.pathname.includes('/paginas/')) {
-                window.location.href = '../index-logado.html';
-            } else {
-                window.location.href = 'index-logado.html';
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            // Campo "Quero me cadastrar como" (cliente ou dono de espaço) - se o
+            // formulário não tiver esse campo por algum motivo, cai em "cliente"
+            const tipo = document.getElementById('cadastro-tipo-conta')?.value || 'cliente';
+
+            try {
+                // "try/catch": tenta rodar o código de dentro do try; se o
+                // chamarAPI() der erro (ex: e-mail já cadastrado), o catch
+                // pega esse erro em vez de quebrar a página inteira
+                const dados = await chamarAPI('/api/cadastro', {
+                    method: 'POST',
+                    body: JSON.stringify({ nome, email, senha, telefone, tipo })
+                });
+
+                salvarSessao(dados.usuario, dados.token);
+                fecharModal();
+
+                if (window.location.pathname.includes('/detalhes/')) {
+                    window.location.href = '../../index-logado.html';
+                } else if (window.location.pathname.includes('/paginas/')) {
+                    window.location.href = '../index-logado.html';
+                } else {
+                    window.location.href = 'index-logado.html';
+                }
+            } catch (erro) {
+                alert(erro.message);
             }
         });
     }
@@ -124,23 +148,36 @@ function fecharModalLogin() {
     if (modal) modal.classList.remove('ativo');
 }
 
-// Liga o evento de "enviar formulário" do modal de login. Como não existe
-// back-end, não valida usuário/senha de verdade: só simula o login e manda
-// a pessoa pra index-logado.html (a versão do site de quem já está logado)
+// Liga o evento de "enviar formulário" do modal de login: manda email/senha
+// pra API (POST /api/login) e só entra se ela confirmar que bate com uma
+// conta de verdade no banco.
 function adicionarLogicaLogin() {
     const form = document.getElementById('form-login');
     if (form) {
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', async function(event) {
             event.preventDefault();
-            fecharModalLogin();
-            alert('Bem-vindo de volta ao Golden Hall!');
 
-            if (window.location.pathname.includes('/detalhes/')) {
-                window.location.href = '../../index-logado.html';
-            } else if (window.location.pathname.includes('/paginas/')) {
-                window.location.href = '../index-logado.html';
-            } else {
-                window.location.href = 'index-logado.html';
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+
+            try {
+                const dados = await chamarAPI('/api/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, senha })
+                });
+
+                salvarSessao(dados.usuario, dados.token);
+                fecharModalLogin();
+
+                if (window.location.pathname.includes('/detalhes/')) {
+                    window.location.href = '../../index-logado.html';
+                } else if (window.location.pathname.includes('/paginas/')) {
+                    window.location.href = '../index-logado.html';
+                } else {
+                    window.location.href = 'index-logado.html';
+                }
+            } catch (erro) {
+                alert(erro.message);
             }
         });
     }
@@ -200,8 +237,9 @@ function mudarMes(delta) {
 
 // Monta visualmente o calendário do mês atual (dataAtualAgenda), marcando
 // em vermelho/cinza os dias que já têm reserva feita para este espaço e
-// deixando clicáveis os dias livres.
-function gerarCalendario() {
+// deixando clicáveis os dias livres. "async" porque agora busca as datas
+// ocupadas na API em vez de ler do localStorage.
+async function gerarCalendario() {
     const gridDias = document.getElementById('grid-dias-mes');
     const txtMesAno = document.getElementById('mes-ano-atual');
     if (!gridDias || !txtMesAno) return;
@@ -217,18 +255,20 @@ function gerarCalendario() {
     ];
     txtMesAno.textContent = `${nomesMeses[mes]} ${ano}`;
 
-    // Identifica de qual espaço é essa agenda pelo nome do arquivo da página atual
-    // (ex: ".../chacara-golden.html" vira "chacara-golden"). Assim cada espaço
-    // tem sua própria lista de datas ocupadas, mesmo usando o mesmo modal de agenda.
-    const espacoAtual = window.location.pathname.split('/').pop().replace('.html', '') || 'geral';
+    // O slug do espaço atual já fica salvo em document.body.dataset.espaco
+    // assim que a página de detalhes busca os dados na API (ver
+    // carregarEspaco() em detalhes.js) - usamos o mesmo valor aqui.
+    const espacoAtual = document.body.dataset.espaco;
+    if (!espacoAtual) return;
 
-    // "gh_reservas" é a chave usada no localStorage para guardar TODAS as
-    // reservas feitas no site (de todos os espaços). Aqui filtramos só as
-    // datas que pertencem a este espaço específico.
-    const reservasExistentes = JSON.parse(localStorage.getItem('gh_reservas')) || [];
-    const datasOcupadas = reservasExistentes
-        .filter(r => r.espaco === espacoAtual)
-        .map(r => r.data);
+    // Busca em GET /api/espacos/:slug/datas-ocupadas (rota pública) a lista
+    // de datas que JÁ têm reserva pra este espaço específico
+    let datasOcupadas = [];
+    try {
+        datasOcupadas = await chamarAPI(`/api/espacos/${espacoAtual}/datas-ocupadas`);
+    } catch (erro) {
+        console.error('Erro ao buscar datas ocupadas:', erro);
+    }
 
     const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // 0=domingo ... 6=sábado
     const totalDiasMes = new Date(ano, mes + 1, 0).getDate(); // truque: dia 0 do mês seguinte = último dia deste mês
@@ -274,10 +314,30 @@ function selecionarDataEReservar(dataString) {
 // 4. MODAL DE SOLICITAÇÃO DE RESERVA
 // --------------------------------------------------------------------------
 
+// Botão "Reservar este espaço": só deixa passar pra tela de reserva quem já
+// está logado (a API exige isso - ver middleware "autenticar" no back-end).
+// Quem não está logado vê um aviso e cai direto no modal de login.
+function iniciarReserva() {
+    if (!obterUsuarioLogado()) {
+        alert('Você precisa entrar (ou criar uma conta) antes de solicitar uma reserva.');
+        abrirModalLogin();
+        return;
+    }
+    abrirModalReserva();
+}
+
 // Abre o formulário de reserva. Se "dataPreSelecionada" for passada (vem do
 // clique num dia do calendário), o campo de data do formulário já nasce
-// preenchido com aquele dia.
+// preenchido com aquele dia. Mesma exigência de login do iniciarReserva()
+// acima, porque dá pra chegar aqui direto pelo calendário também.
 function abrirModalReserva(dataPreSelecionada = null) {
+    if (!obterUsuarioLogado()) {
+        fecharModalAgenda();
+        alert('Você precisa entrar (ou criar uma conta) antes de solicitar uma reserva.');
+        abrirModalLogin();
+        return;
+    }
+
     fecharModalAgenda();
 
     const container = document.getElementById('container-modal-reserva');
@@ -333,23 +393,15 @@ function fecharModalReserva() {
 // política de cancelamento) -> só quando a pessoa confirma que está ciente
 // é que a reserva é de fato gravada -> modal de sucesso.
 
-// PASSO 1: Ao clicar em "Confirmar Solicitação" no Formulário
+// PASSO 1: Ao clicar em "Confirmar Solicitação" no Formulário.
+// Só mostra o aviso da política de cancelamento - a reserva em si ainda
+// não foi enviada pra API (isso só acontece depois, em confirmarReservaFinal()).
+// A checagem de "essa data já está ocupada?" agora é feita pelo SERVIDOR no
+// momento de salvar (ele conhece todas as reservas de verdade, não só o que
+// está guardado neste navegador) - por isso não precisamos mais conferir
+// isso aqui na mão.
 function salvarReserva(event) {
-    if (event) event.preventDefault(); // impede o formulário de recarregar a página, já que não tem back-end
-
-    const dataDigitada = document.getElementById('reserva-data')?.value;
-    const espacoAtual = window.location.pathname.split('/').pop().replace('.html', '') || 'geral';
-    const reservasExistentes = JSON.parse(localStorage.getItem('gh_reservas')) || [];
-
-    // Validação se a data já estiver ocupada (mesma checagem feita ao desenhar o calendário)
-    const dataOcupada = reservasExistentes.some(r => r.espaco === espacoAtual && r.data === dataDigitada);
-
-    if (dataOcupada) {
-        alert('❌ Esta data já está ocupada para este espaço! Escolha outra data no calendário.');
-        fecharModalReserva();
-        abrirModalAgenda();
-        return;
-    }
+    if (event) event.preventDefault(); // impede o formulário de recarregar a página
 
     // Esconde o modal de formulário de reserva e exibe o modal de alerta da política
     const modalReserva = document.getElementById('modal-reserva');
@@ -377,41 +429,44 @@ function cancelarEVoltarReserva() {
 }
 
 // PASSO 2: Ao clicar em "ESTOU CIENTE, CONFIRMAR" no Modal de Alerta.
-// Só AQUI a reserva é realmente gravada no localStorage.
-function confirmarReservaFinal() {
+// Só AQUI a reserva é realmente enviada pra API (POST /api/reservas) e
+// gravada no banco de dados de verdade.
+async function confirmarReservaFinal() {
     const modalAlerta = document.getElementById('modal-alerta-cancelamento');
     const modalSucesso = document.getElementById('modal-sucesso-reserva');
 
     if (modalAlerta) modalAlerta.classList.remove('ativo');
 
-    // Captura os dados do formulário e grava um novo registro de reserva no localStorage.
-    // "gh_reservas" guarda um array com TODAS as reservas de TODOS os espaços do site.
-    let reservas = JSON.parse(localStorage.getItem('gh_reservas')) || [];
-    const espacoAtual = window.location.pathname.split('/').pop().replace('.html', '') || 'geral';
-
-    const novaReserva = {
-        id: 'res_' + Date.now(), // id simples e único baseado no timestamp
-        espaco: espacoAtual,
+    const dadosReserva = {
+        espaco_slug: document.body.dataset.espaco,
         data: document.getElementById('reserva-data')?.value || '',
         horario: document.getElementById('reserva-horario')?.value || '',
-        tipo: document.getElementById('reserva-tipo')?.value || '',
+        tipo_evento: document.getElementById('reserva-tipo')?.value || '',
         convidados: document.getElementById('reserva-convidados')?.value || '',
         telefone: document.getElementById('reserva-telefone')?.value || '',
-        observacoes: document.getElementById('reserva-obs')?.value || '',
-        status: 'Pendente', // status inicial de toda reserva nova (ver reservas.js pra saber onde isso é usado)
-        dataSolicitacao: new Date().toLocaleDateString('pt-BR')
+        observacoes: document.getElementById('reserva-obs')?.value || ''
     };
 
-    reservas.push(novaReserva);
-    localStorage.setItem('gh_reservas', JSON.stringify(reservas));
+    try {
+        await chamarAPI('/api/reservas', {
+            method: 'POST',
+            body: JSON.stringify(dadosReserva)
+        });
 
-    // Exibe o modal de sucesso
-    if (modalSucesso) {
-        modalSucesso.classList.add('ativo');
-    } else {
-        // Fallback caso o modal-sucesso não esteja no HTML
-        alert('✅ Solicitação enviada com sucesso!');
-        window.location.href = 'reservas.html';
+        // Exibe o modal de sucesso
+        if (modalSucesso) {
+            modalSucesso.classList.add('ativo');
+        } else {
+            // Fallback caso o modal-sucesso não esteja no HTML
+            alert('✅ Solicitação enviada com sucesso!');
+            window.location.href = 'reservas.html';
+        }
+    } catch (erro) {
+        // Ex: "Essa data já está ocupada para este espaço" (409, quando duas
+        // pessoas tentam reservar o mesmo dia quase ao mesmo tempo)
+        alert('❌ ' + erro.message);
+        fecharModalReserva();
+        abrirModalAgenda(); // manda a pessoa de volta pro calendário escolher outra data
     }
 }
 
@@ -422,51 +477,7 @@ function irParaMinhasReservas() {
 
 
 // --------------------------------------------------------------------------
-// 6. MODAL DE GALERIA DE FOTOS
-// --------------------------------------------------------------------------
-
-// Abre a galeria com todas as fotos do espaço. Mesmo padrão de carregar o
-// HTML por fetch() na primeira vez (ver abrirModal() acima). Quem monta as
-// fotos de verdade é a função gerarGaleria(), definida em detalhes.js.
-function abrirModalGaleria() {
-    const container = document.getElementById('container-modal-galeria');
-    if (!container) return;
-
-    if (container.innerHTML === "") {
-        let caminho = 'paginas/galeria-modal.html';
-
-        if (window.location.pathname.includes('/detalhes/')) {
-            caminho = '../galeria-modal.html';
-        } else if (window.location.pathname.includes('/paginas/')) {
-            caminho = 'galeria-modal.html';
-        }
-
-        fetch(caminho)
-            .then(resposta => resposta.text())
-            .then(html => {
-                container.innerHTML = html;
-                setTimeout(() => {
-                    const modal = document.getElementById('modal-galeria');
-                    if (modal) modal.classList.add('ativo');
-                    gerarGaleria();
-                }, 50);
-            })
-            .catch(erro => console.error('Erro ao carregar a galeria:', erro));
-    } else {
-        const modal = document.getElementById('modal-galeria');
-        if (modal) modal.classList.add('ativo');
-        gerarGaleria();
-    }
-}
-
-function fecharModalGaleria() {
-    const modal = document.getElementById('modal-galeria');
-    if (modal) modal.classList.remove('ativo');
-}
-
-
-// --------------------------------------------------------------------------
-// 7. ATALHOS E EVENTOS DE FECHAMENTO
+// 6. ATALHOS E EVENTOS DE FECHAMENTO
 // --------------------------------------------------------------------------
 
 // Troca do modal de login pro de cadastro (usado no link "Não tem conta? Cadastre-se")
@@ -491,7 +502,6 @@ window.addEventListener('click', function(event) {
     const modalReserva = document.getElementById('modal-reserva');
     const modalAlerta = document.getElementById('modal-alerta-cancelamento');
     const modalSucesso = document.getElementById('modal-sucesso-reserva');
-    const modalGaleria = document.getElementById('modal-galeria');
 
     if (event.target === modalCadastro) fecharModal();
     if (event.target === modalLogin) fecharModalLogin();
@@ -499,5 +509,4 @@ window.addEventListener('click', function(event) {
     if (event.target === modalReserva) fecharModalReserva();
     if (event.target === modalAlerta) cancelarEVoltarReserva();
     if (event.target === modalSucesso) irParaMinhasReservas();
-    if (event.target === modalGaleria) fecharModalGaleria();
 });

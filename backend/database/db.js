@@ -37,6 +37,7 @@ db.exec(`
     nome TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     senha TEXT NOT NULL,
+    telefone TEXT,
     tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'dono')),
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )

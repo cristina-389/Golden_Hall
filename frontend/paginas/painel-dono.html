@@ -1,0 +1,148 @@
+<!--
+  GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/painel-dono.html)
+  Página exclusiva pra contas do tipo "dono" (ver js/paginas/painel-dono.js,
+  que bloqueia o acesso de quem não for). Lista os espaços do dono logado
+  e permite criar, editar, apagar, e ver/aprovar as reservas recebidas em
+  cada um - tudo ligado direto na API, sem nenhum dado fixo no HTML.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Painel do Dono</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/paginas/reservas.css">
+    <link rel="stylesheet" href="../css/paginas/favoritos.css">
+    <link rel="stylesheet" href="../css/paginas/painel-dono.css">
+</head>
+<body class="logado-layout dark">
+
+    <main class="page-content">
+
+        <section class="banner-reservas">
+            <div class="overlay-banner"></div>
+            <div class="conteudo-banner">
+                <span class="badge-gold"><i class="bi bi-shop"></i> Painel do Dono</span>
+                <h2>Meus <span class="gold-text">Espaços</span></h2>
+                <p>Cadastre seus espaços e gerencie as reservas recebidas no Golden Hall</p>
+            </div>
+        </section>
+
+        <section class="container-principal-reservas">
+
+            <div class="estatisticas-grid estatisticas-grid-dono">
+                <div class="card-estatistica">
+                    <div class="icone-estatistica"><i class="bi bi-building"></i></div>
+                    <div class="info-estatistica">
+                        <span class="label">Espaços Cadastrados</span>
+                        <h4 id="stat-total-espacos">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secao-titulo-grid">
+                <h3>Meus Espaços</h3>
+                <button class="btn-novo-espaco" onclick="abrirFormularioEspaco()">
+                    <i class="bi bi-plus-lg"></i> Cadastrar novo espaço
+                </button>
+            </div>
+
+            <!-- Preenchida via JS (carregarMeusEspacos(), em painel-dono.js) -->
+            <div id="lista-espacos-dono" class="grid-favoritos"></div>
+
+        </section>
+    </main>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="../index-logado.html" class="item-nav">
+            <span class="material-icons-round icone">home</span>
+            <span class="texto">Início</span>
+        </a>
+        <a href="buscar.html" class="item-nav">
+            <span class="material-icons-round icone">search</span>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="painel-dono.html" class="item-nav ativo">
+            <span class="material-icons-round icone">storefront</span>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="perfil.html" class="item-nav">
+            <span class="material-icons-round icone">person</span>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <!-- ================= MODAL: CADASTRAR/EDITAR ESPAÇO ================= -->
+    <div id="modal-form-espaco" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharFormularioEspaco()">&times;</button>
+
+            <h2 id="titulo-form-espaco">Cadastrar Espaço</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">Esses dados aparecem na busca e na página de detalhes do espaço.</p>
+
+            <form id="form-espaco">
+                <div class="form-grid">
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-nome">Nome do Espaço</label>
+                        <input type="text" id="espaco-form-nome" placeholder="Ex: Chácara Bela Vista" required>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-descricao">Descrição</label>
+                        <textarea id="espaco-form-descricao" rows="3" placeholder="Conte o que torna esse espaço especial..."></textarea>
+                    </div>
+
+                    <div class="input-grupo">
+                        <label for="espaco-form-local">Localização</label>
+                        <input type="text" id="espaco-form-local" placeholder="Ex: Caieiras - SP">
+                    </div>
+
+                    <div class="input-grupo">
+                        <label for="espaco-form-capacidade">Capacidade (pessoas)</label>
+                        <input type="number" id="espaco-form-capacidade" min="1" placeholder="Ex: 150">
+                    </div>
+
+                    <div class="input-grupo">
+                        <label for="espaco-form-preco">Valor (R$)</label>
+                        <input type="number" id="espaco-form-preco" min="0" step="0.01" placeholder="Ex: 1800">
+                    </div>
+
+                    <div class="input-grupo">
+                        <label for="espaco-form-imagem">URL da Foto Principal</label>
+                        <input type="url" id="espaco-form-imagem" placeholder="https://...">
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-bloco">Salvar Espaço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: RESERVAS RECEBIDAS ================= -->
+    <div id="modal-reservas-espaco" class="modal-overlay">
+        <div class="modal-box modal-reservas-espaco-box">
+            <button class="fechar-modal" onclick="fecharReservasEspaco()">&times;</button>
+
+            <h2 id="titulo-reservas-espaco">Reservas Recebidas</h2>
+            <div class="linha-dourada-form"></div>
+
+            <!-- Preenchida via JS (abrirReservasEspaco(), em painel-dono.js) -->
+            <div id="lista-reservas-espaco"></div>
+        </div>
+    </div>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/paginas/painel-dono.js"></script>
+</body>
+</html>

@@ -1,15 +1,14 @@
 /* ==========================================================================
-   GOLDEN HALL - LÓGICA DA PÁGINA DE FAVORITOS
-   ========================================================================== 
-   Depende das funções obterFavoritos() e salvarFavoritos() que ficam
-   no global.js (por isso o global.js precisa ser carregado ANTES
-   deste arquivo no favoritos.html).
+   GOLDEN HALL - LÓGICA DA PÁGINA DE FAVORITOS (ligada na API de verdade)
+   Busca os espaços favoritados em GET /api/favoritos (a API já devolve os
+   dados de cada espaço, então não precisa de um pedido a mais por card).
+   Usa chamarAPI(), formatarCapacidade() e formatarPreco(), que ficam no
+   global.js (por isso ele precisa ser carregado ANTES deste arquivo).
    ========================================================================== */
 
-// Assim que a página termina de carregar, já busca e mostra os favoritos salvos
 document.addEventListener('DOMContentLoaded', carregarFavoritos);
 
-function carregarFavoritos() {
+async function carregarFavoritos() {
     // #lista-favoritos = a div onde os cards (ou os benefícios) vão aparecer
     const container = document.getElementById('lista-favoritos');
 
@@ -18,8 +17,25 @@ function carregarFavoritos() {
 
     if (!container) return; // segurança: se por algum motivo a div não existir, não faz nada
 
-    // Pega a lista de favoritos salva no localStorage (função vem do global.js)
-    const favoritos = obterFavoritos();
+    // Essa página exige login - sem token, a API responderia 401
+    if (!obterUsuarioLogado()) {
+        if (heroVazio) heroVazio.style.display = 'none';
+        container.innerHTML = `
+            <div class="beneficios-favoritos" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                <p style="margin-bottom: 16px;">Entre na sua conta para ver e salvar seus espaços favoritos.</p>
+                <button class="btn-explorar-favoritos" onclick="abrirModalLogin()"><i class="bi bi-box-arrow-in-right"></i> Entrar</button>
+            </div>
+        `;
+        return;
+    }
+
+    let favoritos = [];
+    try {
+        favoritos = await chamarAPI('/api/favoritos');
+    } catch (erro) {
+        container.innerHTML = `<p style="text-align:center; padding: 40px;">${erro.message}</p>`;
+        return;
+    }
 
     // ---------- CASO 1: NÃO tem nenhum favorito salvo ----------
     if (favoritos.length === 0) {
@@ -65,44 +81,56 @@ function carregarFavoritos() {
 
     // Pra cada espaço favoritado, monta um card e adiciona na tela
     favoritos.forEach(espaco => {
-        const cardHTML = `
-            <div class="card-favorito">
-                <div class="imagem-favorito">
-                    <img src="${espaco.imagem}" alt="${espaco.nome}">
-
-                    <!-- Clicar aqui chama removerDosFavoritos() passando o slug deste espaço -->
-                    <button class="btn-remover-coracao" onclick="removerDosFavoritos('${espaco.slug}')" title="Remover dos favoritos">
-                        <i class="bi bi-heart-fill"></i>
-                    </button>
-                </div>
-                <div class="card-favorito-content">
-                    <h3>${espaco.nome}</h3>
-                    <p><i class="bi bi-geo-alt"></i> ${espaco.local}</p>
-                    <p><i class="bi bi-people"></i> ${espaco.capacidade}</p>
-                    <div class="card-favorito-preco">
-                        <small>A partir de</small> ${espaco.preco}
-                    </div>
-
-                    <!-- Manda pra página de detalhes daquele espaço específico -->
-                    <button class="btn-ver-detalhes-favorito" onclick="location.href='${espaco.link}'">Ver detalhes</button>
-                </div>
-            </div>
-        `;
-        container.innerHTML += cardHTML;
+        container.appendChild(criarCardFavorito(espaco));
     });
 }
 
-// Remove um espaço da lista de favoritos pelo "slug" (identificador único, ex: 'chacara-golden')
-function removerDosFavoritos(slug) {
-    // Pega a lista atual de favoritos
-    let favoritos = obterFavoritos();
+// Monta o card de um espaço favoritado. Usa textContent pro nome/local
+// (não innerHTML) pelo mesmo motivo de buscar.js: evita que texto digitado
+// por um dono vire HTML de verdade na página (XSS).
+function criarCardFavorito(espaco) {
+    const link = 'detalhes/detalhes.html?slug=' + espaco.slug;
+    const imagem = espaco.imagem || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop';
 
-    // Filtra removendo o espaço com esse slug (mantém todos os outros)
-    favoritos = favoritos.filter(f => f.slug !== slug);
+    const card = document.createElement('div');
+    card.className = 'card-favorito';
+    card.innerHTML = `
+        <div class="imagem-favorito">
+            <img src="${imagem}">
+            <button class="btn-remover-coracao" title="Remover dos favoritos">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+        </div>
+        <div class="card-favorito-content">
+            <h3></h3>
+            <p><i class="bi bi-geo-alt"></i> <span class="texto-local"></span></p>
+            <p><i class="bi bi-people"></i> ${formatarCapacidade(espaco.capacidade)}</p>
+            <div class="card-favorito-preco">
+                <small>A partir de</small> ${formatarPreco(espaco.preco)}
+            </div>
+            <button class="btn-ver-detalhes-favorito">Ver detalhes</button>
+        </div>
+    `;
 
-    // Salva a lista já sem esse espaço de volta no localStorage
-    salvarFavoritos(favoritos);
+    card.querySelector('img').alt = espaco.nome;
+    card.querySelector('h3').textContent = espaco.nome;
+    card.querySelector('.texto-local').textContent = espaco.local || 'Local a definir';
+    card.querySelector('.btn-remover-coracao').addEventListener('click', () => removerDosFavoritos(espaco.slug));
+    card.querySelector('.btn-ver-detalhes-favorito').addEventListener('click', () => { location.href = link; });
 
-    // Redesenha a tela (se ficou vazio, já mostra o estado vazio automaticamente)
-    carregarFavoritos();
+    return card;
+}
+
+// Remove um espaço da lista de favoritos (mesma rota que o coração das
+// outras páginas usa - alternar quando já está favoritado sempre remove)
+async function removerDosFavoritos(slug) {
+    try {
+        await chamarAPI('/api/favoritos/toggle', {
+            method: 'POST',
+            body: JSON.stringify({ espaco_slug: slug })
+        });
+        carregarFavoritos(); // redesenha a tela (se ficou vazia, já mostra o estado vazio automaticamente)
+    } catch (erro) {
+        alert(erro.message);
+    }
 }

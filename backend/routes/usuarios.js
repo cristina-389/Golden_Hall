@@ -19,6 +19,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db');
+const { autenticar } = require('../middlewares/autenticacao');
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ const CUSTO_HASH = 10;
 // Recebe { nome, email, senha, tipo } e cria um usuário novo no banco.
 // --------------------------------------------------------------------------
 router.post('/cadastro', (req, res) => {
-    const { nome, email, senha, tipo } = req.body;
+    const { nome, email, senha, telefone, tipo } = req.body;
 
     if (!nome || !email || !senha) {
         return res.status(400).json({ erro: 'Preencha nome, e-mail e senha.' });
@@ -46,13 +47,14 @@ router.post('/cadastro', (req, res) => {
 
     try {
         const resultado = db
-            .prepare('INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)')
-            .run(nome, email, senhaCriptografada, tipoFinal);
+            .prepare('INSERT INTO usuarios (nome, email, senha, telefone, tipo) VALUES (?, ?, ?, ?, ?)')
+            .run(nome, email, senhaCriptografada, telefone || null, tipoFinal);
 
         const novoUsuario = {
             id: Number(resultado.lastInsertRowid),
             nome,
             email,
+            telefone: telefone || null,
             tipo: tipoFinal
         };
 
@@ -92,10 +94,54 @@ router.post('/login', (req, res) => {
         return res.status(401).json({ erro: 'E-mail ou senha incorretos.' });
     }
 
-    const dadosUsuario = { id: usuario.id, nome: usuario.nome, email: usuario.email, tipo: usuario.tipo };
+    const dadosUsuario = {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        telefone: usuario.telefone,
+        tipo: usuario.tipo
+    };
     const token = gerarToken(dadosUsuario);
 
     res.json({ usuario: dadosUsuario, token });
+});
+
+// --------------------------------------------------------------------------
+// GET /api/perfil - dados completos de quem está logado (usado na página
+// "Meu Perfil"). Nunca devolve a coluna "senha" - só o que a tela precisa.
+// --------------------------------------------------------------------------
+router.get('/perfil', autenticar, (req, res) => {
+    const usuario = db
+        .prepare('SELECT id, nome, email, telefone, tipo, criado_em FROM usuarios WHERE id = ?')
+        .get(req.usuario.id);
+
+    if (!usuario) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    res.json(usuario);
+});
+
+// --------------------------------------------------------------------------
+// PUT /api/perfil - edita nome/telefone de quem está logado. O e-mail
+// propositalmente NÃO pode ser trocado por aqui (evita duplicar a checagem
+// de "e-mail único" e confusão de identidade - trocar e-mail de conta
+// normalmente pede uma confirmação extra, que este projeto não tem ainda).
+// --------------------------------------------------------------------------
+router.put('/perfil', autenticar, (req, res) => {
+    const { nome, telefone } = req.body;
+
+    if (!nome) {
+        return res.status(400).json({ erro: 'O nome não pode ficar em branco.' });
+    }
+
+    db.prepare('UPDATE usuarios SET nome = ?, telefone = ? WHERE id = ?').run(nome, telefone || null, req.usuario.id);
+
+    const usuario = db
+        .prepare('SELECT id, nome, email, telefone, tipo, criado_em FROM usuarios WHERE id = ?')
+        .get(req.usuario.id);
+
+    res.json(usuario);
 });
 
 // Monta o token JWT com o id e o tipo da pessoa. Esses dois dados ficam

@@ -163,165 +163,17 @@
     </p>
 
     <!-- ================= CARDS =================
-         Os 6 espaços em destaque da home. São conteúdo fixo (escrito direto
-         no HTML, não vem de nenhum banco de dados), cada um com link pra
-         sua própria página em paginas/detalhes/. Repare que os números de
-         capacidade e preço aqui precisam bater com os da página de detalhes
-         correspondente - são digitados à mão nos dois lugares. -->
+         Preenchida via JS (js/paginas/home.js), buscando os espaços de
+         verdade em GET /api/espacos - não tem mais nenhum espaço fixo
+         escrito no HTML. Mostra os mais recentes primeiro. -->
 
-    <div class="cards">
-
-      <!-- CARD 1 -->
-      <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="card-content">
-
-          <h3>Salão Golden Luxo</h3>
-
-          <p>Casamento</p>
-
-          <p>Até 300 pessoas</p>
-
-          <div class="price">
-            R$ 2.500
-          </div>
-          <!--===========Botão de ver detalhes temporario============-->
-          <button>
-            <a href="../frontend/paginas/detalhes/salao-golden-luxo.html">Ver detalhes</a>
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- CARD 2 -->
-      <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="card-content">
-
-          <h3>Chácara Golden</h3>
-
-          <p>Aniversário</p>
-
-          <p>Até 150 pessoas</p>
-
-          <div class="price">
-            R$ 1.800
-          </div>
-
-          <button>
-            <a href="../frontend/paginas/detalhes/chacara-golden.html">Ver detalhes</a>
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- CARD 3 -->
-      <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="card-content">
-
-          <h3>Espaço Premium</h3>
-
-          <p>Confraternização</p>
-
-          <p>Até 500 pessoas</p>
-
-          <div class="price">R$ 4.000</div>
-
-          <button>
-            <a href="../frontend/paginas/detalhes/espaco-premium.html">Ver detalhes</a>
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- CARD 4 -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop" alt="Espaço Elegance">
-
-      <div class="card-content">
-
-        <h3>Eventos Royal</h3>
-
-        <p>Formaturas</p>
-
-        <p>Até 250 pessoas</p>
-
-        <div class="price">
-          R$ 2.200
-        </div>
-
-        <button>
-          <a href="../frontend/paginas/detalhes/eventos-royal.html">Ver detalhes</a>
-        </button>
-
-      </div>
-
+    <div class="cards" id="cards-home">
+      <p id="cards-home-carregando" style="grid-column: 1 / -1; text-align: center; opacity: .7;">
+        Carregando espaços...
+      </p>
     </div>
 
-    <!-- CARD 5 -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1200&auto=format&fit=crop" alt="Villa Imperial">
-
-      <div class="card-content">
-
-        <h3>Villa Imperial</h3>
-
-        <p>Casamentos</p>
-
-        <p>Até 400 pessoas</p>
-
-        <div class="price">
-          R$ 3.500
-        </div>
-
-        <button>
-          <a href="../frontend/paginas/detalhes/villa-imperial.html">Ver detalhes</a>
-        </button>
-
-      </div>
-
-    </div>
-
-    <!-- CARD 6 -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop" alt="Jardim das Flores">
-
-      <div class="card-content">
-
-        <h3>Jardim das Flores</h3>
-
-        <p>Festas ao ar livre</p>
-
-        <p>Até 180 pessoas</p>
-
-        <div class="price">
-          R$ 1.950
-        </div>
-
-        <button>
-         <a href="../frontend/paginas/detalhes/jardim-das-flores.html">Ver detalhes</a>
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+  </section>
 
   <footer>
     <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
@@ -337,6 +189,7 @@
   <!-- JS -->
   <script src="js/global.js"></script>
   <script src="js/modais.js"></script>
+  <script src="js/paginas/home.js"></script>
 
 </body>
 

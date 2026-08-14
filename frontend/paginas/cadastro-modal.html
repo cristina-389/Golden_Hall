@@ -31,6 +31,17 @@
                     <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" required>
                 </div>
 
+                <!-- Decide se a conta é de quem RESERVA espaços ou de quem ANUNCIA
+                     um espaço - ver adicionarValidacaoSenha() em modais.js, que lê
+                     esse valor e manda como "tipo" pra API -->
+                <div class="input-grupo col-total">
+                    <label for="cadastro-tipo-conta">Quero me cadastrar como</label>
+                    <select id="cadastro-tipo-conta" name="tipo">
+                        <option value="cliente">Cliente — quero reservar espaços</option>
+                        <option value="dono">Dono de espaço — quero anunciar meu espaço</option>
+                    </select>
+                </div>
+
                 <div class="input-grupo">
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" name="senha" placeholder="••••••••" required>

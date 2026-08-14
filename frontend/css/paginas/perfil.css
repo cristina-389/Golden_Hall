@@ -18,35 +18,23 @@
 }
 
 .avatar-container {
-    position: relative; /* pro botão de editar foto (abaixo) poder ficar posicionado em cima da foto */
     width: 150px;
     height: 150px;
     margin: 0 auto 20px;
-}
-
-.avatar-container img {
-    width: 100%;
-    height: 100%;
     border-radius: 50%;
-    object-fit: cover;
     border: 3px solid #d4af37;
     box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
-}
-
-.btn-edit-foto {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background: #d4af37;
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    color: #000;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Ícone genérico de pessoa, no lugar de uma foto de perfil de verdade
+   (o banco de dados não guarda foto de usuário) */
+.avatar-icone-generico {
+    font-size: 110px;
+    color: #d4af37;
+    opacity: 0.85;
 }
 
 .perfil-nome {
@@ -65,12 +53,19 @@
     border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* Grade de cartões abaixo do cabeçalho (Dados pessoais, Programa de
-   fidelidade, etc.) - quantas colunas cabem, cada uma com no mínimo 320px */
+/* Grade de cartões abaixo do cabeçalho - quantas colunas cabem, cada uma
+   com no mínimo 320px */
 .perfil-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
+}
+
+/* Hoje só existe o card "Dados Pessoais" - centraliza ele em vez de
+   esticar pra largura toda da grade */
+.perfil-grid-unico {
+    grid-template-columns: minmax(320px, 480px);
+    justify-content: center;
 }
 
 .perfil-card {

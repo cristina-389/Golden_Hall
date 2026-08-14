@@ -1,0 +1,47 @@
+/* ==========================================================================
+   GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS
+   Reaproveita bastante coisa de reservas.css (banner, estatísticas, cards de
+   reserva) e favoritos.css (grid-favoritos, card-favorito) - aqui só ficam
+   os ajustes específicos desta página.
+   ========================================================================== */
+
+/* Com só 1 estatística (Espaços Cadastrados), centraliza o card em vez de
+   esticar pra ocupar a largura toda da grade */
+.estatisticas-grid-dono {
+    grid-template-columns: minmax(240px, 340px);
+    justify-content: center;
+}
+
+/* Fileira de botões (Editar / Reservas / Excluir) dentro de cada card de espaço */
+.acoes-espaco-dono {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.acoes-espaco-dono button {
+    flex: 1;
+    min-width: 90px;
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    white-space: nowrap;
+}
+
+/* Modal de "Reservas Recebidas" um pouco mais largo, pra caber os cards de reserva */
+.modal-reservas-espaco-box {
+    max-width: 640px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Dentro do modal de reservas, cada card já tem sua própria borda/fundo -
+   remove a margem grande padrão do container pra não duplicar espaçamento */
+#lista-reservas-espaco .card-reserva {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+#lista-reservas-espaco .card-reserva:last-child {
+    margin-bottom: 0;
+}

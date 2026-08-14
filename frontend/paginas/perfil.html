@@ -1,9 +1,13 @@
 <!--
   GOLDEN HALL - PÁGINA DE PERFIL (paginas/perfil.html)
-  Mostra os dados do usuário "logado". Como o site não tem back-end/login
-  de verdade, os dados aqui (nome, e-mail, WhatsApp, progresso no Golden
-  Club) são só um exemplo fixo escrito no HTML - os botões "Editar Dados"
-  e "Alterar Senha" ainda não têm nenhuma ação ligada a eles (sem onclick).
+  Mostra os dados de verdade de quem está logado, buscados em GET
+  /api/perfil (ver js/paginas/perfil.js) e editáveis (nome e telefone, via
+  PUT /api/perfil) - o e-mail fica travado de propósito. Os cards de
+  "Segurança" (trocar senha) e "Golden Club" (fidelidade), e a foto de
+  perfil, foram removidos por serem só decorativos - não existe coluna
+  nenhuma no banco pra pontos de fidelidade ou foto, e trocar senha exigiria
+  confirmar a senha atual, o que ainda não foi construído. Dá pra adicionar
+  de verdade mais pra frente, se fizer sentido pro projeto.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -22,57 +26,31 @@
         <section class="secao-perfil">
             <div class="perfil-header">
                 <div class="avatar-container">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" alt="Foto de Perfil">
-                    <button class="btn-edit-foto"><span class="material-icons-round">edit</span></button>
+                    <!-- Ícone genérico no lugar de uma foto - o banco não guarda
+                         foto de perfil, então mostrar uma imagem de banco de
+                         imagens fingindo ser "a foto da pessoa" seria enganoso -->
+                    <span class="material-icons-round avatar-icone-generico">account_circle</span>
                 </div>
-                <h2 class="perfil-nome">Marcos Aurélio</h2>
-                <span class="status-badge">Membro Gold ⚜️</span>
+                <h2 class="perfil-nome" id="perfil-nome-cabecalho">Carregando...</h2>
+                <span class="status-badge" id="perfil-status-badge">-</span>
             </div>
 
-            <div class="perfil-grid">
+            <div class="perfil-grid perfil-grid-unico">
                 <div class="perfil-card">
                     <h3><span class="material-icons-round">person</span> Dados Pessoais</h3>
                     <div class="campo-grupo">
                         <label>Nome Completo</label>
-                        <input type="text" value="Marcos Aurélio de Castro" readonly>
+                        <input type="text" id="perfil-input-nome" readonly>
                     </div>
                     <div class="campo-grupo">
                         <label>E-mail</label>
-                        <input type="email" value="marvis.castro@goldenhall.com" readonly>
+                        <input type="email" id="perfil-input-email" readonly>
                     </div>
                     <div class="campo-grupo">
                         <label>WhatsApp</label>
-                        <input type="text" value="+55 (11) 99876-5432" readonly>
+                        <input type="text" id="perfil-input-telefone" readonly>
                     </div>
-                    <button class="btn-ajuste">Editar Dados</button>
-                </div>
-
-                <div class="perfil-card">
-                    <h3><span class="material-icons-round">security</span> Segurança</h3>
-                    <div class="campo-grupo">
-                        <label>Senha Atual</label>
-                        <input type="password" value="********" readonly>
-                    </div>
-                    <p class="info-texto" style="font-size: 12px; color: #666; margin-top: 5px;">Última alteração: há 3 meses</p>
-                    <button class="btn-ajuste">Alterar Senha</button>
-                </div>
-
-                <div class="perfil-card">
-                    <h3><span class="material-icons-round">star</span> Golden Club</h3>
-                    <div class="clube-progresso">
-                        <p style="font-size: 14px; color: #aaa;">Você está a <strong>2 reservas</strong> do nível Platinum!</p>
-                        <div class="barra-progresso">
-                            <div class="progresso-preenchido" style="width: 70%;"></div>
-                        </div>
-                    </div>
-                    <ul class="lista-beneficios" style="list-style: none; padding: 0; margin-top: 15px;">
-                        <li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #777; margin-bottom: 5px;">
-                            <span class="material-icons-round" style="color: #22c55e; font-size: 16px;">check_circle</span> Prioridade em datas festivas
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #777;">
-                            <span class="material-icons-round" style="color: #22c55e; font-size: 16px;">check_circle</span> Consultoria de decoração gratuita
-                        </li>
-                    </ul>
+                    <button class="btn-ajuste" id="btn-editar-dados" onclick="alternarEdicaoPerfil()">Editar Dados</button>
                 </div>
             </div>
 
@@ -108,6 +86,7 @@
     </nav>
 
     <script src="../js/global.js"></script>
+    <script src="../js/paginas/perfil.js"></script>
 
 </body>
 </html>

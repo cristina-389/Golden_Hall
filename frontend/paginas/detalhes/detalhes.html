@@ -1,0 +1,206 @@
+<!--
+  GOLDEN HALL - PÁGINA DE DETALHES (DINÂMICA)
+  Substitui os antigos 6 arquivos fixos (chacara-golden.html, etc.). Agora
+  existe UM arquivo só, e ele descobre QUAL espaço mostrar lendo o "slug"
+  da URL (ex: detalhes.html?slug=chacara-golden) e buscando os dados de
+  verdade em GET /api/espacos/:slug.
+
+  Todo o conteúdo abaixo (nome, foto, preço, capacidade, localização...)
+  começa vazio/genérico no HTML e é preenchido pelo JS assim que a resposta
+  da API chega - ver carregarEspaco() em js/paginas/detalhes.js.
+
+  Seções que existiam antes (Eventos permitidos, Benefícios, "vantagens" da
+  localização, Avaliações, Galeria de fotos) foram removidas porque eram só
+  texto/dados fixos de exemplo, iguais em todo espaço - o banco de dados só
+  guarda nome, descrição, local, capacidade, preço e uma foto por espaço.
+  Dá pra adicionar essas listas de verdade mais pra frente, se fizer
+  sentido (precisaria de novas colunas/tabelas no banco).
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Golden Hall</title>
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!--Bootstrap icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header class="header-detalhes">
+
+        <div class="logo">
+            <img src="../../Imagens/logo.png" alt="Logo">
+
+            <div class="logo-text">
+                <h1>GOLDEN HALL</h1>
+                <p>SALÃO DE FESTAS</p>
+            </div>
+        </div>
+
+        <div class="header-buttons">
+
+            <button class="btn btn-outline" onclick="abrirModalLogin()">
+                Entrar
+            </button>
+
+            <button class="btn btn-gold" onclick="abrirModal()">
+                Criar conta
+            </button>
+
+        </div>
+
+    </header>
+
+    <main class="detalhe-page">
+
+        <a class="voltar" href="../../index.html">
+            ← Voltar para a página inicial
+        </a>
+
+        <!-- Mostrada só se a API não encontrar o espaço (slug errado, apagado, etc.) -->
+        <div id="espaco-nao-encontrado" style="display:none; text-align:center; padding: 80px 20px;">
+            <h2>Espaço não encontrado</h2>
+            <p id="espaco-nao-encontrado-motivo" style="margin: 15px 0 25px;"></p>
+            <a href="../buscar.html" class="btn btn-gold">Ver outros espaços</a>
+        </div>
+
+        <!-- Todo o conteúdo do espaço fica dentro desta div, que a gente esconde
+             enquanto os dados ainda não chegaram da API (evita mostrar a página
+             "vazia" por um instante) e também se o espaço não existir -->
+        <div id="conteudo-espaco" style="display:none;">
+
+            <!-- TOPO -->
+
+            <section class="hero-detalhe">
+
+                <div class="hero-info">
+
+                    <h1 id="espaco-nome">Carregando...</h1>
+
+                    <div class="linha-elegante">
+                        <span>✦</span>
+                    </div>
+
+                    <p id="espaco-descricao"></p>
+
+                </div>
+
+                <div class="hero-foto">
+
+                    <button id="btn-favoritar-detalhe" class="btn-favoritar-detalhe" title="Adicionar aos favoritos">
+                        <i class="bi bi-heart"></i>
+                    </button>
+
+                    <img id="espaco-imagem" src="" alt="">
+
+                </div>
+
+            </section>
+
+            <!-- CARDS -->
+
+            <section class="info-rapida">
+
+                <div class="mini-card">
+                    <h3>Capacidade</h3>
+                    <p id="espaco-capacidade">Sob consulta</p>
+                </div>
+
+                <div class="mini-card">
+                    <h3>Valor</h3>
+                    <p id="espaco-preco">Sob consulta</p>
+                </div>
+
+                <div class="mini-card">
+                    <h3>Disponibilidade</h3>
+                    <button type="button" class="btn-consulte-datas" onclick="abrirModalAgenda()">
+                        <i class="bi bi-calendar-range"></i> Consulte as datas
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- SOBRE -->
+
+            <section class="sobre">
+
+                <div class="section-title">
+                    <span class="line"></span>
+                    <div class="diamond">✦</div>
+                    <span class="line"></span>
+                </div>
+
+                <h2 class="titulo-central">Sobre o espaço</h2>
+
+                <p class="descricao-espaco" id="espaco-sobre"></p>
+
+            </section>
+
+            <section class="localizacao-section">
+
+                <div class="localizacao-info">
+
+                    <h2 class="bi bi-geo-alt-fill icone-dourado">
+                        Localização
+                    </h2>
+
+                    <div class="linha-dourada"></div>
+
+                    <h3 id="espaco-local">-</h3>
+
+                    <a id="espaco-link-mapa" href="#" target="_blank" class="btn btn-gold">
+                        Ver no mapa
+                    </a>
+
+                </div>
+
+                <div class="localizacao-mapa">
+                    <iframe id="espaco-iframe-mapa" src="" loading="lazy" allowfullscreen></iframe>
+                </div>
+
+            </section>
+
+            <!-- BOTÕES -->
+
+            <section class="acoes">
+
+                <button class="btn btn-gold" onclick="iniciarReserva()">
+                    Reservar este espaço
+                </button>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Gavetas onde o modais.js injeta o HTML dos modais via fetch()
+         (cadastro/login/agenda/reserva) - ficam vazias até serem usadas -->
+    <div id="container-modal-cadastro"></div>
+    <div id="container-modal-login"></div>
+    <div id="container-modal-agenda"></div>
+    <div id="container-modal-reserva"></div>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/modais.js"></script>
+    <script src="/frontend/js/paginas/detalhes.js"></script>
+
+</body>
+
+</html>

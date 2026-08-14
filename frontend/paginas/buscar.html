@@ -1,8 +1,8 @@
 <!--
   GOLDEN HALL - PÁGINA DE BUSCA (paginas/buscar.html)
-  Tela de busca/filtro de espaços. Os cards de resultado aqui são fixos no
-  HTML (não vêm de nenhum banco de dados) e a lógica de filtrar/mostrar
-  fica em js/paginas/buscar.js. O botão de coração de cada card usa as
+  Tela de busca/filtro de espaços. Os espaços vêm de verdade da API
+  (GET /api/espacos) - buscar.js busca a lista assim que a página carrega
+  e desenha os cards dinamicamente. O botão de coração de cada card usa as
   funções de favoritos que ficam em js/global.js.
 -->
 <!DOCTYPE html>
@@ -85,13 +85,6 @@
                         </div>
                     </div>
 
-                    <div class="campo-filtro">
-                        <label>Avaliação mínima</label>
-                        <div class="input-wrapper">
-                            <i class="bi bi-star"></i>
-                            <input type="number" id="filtro-avaliacao" step="0.1" min="1" max="5" placeholder="Ex: 4.5">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="painel-filtros-botoes">
@@ -111,38 +104,9 @@
         </section>
 
         <section class="resultados-busca">
-            <div class="cards">
-                <div class="card" data-cidade="caieiras" data-evento="casamento" data-capacidade="300" data-preco="2500" data-tags="caieiras casamento salao golden luxo">
-                    <div class="card-badge">Destaque</div>
-                    <button class="btn-favoritar" data-slug="salao-golden-luxo" title="Adicionar aos favoritos"
-                        onclick="toggleFavorito({slug:'salao-golden-luxo', nome:'Salão Golden Luxo', imagem:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop', local:'Caieiras - SP', capacidade:'Até 300 pessoas', preco:'R$ 2.500', link:'detalhes/salao-golden-luxo.html'}, this)">
-                        <i class="bi bi-heart"></i>
-                    </button>
-                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop" alt="Salão Golden Luxo">
-                    <div class="card-content">
-                        <h3>Salão Golden Luxo</h3>
-                        <p class="card-loc"><i class="bi bi-geo-alt"></i> Caieiras - SP <span class="card-rating"><i class="bi bi-star-fill"></i> 4,9</span></p>
-                        <p class="card-cap"><i class="bi bi-people"></i> Até 300 pessoas</p>
-                        <span class="price"><small>A partir de</small> R$ 2.500</span>
-                        <button class="btn-detalhes" onclick="location.href='detalhes/salao-golden-luxo.html'">Ver detalhes</button>
-                    </div>
-                </div>
-
-                <div class="card" data-cidade="caieiras" data-evento="casamento" data-capacidade="150" data-preco="1800" data-tags="caieiras casamento chacara golden">
-                    <button class="btn-favoritar" data-slug="chacara-golden" title="Adicionar aos favoritos"
-                        onclick="toggleFavorito({slug:'chacara-golden', nome:'Chácara Golden', imagem:'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=600&auto=format&fit=crop', local:'Caieiras - SP', capacidade:'Até 150 pessoas', preco:'R$ 1.800', link:'detalhes/chacara-golden.html'}, this)">
-                        <i class="bi bi-heart"></i>
-                    </button>
-                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=600&auto=format&fit=crop" alt="Chácara Golden">
-                    <div class="card-content">
-                        <h3>Chácara Golden</h3>
-                        <p class="card-loc"><i class="bi bi-geo-alt"></i> Caieiras - SP <span class="card-rating"><i class="bi bi-star-fill"></i> 4,8</span></p>
-                        <p class="card-cap"><i class="bi bi-people"></i> Até 150 pessoas</p>
-                        <span class="price"><small>A partir de</small> R$ 1.800</span>
-                        <button class="btn-detalhes" onclick="location.href='detalhes/chacara-golden.html'">Ver detalhes</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Preenchida via JS (renderizarCards(), em buscar.js) com um card
+                 pra cada espaço que bate com a busca/filtro -->
+            <div class="cards"></div>
         </section>
 
         <section class="alerta-busca-vazia" id="alerta-vazio" style="display: none;">
