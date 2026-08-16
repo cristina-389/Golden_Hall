@@ -15,8 +15,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     <!-- CSS: o style.css traz as variáveis globais/tema, o favoritos.css é só desta página -->
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/paginas/favoritos.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/favoritos.css">
 </head>
 <body class="logado-layout dark">
 
@@ -75,7 +75,7 @@
                     <p class="desc">Descubra espaços incríveis e adicione aqueles que combinam com a celebração dos seus sonhos.</p>
 
                     <!-- Manda a pessoa direto pra página de busca -->
-                    <a href="buscar.html" class="btn-explorar-favoritos"><i class="bi bi-stars"></i> Explorar Espaços</a>
+                    <a href="/frontend/paginas/cliente/buscar.html" class="btn-explorar-favoritos"><i class="bi bi-stars"></i> Explorar Espaços</a>
                 </div>
 
             </div>
@@ -96,23 +96,23 @@
     <!-- ================= BARRA DE NAVEGAÇÃO INFERIOR =================
          Igual em todas as páginas logadas, só muda qual link tem a classe "ativo" -->
     <nav class="barra-navegacao-inferior">
-        <a href="../index-logado.html" class="item-nav">
+        <a href="/frontend/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>
             <span class="texto">Início</span>
         </a>
-        <a href="buscar.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
             <span class="material-icons-round icone">search</span>
             <span class="texto">Buscar</span>
         </a>
-        <a href="favoritos.html" class="item-nav ativo">
+        <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav ativo">
             <span class="material-icons-round icone">favorite</span>
             <span class="texto">Favoritos</span>
         </a>
-        <a href="reservas.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/reservas.html" class="item-nav">
             <span class="material-icons-round icone">calendar_month</span>
             <span class="texto">Reservas</span>
         </a>
-        <a href="perfil.html" class="item-nav">
+        <a href="/frontend/paginas/perfil.html" class="item-nav">
             <span class="material-icons-round icone">person</span>
             <span class="texto">Perfil</span>
         </a>
@@ -120,7 +120,7 @@
 
     <!-- global.js precisa vir ANTES do favoritos.js, porque é lá que ficam
          as funções obterFavoritos(), salvarFavoritos() etc. que o favoritos.js usa -->
-    <script src="../js/global.js"></script>
-    <script src="../js/paginas/favoritos.js"></script>
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/favoritos.js"></script>
 </body>
 </html>

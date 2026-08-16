@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuario = obterUsuarioLogado();
     if (!usuario || usuario.tipo !== 'dono') {
         alert('Esta área é exclusiva para contas de dono de espaço.');
-        window.location.href = '../index-logado.html';
+        window.location.href = '/frontend/index-logado.html';
         return;
     }
 

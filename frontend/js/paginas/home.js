@@ -36,7 +36,7 @@ async function carregarEspacosHome() {
 // contra XSS já usada em buscar.js, favoritos.js e painel-dono.js
 function criarCardHome(espaco) {
     const imagem = espaco.imagem || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop';
-    const link = 'paginas/detalhes/detalhes.html?slug=' + espaco.slug;
+    const link = '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
 
     const card = document.createElement('div');
     card.className = 'card';

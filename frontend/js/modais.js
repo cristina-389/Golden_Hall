@@ -16,18 +16,12 @@ function abrirModal() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        // O caminho até o cadastro-modal.html muda dependendo de quantas pastas
-        // de profundidade a página atual está (ex: uma página dentro de
-        // /paginas/detalhes/ precisa voltar menos "níveis" que a index.html na raiz).
-        let caminho = 'paginas/cadastro-modal.html'; // caminho padrão: quando quem chamou está na raiz (index.html)
-
-        if (window.location.pathname.includes('/detalhes/')) {
-            caminho = '../cadastro-modal.html'; // está dentro de /paginas/detalhes/, então sobe 1 nível
-        } else if (window.location.pathname.includes('/paginas/')) {
-            caminho = 'cadastro-modal.html'; // já está dentro de /paginas/, então é só o nome do arquivo
-        }
-
-        fetch(caminho)
+        // Caminho ABSOLUTO (começando com "/frontend/") - funciona igual não
+        // importa de qual página/pasta a função é chamada, porque não depende
+        // de "quantos níveis subir" (../, ../../, etc.). O servidor Express
+        // serve a pasta frontend/ inteira sob o prefixo "/frontend/" (ver
+        // server.js), então esse caminho sempre aponta pro mesmo arquivo.
+        fetch('/frontend/paginas/cadastro-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -91,14 +85,7 @@ function adicionarValidacaoSenha() {
 
                 salvarSessao(dados.usuario, dados.token);
                 fecharModal();
-
-                if (window.location.pathname.includes('/detalhes/')) {
-                    window.location.href = '../../index-logado.html';
-                } else if (window.location.pathname.includes('/paginas/')) {
-                    window.location.href = '../index-logado.html';
-                } else {
-                    window.location.href = 'index-logado.html';
-                }
+                window.location.href = '/frontend/index-logado.html';
             } catch (erro) {
                 alert(erro.message);
             }
@@ -118,15 +105,7 @@ function abrirModalLogin() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        let caminho = 'paginas/login-modal.html';
-
-        if (window.location.pathname.includes('/detalhes/')) {
-            caminho = '../login-modal.html';
-        } else if (window.location.pathname.includes('/paginas/')) {
-            caminho = 'login-modal.html';
-        }
-
-        fetch(caminho)
+        fetch('/frontend/paginas/login-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -168,14 +147,7 @@ function adicionarLogicaLogin() {
 
                 salvarSessao(dados.usuario, dados.token);
                 fecharModalLogin();
-
-                if (window.location.pathname.includes('/detalhes/')) {
-                    window.location.href = '../../index-logado.html';
-                } else if (window.location.pathname.includes('/paginas/')) {
-                    window.location.href = '../index-logado.html';
-                } else {
-                    window.location.href = 'index-logado.html';
-                }
+                window.location.href = '/frontend/index-logado.html';
             } catch (erro) {
                 alert(erro.message);
             }
@@ -198,15 +170,7 @@ function abrirModalAgenda() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        let caminho = 'paginas/agenda-modal.html';
-
-        if (window.location.pathname.includes('/detalhes/')) {
-            caminho = '../agenda-modal.html';
-        } else if (window.location.pathname.includes('/paginas/')) {
-            caminho = 'agenda-modal.html';
-        }
-
-        fetch(caminho)
+        fetch('/frontend/paginas/cliente/agenda-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -354,15 +318,7 @@ function abrirModalReserva(dataPreSelecionada = null) {
     };
 
     if (container.innerHTML === "") {
-        let caminho = 'paginas/reserva-modal.html';
-        
-        if (window.location.pathname.includes('/detalhes/')) {
-            caminho = '../reserva-modal.html';
-        } else if (window.location.pathname.includes('/paginas/')) {
-            caminho = 'reserva-modal.html';
-        }
-
-        fetch(caminho)
+        fetch('/frontend/paginas/cliente/reserva-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -412,7 +368,7 @@ function salvarReserva(event) {
         modalAlerta.classList.add('ativo');
     } else {
         // Fallback caso o modal-alerta não esteja no HTML (evita travar o fluxo)
-        if (confirm('Atenção: Cancelamentos a menos de 7 dias possuem multa de 30%. Confirmar?')) {
+        if (confirm('Confirmar a solicitação de reserva?')) {
             confirmarReservaFinal();
         }
     }
@@ -459,7 +415,7 @@ async function confirmarReservaFinal() {
         } else {
             // Fallback caso o modal-sucesso não esteja no HTML
             alert('✅ Solicitação enviada com sucesso!');
-            window.location.href = 'reservas.html';
+            window.location.href = '/frontend/paginas/cliente/reservas.html';
         }
     } catch (erro) {
         // Ex: "Essa data já está ocupada para este espaço" (409, quando duas
@@ -472,7 +428,7 @@ async function confirmarReservaFinal() {
 
 // PASSO 3: Botão de ir para Minhas Reservas no Modal de Sucesso
 function irParaMinhasReservas() {
-    window.location.href = '../reservas.html';
+    window.location.href = '/frontend/paginas/cliente/reservas.html';
 }
 
 

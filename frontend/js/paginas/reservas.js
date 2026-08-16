@@ -2,8 +2,7 @@
    GOLDEN HALL - PÁGINA "MINHAS RESERVAS"
    Busca as reservas de quem está logado em GET /api/minhas-reservas (a API
    já devolve o nome do espaço junto, graças ao JOIN feito no back-end) e
-   desenha um card para cada uma, junto com as regras de cancelamento
-   (grátis ou com multa).
+   desenha um card para cada uma.
    ========================================================================== */
 
 // Assim que a página carrega, já busca e desenha as reservas salvas
@@ -42,7 +41,7 @@ async function carregarMinhasReservas() {
             <div class="reservas-vazias">
                 <i class="bi bi-calendar-x"></i>
                 <p>Você ainda não possui nenhuma reserva realizada no Golden Hall.</p>
-                <a href="buscar.html" class="btn-novo-espaco"><i class="bi bi-search"></i> Explorar Espaços Disponíveis</a>
+                <a href="/frontend/paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-search"></i> Explorar Espaços Disponíveis</a>
             </div>
         `;
         return;
@@ -70,13 +69,13 @@ async function carregarMinhasReservas() {
                         <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
 
                         <p class="aviso-prazo-cancelamento">
-                        <i class="bi bi-shield-exclamation"></i>
-                        <span>Cancelamento grátis até 7 dias antes do evento.</span>
+                        <i class="bi bi-shield-check"></i>
+                        <span>Cancelamento gratuito a qualquer momento.</span>
                         </p>
                     </div>
                 </div>
 
-                <button class="btn-cancelar-reserva" onclick="cancelarReserva(${reserva.id}, '${reserva.data}')">
+                <button class="btn-cancelar-reserva" onclick="cancelarReserva(${reserva.id})">
                     <i class="bi bi-trash"></i> Cancelar Reserva
                 </button>
             </div>
@@ -104,34 +103,12 @@ function atualizarEstatisticas(reservas) {
     aprovadasEl.textContent = aprovadas;
 }
 
-// Configuração da Regra de Negócio
-const REGRAS_CANCELAMENTO = {
-    DIAS_LIMITE_GRATIS: 7, // Até quantos dias antes da data o cancelamento é 100% gratuito
-    PORCENTAGEM_MULTA: 30  // Porcentagem da taxa cobrada após o prazo
-};
-
-// Botão "Cancelar Reserva" de um card: calcula quantos dias faltam pro
-// evento, avisa se vai ter multa ou não, e só chama a API (DELETE
-// /api/reservas/:id) se a pessoa confirmar no alerta. O cálculo de multa
-// aqui é só uma mensagem pro usuário - o back-end é quem decide de verdade
-// se pode cancelar (só o dono da reserva consegue, ver routes/reservas.js).
-// "dataEventoISO" vem no formato AAAA-MM-DD, direto do banco.
-async function cancelarReserva(idReserva, dataEventoISO) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const [ano, mes, dia] = dataEventoISO.split('-');
-    const dataEvento = new Date(ano, mes - 1, dia);
-    const diasRestantes = Math.ceil((dataEvento.getTime() - hoje.getTime()) / (1000 * 3600 * 24));
-
-    let mensagemConfirmacao;
-    if (diasRestantes >= REGRAS_CANCELAMENTO.DIAS_LIMITE_GRATIS) {
-        mensagemConfirmacao = `ℹ️ CANCELAMENTO GRATUITO\n\nVocê está dentro do prazo de cancelamento sem taxas (mínimo de ${REGRAS_CANCELAMENTO.DIAS_LIMITE_GRATIS} dias de antecedência).\n\nDeseja realmente cancelar esta reserva?`;
-    } else {
-        mensagemConfirmacao = `⚠️ ATENÇÃO: CANCELAMENTO SUJEITO À MULTA!\n\nComo o prazo de cancelamento gratuito (${REGRAS_CANCELAMENTO.DIAS_LIMITE_GRATIS} dias de antecedência) expirou, será cobrada uma taxa de rescisão de ${REGRAS_CANCELAMENTO.PORCENTAGEM_MULTA}% sobre o valor do agendamento.\n\nDeseja confirmar o cancelamento e gerar a taxa de multa?`;
-    }
-
-    if (!confirm(mensagemConfirmacao)) return;
+// Botão "Cancelar Reserva" de um card: confirma com a pessoa e só chama a
+// API (DELETE /api/reservas/:id) se ela confirmar no alerta. Quem decide de
+// verdade se pode cancelar é o back-end (só o dono da reserva consegue, ver
+// routes/reservas.js).
+async function cancelarReserva(idReserva) {
+    if (!confirm('Deseja realmente cancelar esta reserva? O cancelamento é gratuito.')) return;
 
     try {
         await chamarAPI(`/api/reservas/${idReserva}`, { method: 'DELETE' });

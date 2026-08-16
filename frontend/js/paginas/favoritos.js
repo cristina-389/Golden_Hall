@@ -89,7 +89,7 @@ async function carregarFavoritos() {
 // (não innerHTML) pelo mesmo motivo de buscar.js: evita que texto digitado
 // por um dono vire HTML de verdade na página (XSS).
 function criarCardFavorito(espaco) {
-    const link = 'detalhes/detalhes.html?slug=' + espaco.slug;
+    const link = '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
     const imagem = espaco.imagem || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop';
 
     const card = document.createElement('div');

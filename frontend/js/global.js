@@ -50,14 +50,7 @@ function confirmarSaida() {
     const certeza = confirm("Tem certeza que deseja sair da sua conta no Golden Hall?");
     if (certeza) {
         limparSessao(); // apaga o token guardado - a partir daqui a pessoa não está mais "logada"
-
-        // Verifica se o arquivo está dentro de /paginas para ajustar o caminho de volta
-        // (de dentro de /paginas precisa subir uma pasta com "../" pra chegar na index.html)
-        if (window.location.pathname.includes('/paginas/')) {
-            window.location.href = '../index.html';
-        } else {
-            window.location.href = 'index.html';
-        }
+        window.location.href = '/frontend/index.html'; // caminho absoluto, funciona de qualquer página
     }
 }
 
@@ -248,13 +241,8 @@ function ajustarNavegacaoParaDono() {
     const nav = document.querySelector('.barra-navegacao-inferior');
     if (!nav) return;
 
-    // Mesmo cálculo de caminho relativo já usado em modais.js/detalhes.js
-    let caminhoPainel = 'paginas/painel-dono.html';
-    if (window.location.pathname.includes('/detalhes/')) {
-        caminhoPainel = '../painel-dono.html';
-    } else if (window.location.pathname.includes('/paginas/')) {
-        caminhoPainel = 'painel-dono.html';
-    }
+    // Caminho absoluto - funciona de qualquer página, sem calcular "níveis"
+    const caminhoPainel = '/frontend/paginas/dono/painel-dono.html';
 
     nav.querySelectorAll('.item-nav').forEach(item => {
         const icone = item.querySelector('.icone');

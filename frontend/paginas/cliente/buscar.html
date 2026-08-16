@@ -1,5 +1,5 @@
 <!--
-  GOLDEN HALL - PÁGINA DE BUSCA (paginas/buscar.html)
+  GOLDEN HALL - PÁGINA DE BUSCA (paginas/cliente/buscar.html)
   Tela de busca/filtro de espaços. Os espaços vêm de verdade da API
   (GET /api/espacos) - buscar.js busca a lista assim que a página carrega
   e desenha os cards dinamicamente. O botão de coração de cada card usa as
@@ -21,8 +21,8 @@
   <!--icones dourados-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/paginas/buscar.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/buscar.css">
 </head>
 <body class="logado-layout dark">
 
@@ -124,29 +124,29 @@
     </main>
 
     <nav class="barra-navegacao-inferior">
-        <a href="../index-logado.html" class="item-nav">
+        <a href="/frontend/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>
             <span class="texto">Início</span>
         </a>
-        <a href="buscar.html" class="item-nav ativo">
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav ativo">
             <span class="material-icons-round icone">search</span>
             <span class="texto">Buscar</span>
         </a>
-        <a href="favoritos.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
             <span class="material-icons-round icone">favorite</span>
             <span class="texto">Favoritos</span>
         </a>
-        <a href="reservas.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/reservas.html" class="item-nav">
             <span class="material-icons-round icone">calendar_month</span>
             <span class="texto">Reservas</span>
         </a>
-        <a href="perfil.html" class="item-nav">
+        <a href="/frontend/paginas/perfil.html" class="item-nav">
             <span class="material-icons-round icone">person</span>
             <span class="texto">Perfil</span>
         </a>
     </nav>
 
-    <script src="../js/global.js"></script>
-    <script src="../js/paginas/buscar.js"></script>
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/buscar.js"></script>
 </body>
 </html>

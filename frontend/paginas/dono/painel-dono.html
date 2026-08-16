@@ -1,5 +1,5 @@
 <!--
-  GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/painel-dono.html)
+  GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/dono/painel-dono.html)
   Página exclusiva pra contas do tipo "dono" (ver js/paginas/painel-dono.js,
   que bloqueia o acesso de quem não for). Lista os espaços do dono logado
   e permite criar, editar, apagar, e ver/aprovar as reservas recebidas em
@@ -19,10 +19,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/paginas/reservas.css">
-    <link rel="stylesheet" href="../css/paginas/favoritos.css">
-    <link rel="stylesheet" href="../css/paginas/painel-dono.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/favoritos.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/painel-dono.css">
 </head>
 <body class="logado-layout dark">
 
@@ -63,19 +63,19 @@
     </main>
 
     <nav class="barra-navegacao-inferior">
-        <a href="../index-logado.html" class="item-nav">
+        <a href="/frontend/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>
             <span class="texto">Início</span>
         </a>
-        <a href="buscar.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
             <span class="material-icons-round icone">search</span>
             <span class="texto">Buscar</span>
         </a>
-        <a href="painel-dono.html" class="item-nav ativo">
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav ativo">
             <span class="material-icons-round icone">storefront</span>
             <span class="texto">Meus Espaços</span>
         </a>
-        <a href="perfil.html" class="item-nav">
+        <a href="/frontend/paginas/perfil.html" class="item-nav">
             <span class="material-icons-round icone">person</span>
             <span class="texto">Perfil</span>
         </a>
@@ -142,7 +142,7 @@
         </div>
     </div>
 
-    <script src="../js/global.js"></script>
-    <script src="../js/paginas/painel-dono.js"></script>
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/painel-dono.js"></script>
 </body>
 </html>

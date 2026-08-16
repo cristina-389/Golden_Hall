@@ -14,7 +14,7 @@ async function carregarPerfil() {
     // Sem login, não tem perfil nenhum pra mostrar
     if (!obterUsuarioLogado()) {
         alert('Você precisa entrar na sua conta para ver o perfil.');
-        window.location.href = '../index.html';
+        window.location.href = '/frontend/index.html';
         return;
     }
 

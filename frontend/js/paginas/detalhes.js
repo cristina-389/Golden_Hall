@@ -97,7 +97,7 @@ function inicializarBotaoFavoritoDetalhe(espaco) {
         local: espaco.local || '',
         capacidade: formatarCapacidade(espaco.capacidade),
         preco: formatarPreco(espaco.preco),
-        link: 'detalhes/detalhes.html?slug=' + espaco.slug
+        link: '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug
     };
 
     if (isFavorito(espaco.slug)) {

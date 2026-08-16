@@ -1,9 +1,7 @@
 /* ==========================================================================
    GOLDEN HALL - DESIGN DA PÁGINA INTERNA DE DETALHES DO SALÃO
-   Usado pelas 6 páginas em paginas/detalhes/*.html (chacara-golden,
-   salao-golden-luxo, eventos-royal, jardim-das-flores, villa-imperial e
-   espaco-premium), que são idênticas em estrutura, só trocando o
-   conteúdo (texto, fotos, valores).
+   Usado por paginas/cliente/detalhes/detalhes.html, o template único (dinâmico) que
+   mostra qualquer espaço cadastrado, buscando os dados de verdade na API.
    ========================================================================== */
 
 .detalhe-page {
@@ -144,13 +142,6 @@
 .box ul { padding-left: 22px; }
 .box li { margin-bottom: 10px; }
 
-/* Duas colunas lado a lado: "Eventos permitidos" e "Benefícios" */
-.grid-box {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-}
-
 /* Fileira dos botões "Reservar este espaço" / "Fale Conosco" no final da página */
 .acoes {
     display: flex;
@@ -196,46 +187,6 @@
     font-size: 1.1rem;
 }
 
-/* Seção do carrossel de avaliações (o texto muda via JS, ver mostrarAvaliacao() em detalhes.js) */
-.avaliacoes {
-    margin: 80px 0;
-    text-align: center;
-}
-
-.avaliacoes h2 {
-    font-family: "Cinzel", serif;
-    color: #d4af37;
-    font-size: 2rem;
-    margin-bottom: 30px;
-}
-
-/* Caixa com a seta "❮", o texto/autor da avaliação no meio, e a seta "❯" */
-.avaliacao-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(212, 175, 55, .3);
-}
-
-.avaliacao-conteudo { max-width: 700px; }
-.estrelas { color: #d4af37; font-size: 28px; margin-bottom: 15px; }
-.avaliacao-conteudo p { font-size: 18px; line-height: 1.8; margin-bottom: 15px; }
-.avaliacao-conteudo h4 { color: #d4af37; font-weight: 600; }
-
-.seta {
-    background: none;
-    border: none;
-    font-size: 35px;
-    cursor: pointer;
-    color: #d4af37;
-    transition: .3s;
-}
-
-.seta:hover { transform: scale(1.2); }
-
 /* Cabeçalho mais fino/compacto especificamente nas páginas de detalhes
    (o cabeçalho "padrão" do site é maior - aqui reduzimos tudo um pouco) */
 .header-detalhes { padding: 12px 40px; min-height: 70px; }
@@ -275,33 +226,18 @@
 
 .localizacao-info h3 { font-size: 2rem; margin-bottom: 20px; }
 .descricao-localizacao { font-size: 1.1rem; line-height: 1.8; margin-bottom: 35px; }
-.vantagens-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 35px; }
-
-.vantagem-card {
-    display: flex;
-    gap: 15px;
-    padding: 18px;
-    border-radius: 18px;
-    transition: .3s;
-}
-
-.vantagem-card:hover { transform: translateY(-4px); }
-.vantagem-card h4 { font-family: "Cinzel", serif; color: #d4af37; margin-bottom: 8px; }
-.vantagem-card p { font-size: .95rem; line-height: 1.5; }
 .localizacao-mapa iframe { width: 100%; height: 600px; border: none; border-radius: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, .15); }
 
 body:not(.dark) .localizacao-section { background: #fdfdfd; border: 1px solid rgba(212, 175, 55, .4); }
-body:not(.dark) .vantagem-card { background: #fff; border: 1px solid rgba(212, 175, 55, .25); box-shadow: 0 5px 15px rgba(0, 0, 0, .06); }
 
 body.dark .localizacao-section { background: #111; border: 1px solid rgba(212, 175, 55, .3); }
 body.dark .localizacao-info { color: #f5f5f5; }
-body.dark .vantagem-card { background: #1b1b1b; border: 1px solid rgba(212, 175, 55, .2); }
 body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
 
 /* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
    a ter só 1 coluna, ficando uma embaixo da outra. */
 @media(max-width:900px) {
-    .hero-detalhe, .grid-box, .info-rapida, .localizacao-section, .vantagens-grid { grid-template-columns: 1fr; }
+    .hero-detalhe, .info-rapida, .localizacao-section { grid-template-columns: 1fr; }
     .hero-info h1 { font-size: 40px; }
     .localizacao-section { padding: 25px; }
     .localizacao-mapa iframe { height: 350px; }

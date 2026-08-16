@@ -1,5 +1,5 @@
 <!--
-  GOLDEN HALL - PÁGINA "MINHAS RESERVAS" (paginas/reservas.html)
+  GOLDEN HALL - PÁGINA "MINHAS RESERVAS" (paginas/cliente/reservas.html)
   Os números das estatísticas (Total/Pendentes/Aprovadas) e a lista de
   cards dentro de #lista-reservas começam vazios/zerados no HTML - é o
   js/paginas/reservas.js que lê o localStorage e preenche tudo isso assim
@@ -19,8 +19,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/paginas/reservas.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
 </head>
 <body class="logado-layout dark">
 
@@ -63,7 +63,7 @@
 
             <div class="secao-titulo-grid">
                 <h3>Meus Agendamentos</h3>
-                <a href="buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
+                <a href="/frontend/paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
             </div>
 
             <!-- Preenchida via JS (carregarMinhasReservas() em reservas.js) com
@@ -76,29 +76,29 @@
     </main>
 
     <nav class="barra-navegacao-inferior">
-        <a href="../index-logado.html" class="item-nav">
+        <a href="/frontend/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>
             <span class="texto">Início</span>
         </a>
-        <a href="buscar.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
             <span class="material-icons-round icone">search</span>
             <span class="texto">Buscar</span>
         </a>
-        <a href="favoritos.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
             <span class="material-icons-round icone">favorite</span>
             <span class="texto">Favoritos</span>
         </a>
-        <a href="reservas.html" class="item-nav ativo">
+        <a href="/frontend/paginas/cliente/reservas.html" class="item-nav ativo">
             <span class="material-icons-round icone">calendar_month</span>
             <span class="texto">Reservas</span>
         </a>
-        <a href="perfil.html" class="item-nav">
+        <a href="/frontend/paginas/perfil.html" class="item-nav">
             <span class="material-icons-round icone">person</span>
             <span class="texto">Perfil</span>
         </a>
     </nav>
 
-    <script src="../js/global.js"></script>
-    <script src="../js/paginas/reservas.js"></script>
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/reservas.js"></script>
 </body>
 </html>
