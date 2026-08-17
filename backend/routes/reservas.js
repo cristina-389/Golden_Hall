@@ -8,7 +8,7 @@
 
 const express = require('express');
 const db = require('../database/db');
-const { autenticar, exigirDono } = require('../middlewares/autenticacao');
+const { autenticar, exigirProprietario } = require('../middlewares/autenticacao');
 
 const router = express.Router();
 
@@ -81,6 +81,9 @@ router.post('/reservas', autenticar, (req, res) => {
 
 // --------------------------------------------------------------------------
 // GET /api/minhas-reservas - lista as reservas de quem está logado
+// O "LEFT JOIN avaliacoes" traz junto se cada reserva já foi avaliada ou não
+// (campo "avaliado": 1 ou 0) - é o que decide se a tela mostra o botão
+// "Avaliar" ou "Você já avaliou" pra cada reserva aprovada.
 // --------------------------------------------------------------------------
 router.get('/minhas-reservas', autenticar, (req, res) => {
     // JOIN: busca nas duas tabelas ao mesmo tempo, ligando pelo espaco_id -
@@ -91,15 +94,58 @@ router.get('/minhas-reservas', autenticar, (req, res) => {
                 reservas.*,
                 espacos.nome AS espaco_nome,
                 espacos.slug AS espaco_slug,
-                espacos.imagem AS espaco_imagem
+                espacos.imagem AS espaco_imagem,
+                CASE WHEN avaliacoes.id IS NULL THEN 0 ELSE 1 END AS avaliado
             FROM reservas
             JOIN espacos ON espacos.id = reservas.espaco_id
+            LEFT JOIN avaliacoes ON avaliacoes.reserva_id = reservas.id
             WHERE reservas.usuario_id = ?
             ORDER BY reservas.criado_em DESC
         `)
         .all(req.usuario.id);
 
     res.json(reservas);
+});
+
+// --------------------------------------------------------------------------
+// POST /api/reservas/:id/avaliacao - cliente avalia uma reserva já aprovada
+// Body: { nota, comentario }. Só dá pra avaliar reserva PRÓPRIA, com status
+// "Aprovado", e só UMA vez (a UNIQUE(reserva_id) do banco garante isso, mas
+// conferimos antes também pra devolver uma mensagem de erro clara).
+// --------------------------------------------------------------------------
+router.post('/reservas/:id/avaliacao', autenticar, (req, res) => {
+    const notaNumero = Number(req.body.nota);
+    const comentario = req.body.comentario;
+
+    if (!notaNumero || notaNumero < 1 || notaNumero > 5) {
+        return res.status(400).json({ erro: 'Dê uma nota de 1 a 5 estrelas.' });
+    }
+
+    const reserva = db.prepare('SELECT * FROM reservas WHERE id = ?').get(req.params.id);
+
+    if (!reserva) {
+        return res.status(404).json({ erro: 'Reserva não encontrada.' });
+    }
+
+    if (reserva.usuario_id !== req.usuario.id) {
+        return res.status(403).json({ erro: 'Você só pode avaliar as suas próprias reservas.' });
+    }
+
+    if (reserva.status !== 'Aprovado') {
+        return res.status(400).json({ erro: 'Só é possível avaliar reservas já aprovadas pelo proprietário.' });
+    }
+
+    const jaAvaliada = db.prepare('SELECT id FROM avaliacoes WHERE reserva_id = ?').get(req.params.id);
+    if (jaAvaliada) {
+        return res.status(409).json({ erro: 'Você já avaliou esta reserva.' });
+    }
+
+    db.prepare(`
+        INSERT INTO avaliacoes (espaco_id, usuario_id, reserva_id, nota, comentario)
+        VALUES (?, ?, ?, ?, ?)
+    `).run(reserva.espaco_id, req.usuario.id, reserva.id, notaNumero, comentario || null);
+
+    res.status(201).json({ ok: true });
 });
 
 // --------------------------------------------------------------------------
@@ -121,10 +167,10 @@ router.delete('/reservas/:id', autenticar, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
-// PUT /api/reservas/:id/status - o DONO do espaço aprova (ou recusa) uma
-// reserva recebida. Body: { status } ("Aprovado" ou "Cancelado")
+// PUT /api/reservas/:id/status - o PROPRIETÁRIO do espaço aprova (ou recusa)
+// uma reserva recebida. Body: { status } ("Aprovado" ou "Cancelado")
 // --------------------------------------------------------------------------
-router.put('/reservas/:id/status', autenticar, exigirDono, (req, res) => {
+router.put('/reservas/:id/status', autenticar, exigirProprietario, (req, res) => {
     const { status } = req.body;
 
     if (!['Aprovado', 'Cancelado'].includes(status)) {
@@ -132,7 +178,7 @@ router.put('/reservas/:id/status', autenticar, exigirDono, (req, res) => {
     }
 
     // JOIN com espacos pra conferir de quem é o espaço dessa reserva -
-    // só o dono DAQUELE espaço específico pode aprovar/recusar
+    // só o proprietário DAQUELE espaço específico pode aprovar/recusar
     const reserva = db
         .prepare(`
             SELECT reservas.*, espacos.dono_id

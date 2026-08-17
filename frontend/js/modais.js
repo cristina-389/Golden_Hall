@@ -11,9 +11,19 @@
 // BUSCAR esse arquivo com fetch() e injetar o HTML dentro da div
 // "container-modal-cadastro". Nas próximas vezes, o HTML já está ali dentro
 // (container.innerHTML não está mais vazio), então só precisa mostrar o modal.
-function abrirModal() {
+//
+// "tipoPreSelecionado" é opcional: passe 'proprietario' (ex: botão "Cadastre
+// seu espaço" na home) pra abrir o formulário já com essa opção marcada no
+// campo "Quero me cadastrar como", em vez da pessoa ter que trocar na mão.
+function abrirModal(tipoPreSelecionado = null) {
     const container = document.getElementById('container-modal-cadastro');
     if (!container) return;
+
+    const aplicarTipoPreSelecionado = () => {
+        if (!tipoPreSelecionado) return;
+        const selectTipo = document.getElementById('cadastro-tipo-conta');
+        if (selectTipo) selectTipo.value = tipoPreSelecionado;
+    };
 
     if (container.innerHTML === "") {
         // Caminho ABSOLUTO (começando com "/frontend/") - funciona igual não
@@ -31,12 +41,14 @@ function abrirModal() {
                     const modal = document.getElementById('modal-cadastro');
                     if (modal) modal.classList.add('ativo'); // classe "ativo" é o que o CSS usa pra mostrar o modal na tela
                     adicionarValidacaoSenha();
+                    aplicarTipoPreSelecionado();
                 }, 50);
             })
             .catch(erro => console.error('Erro ao carregar o cadastro:', erro));
     } else {
         const modal = document.getElementById('modal-cadastro');
         if (modal) modal.classList.add('ativo');
+        aplicarTipoPreSelecionado();
     }
 }
 
@@ -70,7 +82,7 @@ function adicionarValidacaoSenha() {
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
             const telefone = document.getElementById('telefone').value;
-            // Campo "Quero me cadastrar como" (cliente ou dono de espaço) - se o
+            // Campo "Quero me cadastrar como" (cliente ou proprietário de espaço) - se o
             // formulário não tiver esse campo por algum motivo, cai em "cliente"
             const tipo = document.getElementById('cadastro-tipo-conta')?.value || 'cliente';
 

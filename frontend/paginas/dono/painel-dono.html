@@ -1,7 +1,7 @@
 <!--
   GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/dono/painel-dono.html)
-  Página exclusiva pra contas do tipo "dono" (ver js/paginas/painel-dono.js,
-  que bloqueia o acesso de quem não for). Lista os espaços do dono logado
+  Página exclusiva pra contas do tipo "proprietario" (ver js/paginas/painel-dono.js,
+  que bloqueia o acesso de quem não for). Lista os espaços do proprietário logado
   e permite criar, editar, apagar, e ver/aprovar as reservas recebidas em
   cada um - tudo ligado direto na API, sem nenhum dado fixo no HTML.
 -->
@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Hall | Painel do Dono</title>
+    <title>Golden Hall | Painel do Proprietário</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
         <section class="banner-reservas">
             <div class="overlay-banner"></div>
             <div class="conteudo-banner">
-                <span class="badge-gold"><i class="bi bi-shop"></i> Painel do Dono</span>
+                <span class="badge-gold"><i class="bi bi-shop"></i> Painel do Proprietário</span>
                 <h2>Meus <span class="gold-text">Espaços</span></h2>
                 <p>Cadastre seus espaços e gerencie as reservas recebidas no Golden Hall</p>
             </div>
@@ -121,6 +121,26 @@
                     <div class="input-grupo">
                         <label for="espaco-form-imagem">URL da Foto Principal</label>
                         <input type="url" id="espaco-form-imagem" placeholder="https://...">
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-fotos">Fotos Extras (uma URL por linha)</label>
+                        <textarea id="espaco-form-fotos" rows="3" placeholder="https://.../foto1.jpg&#10;https://.../foto2.jpg"></textarea>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-beneficios">Benefícios (um por linha)</label>
+                        <textarea id="espaco-form-beneficios" rows="3" placeholder="Estacionamento&#10;Ar condicionado&#10;Cozinha equipada"></textarea>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-eventos">Eventos Permitidos (um por linha)</label>
+                        <textarea id="espaco-form-eventos" rows="3" placeholder="Casamento&#10;Aniversário&#10;Formatura"></textarea>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="espaco-form-pontos-referencia">Pontos de Referência da Localização (um por linha)</label>
+                        <textarea id="espaco-form-pontos-referencia" rows="3" placeholder="A 5 minutos do centro&#10;Fácil acesso pela rodovia&#10;Perto de hotéis"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-gold btn-bloco">Salvar Espaço</button>

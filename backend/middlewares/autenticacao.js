@@ -41,12 +41,12 @@ function autenticar(req, res, next) {
 }
 
 // Middleware extra: além de estar logado, exige que o tipo da conta seja
-// "dono". Sempre usado DEPOIS de "autenticar" (que é quem preenche req.usuario).
-function exigirDono(req, res, next) {
-    if (req.usuario.tipo !== 'dono') {
-        return res.status(403).json({ erro: 'Essa ação é exclusiva de contas de dono de espaço.' });
+// "proprietario". Sempre usado DEPOIS de "autenticar" (que é quem preenche req.usuario).
+function exigirProprietario(req, res, next) {
+    if (req.usuario.tipo !== 'proprietario') {
+        return res.status(403).json({ erro: 'Essa ação é exclusiva de contas de proprietário de espaço.' });
     }
     next();
 }
 
-module.exports = { autenticar, exigirDono };
+module.exports = { autenticar, exigirProprietario };

@@ -38,9 +38,9 @@ router.post('/cadastro', (req, res) => {
         return res.status(400).json({ erro: 'Preencha nome, e-mail e senha.' });
     }
 
-    // Só aceita "dono" se vier explicitamente escrito assim; qualquer outra
-    // coisa (ou nada) vira "cliente", que é o tipo padrão de conta
-    const tipoFinal = tipo === 'dono' ? 'dono' : 'cliente';
+    // Só aceita "proprietario" se vier explicitamente escrito assim; qualquer
+    // outra coisa (ou nada) vira "cliente", que é o tipo padrão de conta
+    const tipoFinal = tipo === 'proprietario' ? 'proprietario' : 'cliente';
 
     // Transforma a senha digitada num hash antes de guardar
     const senhaCriptografada = bcrypt.hashSync(senha, CUSTO_HASH);

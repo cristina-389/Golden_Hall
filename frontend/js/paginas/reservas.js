@@ -53,6 +53,16 @@ async function carregarMinhasReservas() {
         const status = reserva.status || 'Pendente';
         const classeStatus = status.toLowerCase() === 'aprovado' ? 'status-aprovado' : 'status-pendente';
 
+        // Só reservas já Aprovadas podem ser avaliadas - e só uma vez (ver
+        // routes/reservas.js). "avaliado" vem pronto da API (LEFT JOIN
+        // avaliacoes em GET /api/minhas-reservas).
+        let botaoAvaliacao = '';
+        if (status === 'Aprovado') {
+            botaoAvaliacao = reserva.avaliado
+                ? `<span class="ja-avaliado"><i class="bi bi-star-fill"></i> Você já avaliou este espaço</span>`
+                : `<button class="btn-avaliar-reserva" onclick="abrirModalAvaliacao(${reserva.id})"><i class="bi bi-star"></i> Avaliar Espaço</button>`;
+        }
+
         const cardHTML = `
             <div class="card-reserva">
                 <div>
@@ -75,6 +85,8 @@ async function carregarMinhasReservas() {
                     </div>
                 </div>
 
+                ${botaoAvaliacao}
+
                 <button class="btn-cancelar-reserva" onclick="cancelarReserva(${reserva.id})">
                     <i class="bi bi-trash"></i> Cancelar Reserva
                 </button>
@@ -84,6 +96,55 @@ async function carregarMinhasReservas() {
         container.innerHTML += cardHTML;
     });
 }
+
+/* ==========================================================================
+   MODAL DE AVALIAÇÃO
+   ========================================================================== */
+let reservaEmAvaliacaoId = null;
+
+function abrirModalAvaliacao(idReserva) {
+    reservaEmAvaliacaoId = idReserva;
+    document.getElementById('form-avaliacao').reset();
+    document.getElementById('modal-avaliacao').classList.add('ativo');
+}
+
+function fecharModalAvaliacao() {
+    document.getElementById('modal-avaliacao').classList.remove('ativo');
+    reservaEmAvaliacaoId = null;
+}
+
+// Fecha o modal ao clicar fora dele (no overlay escuro), mesmo padrão usado
+// nos outros modais do site (ver modais.js)
+window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('modal-avaliacao')) {
+        fecharModalAvaliacao();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('form-avaliacao');
+    if (!form) return;
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const nota = document.getElementById('avaliacao-nota').value;
+        const comentario = document.getElementById('avaliacao-comentario').value;
+
+        try {
+            await chamarAPI(`/api/reservas/${reservaEmAvaliacaoId}/avaliacao`, {
+                method: 'POST',
+                body: JSON.stringify({ nota: Number(nota), comentario })
+            });
+
+            fecharModalAvaliacao();
+            alert('Obrigado! Sua avaliação foi enviada.');
+            carregarMinhasReservas(); // recarrega os cards - o botão vira "Você já avaliou"
+        } catch (erro) {
+            alert(erro.message);
+        }
+    });
+});
 
 // Preenche os números do painel no topo da página (total de reservas,
 // quantas estão pendentes e quantas já foram aprovadas)

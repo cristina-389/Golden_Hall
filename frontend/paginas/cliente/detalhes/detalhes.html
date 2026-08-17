@@ -9,12 +9,12 @@
   começa vazio/genérico no HTML e é preenchido pelo JS assim que a resposta
   da API chega - ver carregarEspaco() em js/paginas/detalhes.js.
 
-  Seções que existiam antes (Eventos permitidos, Benefícios, "vantagens" da
-  localização, Avaliações, Galeria de fotos) foram removidas porque eram só
-  texto/dados fixos de exemplo, iguais em todo espaço - o banco de dados só
-  guarda nome, descrição, local, capacidade, preço e uma foto por espaço.
-  Dá pra adicionar essas listas de verdade mais pra frente, se fizer
-  sentido (precisaria de novas colunas/tabelas no banco).
+  Galeria de fotos, benefícios e avaliações são de verdade agora (vêm das
+  tabelas fotos_espaco, beneficios e avaliacoes) - o proprietário cadastra
+  fotos/benefícios no painel dele, e avaliações só existem quando um
+  cliente com reserva Aprovada avalia de verdade (ver reservas.js). Cada
+  seção só aparece se tiver algo pra mostrar (fica escondida se a lista
+  vier vazia da API).
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -113,6 +113,13 @@
 
             </section>
 
+            <!-- GALERIA DE FOTOS - só aparece se o espaço tiver fotos extras
+                 cadastradas (ver preencherPagina() em detalhes.js). Clicar
+                 numa miniatura troca a foto grande lá em cima. -->
+            <section class="galeria-fotos" id="galeria-fotos" style="display:none;">
+                <div class="galeria-fotos-grid" id="galeria-fotos-grid"></div>
+            </section>
+
             <!-- CARDS -->
 
             <section class="info-rapida">
@@ -152,6 +159,23 @@
 
             </section>
 
+            <!-- BENEFÍCIOS E EVENTOS PERMITIDOS - cada bloco só aparece se o
+                 proprietário tiver cadastrado pelo menos um item nele (ver
+                 preencherPagina() em detalhes.js) -->
+            <div class="grid-box" id="grid-beneficios-eventos">
+
+                <section class="box" id="secao-beneficios" style="display:none;">
+                    <h2><i class="bi bi-check2-circle"></i> Benefícios</h2>
+                    <ul id="lista-beneficios"></ul>
+                </section>
+
+                <section class="box" id="secao-eventos" style="display:none;">
+                    <h2><i class="bi bi-calendar-check"></i> Eventos Permitidos</h2>
+                    <ul id="lista-eventos"></ul>
+                </section>
+
+            </div>
+
             <section class="localizacao-section">
 
                 <div class="localizacao-info">
@@ -168,11 +192,33 @@
                         Ver no mapa
                     </a>
 
+                    <!-- PONTOS DE REFERÊNCIA - só aparece se tiver pelo menos
+                         um cadastrado (ver preencherPagina() em detalhes.js) -->
+                    <div class="pontos-referencia-grid" id="pontos-referencia-grid"></div>
+
                 </div>
 
                 <div class="localizacao-mapa">
                     <iframe id="espaco-iframe-mapa" src="" loading="lazy" allowfullscreen></iframe>
                 </div>
+
+            </section>
+
+            <!-- AVALIAÇÕES - só de quem realmente teve uma reserva Aprovada
+                 nesse espaço (ver botão "Avaliar" em paginas/cliente/reservas.html) -->
+            <section class="avaliacoes-detalhe">
+
+                <div class="section-title">
+                    <span class="line"></span>
+                    <div class="diamond">✦</div>
+                    <span class="line"></span>
+                </div>
+
+                <h2 class="titulo-central">Avaliações</h2>
+
+                <div class="resumo-avaliacoes" id="resumo-avaliacoes"></div>
+
+                <div class="lista-avaliacoes" id="lista-avaliacoes"></div>
 
             </section>
 

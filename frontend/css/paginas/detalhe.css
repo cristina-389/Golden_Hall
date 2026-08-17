@@ -142,6 +142,107 @@
 .box ul { padding-left: 22px; }
 .box li { margin-bottom: 10px; }
 
+/* Duas colunas lado a lado: Benefícios e Eventos Permitidos. Se só uma das
+   duas tiver conteúdo, o CSS não sabe disso - é o JS (preencherPagina() em
+   detalhes.js) quem esconde a .box vazia, então às vezes só uma coluna
+   aparece preenchida mesmo dentro do grid de duas. */
+.grid-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto 40px;
+}
+
+/* GALERIA DE FOTOS: miniaturas clicáveis logo abaixo da foto principal -
+   clicar numa delas troca a imagem grande (ver trocarFotoPrincipal() em
+   detalhes.js) */
+.galeria-fotos {
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.galeria-fotos-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.galeria-fotos-grid img {
+    width: 110px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: .2s;
+    opacity: .8;
+}
+
+.galeria-fotos-grid img:hover {
+    opacity: 1;
+}
+
+.galeria-fotos-grid img.miniatura-ativa {
+    border-color: #d4af37;
+    opacity: 1;
+}
+
+/* AVALIAÇÕES */
+.avaliacoes-detalhe {
+    max-width: 800px;
+    margin: 0 auto 60px;
+}
+
+.resumo-avaliacoes {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.resumo-avaliacoes .estrelas {
+    color: #d4af37;
+    font-size: 26px;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.card-avaliacao {
+    padding: 20px 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 175, 55, .3);
+    margin-bottom: 15px;
+}
+
+.card-avaliacao-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.card-avaliacao-topo .estrelas {
+    color: #d4af37;
+    letter-spacing: 1px;
+}
+
+.card-avaliacao .autor {
+    font-weight: 600;
+}
+
+.card-avaliacao .data {
+    font-size: .82rem;
+    opacity: .6;
+}
+
+.card-avaliacao .comentario {
+    line-height: 1.6;
+    opacity: .9;
+}
+
 /* Fileira dos botões "Reservar este espaço" / "Fale Conosco" no final da página */
 .acoes {
     display: flex;
@@ -177,6 +278,12 @@
     font-size: 2rem;
     color: #d4af37;
     margin-bottom: 20px;
+}
+
+/* Modificador: usado quando o título separa um segundo grupo de conteúdo
+   (ex: FAQ "para donos" logo abaixo do FAQ "para clientes") */
+.titulo-central-separador {
+    margin-top: 60px;
 }
 
 .descricao-espaco {
@@ -237,8 +344,31 @@ body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 /* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
    a ter só 1 coluna, ficando uma embaixo da outra. */
 @media(max-width:900px) {
-    .hero-detalhe, .info-rapida, .localizacao-section { grid-template-columns: 1fr; }
+    .hero-detalhe, .info-rapida, .localizacao-section, .grid-box { grid-template-columns: 1fr; }
     .hero-info h1 { font-size: 40px; }
     .localizacao-section { padding: 25px; }
     .localizacao-mapa iframe { height: 350px; }
+}
+
+/* PONTOS DE REFERÊNCIA: pequenos "chips" com os destaques da localização,
+   logo abaixo do botão "Ver no mapa" (ver preencherPagina() em detalhes.js) */
+.pontos-referencia-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.ponto-referencia-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, .3);
+    font-size: .95rem;
+}
+
+.ponto-referencia-item i {
+    color: #d4af37;
 }

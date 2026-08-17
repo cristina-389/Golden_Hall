@@ -91,14 +91,11 @@
 
       <p>
 
-        Salões de festas incríveis para aniversários,
-        casamentos, confraternizações e muito mais.
+        Salões de festas incríveis para aniversários, casamentos e
+        confraternizações. Tem um espaço assim? Anuncie no Golden Hall
+        e comece a receber pedidos de reserva.
 
       </p>
-
-      <button class="search-btn" onclick="abrirModal()">
-        Buscar espaços
-      </button>
 
     </div>
 
@@ -113,64 +110,208 @@
 
   </section>
 
-  <!-- ================= INFO ================= -->
+  <!-- ================= INFO (BENEFÍCIOS PARA QUEM VAI ALUGAR) ================= -->
 
-  <section class="info">
+  <section class="search-section">
 
-    <div class="info-card">
-      <div class="icone-contorno">
-        <span class="material-icons-round">calendar_month</span>
+    <h2>Por que usar o Golden Hall?</h2>
+    <p class="section-subtitle">
+      Tudo o que você precisa pra encontrar e reservar o espaço certo, sem complicação.
+    </p>
+
+    <div class="info">
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">calendar_month</span>
+        </div>
+        <h3>Diversos espaços</h3>
+        <p>Encontre o lugar ideal para o seu evento</p>
       </div>
-      <h3>Diversos espaços</h3>
-      <p>Encontre o lugar ideal para o seu evento</p>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">verified_user</span>
+        </div>
+        <h3>Reserva segura</h3>
+        <p>Processo rápido e confiável</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">local_offer</span>
+        </div>
+        <h3>Melhores preços</h3>
+        <p>Compare valores e escolha o melhor</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">event_available</span>
+        </div>
+        <h3>Acompanhe sua reserva</h3>
+        <p>Saiba a qualquer momento se o proprietário já aprovou</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">favorite</span>
+        </div>
+        <h3>Favoritos</h3>
+        <p>Salve os espaços que você mais gostou e acesse quando quiser</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">tune</span>
+        </div>
+        <h3>Filtros inteligentes</h3>
+        <p>Filtre por cidade, tipo de evento, capacidade e preço</p>
+      </div>
+
     </div>
 
-    <div class="info-card">
-      <div class="icone-contorno">
-        <span class="material-icons-round">verified_user</span>
-      </div>
-      <h3>Reserva segura</h3>
-      <p>Processo rápido e confiável</p>
-    </div>
+  </section>
 
-    <div class="info-card">
-      <div class="icone-contorno">
-        <span class="material-icons-round">local_offer</span>
-      </div>
-      <h3>Melhores preços</h3>
-      <p>Compare valores e escolha o melhor</p>
-    </div>
+  <!-- ================= BUSCA =================
+       Só um título de transição - os cards de espaço de verdade (e o
+       acesso a eles) ficam em paginas/cliente/buscar.html, não aqui. -->
 
-    <div class="info-card">
-      <div class="icone-contorno">
-        <span class="material-icons-round">event_available</span>
-      </div>
-      <h3>Acompanhe sua reserva</h3>
-      <p>Saiba a qualquer momento se o dono já aprovou</p>
-    </div>
+<section class="search-section">
+
+    <h2 class="titulo-discreto">Busque o espaço ideal</h2>
+    <p class="section-subtitle">
+      Descubra salões, chácaras e espaços exclusivos para transformar o seu evento em um momento inesquecível.
+    </p>
 
   </section>
 
   <div class="wave"></div>
 
-  <!-- ================= BUSCA ================= -->
+  <!-- ================= PARA DONOS DE ESPAÇO =================
+       Até aqui a página só falava com quem quer ALUGAR um espaço - essa
+       seção é voltada pra quem quer ANUNCIAR um espaço no Golden Hall. -->
 
-<section class="search-section">
+  <section class="search-section">
 
-    <h2>Busque o espaço ideal</h2>
+    <h2>Tem um espaço para eventos?</h2>
     <p class="section-subtitle">
-      Descubra salões, chácaras e espaços exclusivos para transformar o seu evento em um momento inesquecível.
+      Anuncie seu salão, chácara ou espaço de festas no Golden Hall e receba pedidos de reserva direto no seu painel.
     </p>
 
-    <!-- ================= CARDS =================
-         Preenchida via JS (js/paginas/home.js), buscando os espaços de
-         verdade em GET /api/espacos - não tem mais nenhum espaço fixo
-         escrito no HTML. Mostra os mais recentes primeiro. -->
+    <div class="info">
 
-    <div class="cards" id="cards-home">
-      <p id="cards-home-carregando" style="grid-column: 1 / -1; text-align: center; opacity: .7;">
-        Carregando espaços...
-      </p>
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">campaign</span>
+        </div>
+        <h3>Mais visibilidade</h3>
+        <p>Seu espaço aparece para quem está procurando um lugar para festas</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">dashboard</span>
+        </div>
+        <h3>Painel completo</h3>
+        <p>Cadastre, edite e gerencie seus espaços em um só lugar</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">fact_check</span>
+        </div>
+        <h3>Você decide</h3>
+        <p>Aprove ou recuse cada pedido de reserva que receber</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">payments</span>
+        </div>
+        <h3>Sem custo para anunciar</h3>
+        <p>Cadastrar seu espaço no Golden Hall é gratuito</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">bolt</span>
+        </div>
+        <h3>Cadastro rápido</h3>
+        <p>Anuncie seu espaço em poucos minutos, sem burocracia</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icone-contorno">
+          <span class="material-icons-round">edit</span>
+        </div>
+        <h3>Edite quando quiser</h3>
+        <p>Atualize as informações do seu espaço a qualquer momento</p>
+      </div>
+
+    </div>
+
+    <!-- ================= EXEMPLO DE ANÚNCIO =================
+         Mockup mostrando o caminho completo: como o espaço aparece na
+         busca (card) -> o que o cliente vê ao clicar em "Ver detalhes".
+         Usa as MESMAS classes visuais dos cards de verdade (.card,
+         .card-content, .price), só que com dados de exemplo óbvios e um
+         selo "Exemplo" no canto, pra nunca parecer um anúncio real.
+
+         Só um card fica visível por vez - clicar na seta esconde o card
+         atual e mostra o outro no lugar dele (ver alternarPreviewAnuncio()
+         em js/paginas/index-home.js). -->
+
+    <h3 class="titulo-central titulo-central-separador">Veja como seu espaço vai aparecer</h3>
+
+    <div class="preview-fluxo">
+
+      <div class="card" id="preview-anuncio">
+        <span class="badge-exemplo">Exemplo</span>
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop" alt="Exemplo de card de espaço anunciado">
+        <div class="card-content">
+          <h3>Nome do seu Espaço</h3>
+          <p class="texto-local">Sua cidade - SP</p>
+          <p>Até 200 pessoas</p>
+          <span class="price"><small>A partir de</small> R$ 1.800</span>
+          <button disabled>Ver detalhes</button>
+        </div>
+      </div>
+
+      <div class="card" id="preview-detalhe" style="display:none;">
+        <span class="badge-exemplo">Exemplo</span>
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop" alt="Exemplo da página de detalhes do espaço">
+        <div class="card-content">
+          <h3>Nome do seu Espaço</h3>
+          <p>Descreva aqui os diferenciais do seu espaço para atrair mais clientes.</p>
+          <div class="preview-detalhe-mini">
+            <div class="preview-detalhe-stat">
+              <span class="label">Capacidade</span>
+              <span class="valor">Até 200 pessoas</span>
+            </div>
+            <div class="preview-detalhe-stat">
+              <span class="label">Valor</span>
+              <span class="valor">A partir de R$ 1.800</span>
+            </div>
+          </div>
+          <button disabled>Reservar este espaço</button>
+        </div>
+      </div>
+
+      <button type="button" class="seta-preview-btn" id="btn-alternar-preview" onclick="alternarPreviewAnuncio()" title="Ver a página de detalhes">
+        <span class="material-icons-round seta-preview">arrow_forward</span>
+      </button>
+
+    </div>
+
+    <p class="section-subtitle legenda-exemplo">
+      Essa é só uma prévia simplificada de como seu espaço aparece na busca -
+      ao clicar em "Ver detalhes", os clientes veem a página completa, com
+      fotos, benefícios, eventos permitidos, localização e avaliações.
+    </p>
+
+    <div class="cta-centralizado">
+      <button class="search-btn" onclick="abrirModal('proprietario')">Cadastre seu espaço</button>
     </div>
 
   </section>
@@ -189,7 +330,7 @@
   <!-- JS -->
   <script src="js/global.js"></script>
   <script src="js/modais.js"></script>
-  <script src="js/paginas/home.js"></script>
+  <script src="js/paginas/index-home.js"></script>
 
 </body>
 

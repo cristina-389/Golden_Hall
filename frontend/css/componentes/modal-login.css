@@ -35,17 +35,24 @@
     background-color: var(--modal-bg, #111111);
     color: var(--modal-text, #ffffff);
     padding: 30px 40px;
-    border-radius: 20px; 
+    border-radius: 20px;
     width: 95%;
-    max-width: 580px;   
+    max-width: 580px;
     text-align: center;
     position: relative;
     transform: translateY(20px);
     transition: transform 0.4s ease;
-    overflow: hidden; 
-    border: 1px solid rgba(255, 215, 0, 0.6); 
-    box-shadow: 0 0 15px hsla(46, 100%, 60%, 0.5), 
-                0 0 40px hsla(46, 100%, 55%, 0.45), 
+    /* max-height + overflow-y: alguns formulários (ex: cadastrar/editar
+       espaço, com vários campos de texto grandes) ficam mais altos que a
+       tela - sem isso, o botão de enviar simplesmente ficava inacessível
+       em telas menores. Rola só o conteúdo de dentro, o resto da página
+       continua fixo atrás do overlay escuro. */
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 15px hsla(46, 100%, 60%, 0.5),
+                0 0 40px hsla(46, 100%, 55%, 0.45),
                 0 0 70px hsla(46, 100%, 50%, 0.25);
 }
 

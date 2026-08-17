@@ -30,7 +30,7 @@ async function carregarPerfil() {
 function preencherPerfil(usuario) {
     document.getElementById('perfil-nome-cabecalho').textContent = usuario.nome;
     document.getElementById('perfil-status-badge').textContent =
-        usuario.tipo === 'dono' ? 'Dono de Espaço ⚜️' : 'Cliente Golden Hall ⚜️';
+        usuario.tipo === 'proprietario' ? 'Proprietário de Espaço ⚜️' : 'Cliente Golden Hall ⚜️';
 
     document.getElementById('perfil-input-nome').value = usuario.nome;
     document.getElementById('perfil-input-email').value = usuario.email;

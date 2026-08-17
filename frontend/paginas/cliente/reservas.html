@@ -75,6 +75,43 @@
         </section>
     </main>
 
+    <!-- ================= MODAL: AVALIAR ESPAÇO =================
+         Só é usado em reservas com status "Aprovado" e que ainda não
+         foram avaliadas (ver criarCardReserva() em reservas.js) -->
+    <div id="modal-avaliacao" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalAvaliacao()">&times;</button>
+
+            <h2>Avaliar Espaço</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">Conte como foi sua experiência - sua avaliação ajuda outras pessoas a escolher.</p>
+
+            <form id="form-avaliacao">
+                <div class="form-grid">
+
+                    <div class="input-grupo col-total">
+                        <label for="avaliacao-nota">Sua nota</label>
+                        <select id="avaliacao-nota" required>
+                            <option value="">Selecione...</option>
+                            <option value="5">★★★★★ (5) Excelente</option>
+                            <option value="4">★★★★☆ (4) Muito bom</option>
+                            <option value="3">★★★☆☆ (3) Bom</option>
+                            <option value="2">★★☆☆☆ (2) Regular</option>
+                            <option value="1">★☆☆☆☆ (1) Ruim</option>
+                        </select>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="avaliacao-comentario">Comentário (opcional)</label>
+                        <textarea id="avaliacao-comentario" rows="3" placeholder="O que você achou do espaço?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-bloco">Enviar Avaliação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <nav class="barra-navegacao-inferior">
         <a href="/frontend/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>

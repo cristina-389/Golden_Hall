@@ -1,16 +1,16 @@
 /* ==========================================================================
    GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS
-   Página exclusiva para contas do tipo "dono": lista, cria, edita e apaga
-   os espaços dele (CRUD completo com a API que já construímos), e mostra
-   as reservas recebidas em cada espaço, com botão de aprovar/recusar.
+   Página exclusiva para contas do tipo "proprietario": lista, cria, edita e
+   apaga os espaços dele (CRUD completo com a API que já construímos), e
+   mostra as reservas recebidas em cada espaço, com botão de aprovar/recusar.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Essa página é exclusiva pra donos - clientes (ou quem não está logado)
-    // são mandados de volta pra home logada
+    // Essa página é exclusiva pra proprietários - clientes (ou quem não está
+    // logado) são mandados de volta pra home logada
     const usuario = obterUsuarioLogado();
-    if (!usuario || usuario.tipo !== 'dono') {
-        alert('Esta área é exclusiva para contas de dono de espaço.');
+    if (!usuario || usuario.tipo !== 'proprietario') {
+        alert('Esta área é exclusiva para contas de proprietário de espaço.');
         window.location.href = '/frontend/index-logado.html';
         return;
     }
@@ -102,7 +102,12 @@ function criarCardEspacoDono(espaco) {
 // Abre o formulário. Se "espaco" for passado, entra em modo EDIÇÃO (os
 // campos já nascem preenchidos com os dados atuais); sem argumento, é um
 // cadastro novo (formulário em branco).
-function abrirFormularioEspaco(espaco = null) {
+//
+// GET /api/meus-espacos (usado na listagem) não traz benefícios/fotos, só os
+// dados básicos - por isso, ao editar, buscamos os detalhes completos em
+// GET /api/espacos/:slug (mesma rota que a página de detalhes usa) antes de
+// preencher o formulário, senão esses dois campos apareceriam sempre vazios.
+async function abrirFormularioEspaco(espaco = null) {
     espacoEmEdicaoId = espaco ? espaco.id : null;
 
     document.getElementById('titulo-form-espaco').textContent = espaco ? 'Editar Espaço' : 'Cadastrar Espaço';
@@ -112,8 +117,28 @@ function abrirFormularioEspaco(espaco = null) {
     document.getElementById('espaco-form-capacidade').value = espaco ? (espaco.capacidade || '') : '';
     document.getElementById('espaco-form-preco').value = espaco ? (espaco.preco || '') : '';
     document.getElementById('espaco-form-imagem').value = espaco ? (espaco.imagem || '') : '';
+    document.getElementById('espaco-form-fotos').value = '';
+    document.getElementById('espaco-form-beneficios').value = '';
+    document.getElementById('espaco-form-eventos').value = '';
+    document.getElementById('espaco-form-pontos-referencia').value = '';
 
     document.getElementById('modal-form-espaco').classList.add('ativo');
+
+    if (espaco) {
+        try {
+            const detalhes = await chamarAPI(`/api/espacos/${espaco.slug}`);
+            // "fotos", "beneficios", etc. chegam da API como array - aqui
+            // viram texto (um por linha) pra caber num <textarea>; o
+            // processo inverso acontece em salvarEspaco(), que quebra o
+            // texto de volta em array antes de enviar
+            document.getElementById('espaco-form-fotos').value = (detalhes.fotos || []).join('\n');
+            document.getElementById('espaco-form-beneficios').value = (detalhes.beneficios || []).join('\n');
+            document.getElementById('espaco-form-eventos').value = (detalhes.eventos_permitidos || []).join('\n');
+            document.getElementById('espaco-form-pontos-referencia').value = (detalhes.pontos_referencia || []).join('\n');
+        } catch (erro) {
+            console.error('Erro ao buscar os detalhes completos do espaço:', erro);
+        }
+    }
 }
 
 function fecharFormularioEspaco() {
@@ -128,13 +153,22 @@ async function salvarEspaco(event) {
     const capacidade = document.getElementById('espaco-form-capacidade').value;
     const preco = document.getElementById('espaco-form-preco').value;
 
+    // Cada linha do <textarea> vira um item do array (linhas em branco são
+    // ignoradas) - é assim que "Estacionamento\nAr condicionado" vira
+    // ["Estacionamento", "Ar condicionado"] antes de mandar pra API
+    const quebrarEmLinhas = (texto) => texto.split('\n').map(linha => linha.trim()).filter(linha => linha.length > 0);
+
     const dados = {
         nome: document.getElementById('espaco-form-nome').value,
         descricao: document.getElementById('espaco-form-descricao').value,
         local: document.getElementById('espaco-form-local').value,
         capacidade: capacidade ? Number(capacidade) : null,
         preco: preco ? Number(preco) : null,
-        imagem: document.getElementById('espaco-form-imagem').value
+        imagem: document.getElementById('espaco-form-imagem').value,
+        fotos: quebrarEmLinhas(document.getElementById('espaco-form-fotos').value),
+        beneficios: quebrarEmLinhas(document.getElementById('espaco-form-beneficios').value),
+        eventos_permitidos: quebrarEmLinhas(document.getElementById('espaco-form-eventos').value),
+        pontos_referencia: quebrarEmLinhas(document.getElementById('espaco-form-pontos-referencia').value)
     };
 
     try {

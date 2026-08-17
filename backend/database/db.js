@@ -27,9 +27,9 @@ db.exec('PRAGMA foreign_keys = ON');
 
 // --------------------------------------------------------------------------
 // TABELA DE USUÁRIOS
-// "tipo" separa clientes (quem reserva espaços) de donos (quem cadastra
-// espaços) - é isso que depois vai decidir se a pessoa vê a tela de cliente
-// ou a tela de dono do espaço.
+// "tipo" separa clientes (quem reserva espaços) de proprietários (quem
+// cadastra espaços) - é isso que depois vai decidir se a pessoa vê a tela
+// de cliente ou a tela de proprietário do espaço.
 // --------------------------------------------------------------------------
 db.exec(`
   CREATE TABLE IF NOT EXISTS usuarios (
@@ -38,7 +38,7 @@ db.exec(`
     email TEXT NOT NULL UNIQUE,
     senha TEXT NOT NULL,
     telefone TEXT,
-    tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'dono')),
+    tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'proprietario')),
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )
 `);
@@ -103,6 +103,91 @@ db.exec(`
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
     FOREIGN KEY (espaco_id) REFERENCES espacos (id),
     UNIQUE (usuario_id, espaco_id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE BENEFÍCIOS
+// Lista de comodidades de um espaço (ex: "Estacionamento", "Ar
+// condicionado"). Uma linha por benefício - um espaço pode ter vários.
+// Toda vez que o proprietário salva o espaço, apagamos os benefícios
+// antigos dele e inserimos a lista nova (mais simples que ficar
+// comparando item por item o que mudou).
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS beneficios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    espaco_id INTEGER NOT NULL,
+    texto TEXT NOT NULL,
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE EVENTOS PERMITIDOS
+// Lista dos tipos de evento que o proprietário aceita nesse espaço (ex:
+// "Casamento", "Formatura"). Mesma ideia da tabela de benefícios - uma
+// linha por item, apagada e regravada toda vez que o espaço é salvo.
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS eventos_permitidos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    espaco_id INTEGER NOT NULL,
+    texto TEXT NOT NULL,
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE PONTOS DE REFERÊNCIA
+// Destaques da localização do espaço (ex: "A 5 minutos do centro", "Perto
+// da rodovia"). Mesma ideia de novo - uma linha por ponto.
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS pontos_referencia (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    espaco_id INTEGER NOT NULL,
+    texto TEXT NOT NULL,
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE FOTOS
+// Fotos extras de um espaço, além da "imagem" principal que já existe na
+// tabela espacos (essa continua sendo a capa, usada nos cards). "ordem"
+// guarda a posição em que a foto deve aparecer na galeria.
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS fotos_espaco (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    espaco_id INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    ordem INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE AVALIAÇÕES
+// Só quem teve uma reserva "Aprovada" pode avaliar - por isso a avaliação
+// é ligada a uma reserva específica (reserva_id), não só ao espaço. O
+// "UNIQUE(reserva_id)" garante que cada reserva só gera UMA avaliação
+// (não dá pra avaliar a mesma experiência várias vezes).
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS avaliacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    espaco_id INTEGER NOT NULL,
+    usuario_id INTEGER NOT NULL,
+    reserva_id INTEGER NOT NULL,
+    nota INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+    comentario TEXT,
+    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+    FOREIGN KEY (reserva_id) REFERENCES reservas (id),
+    UNIQUE (reserva_id)
   )
 `);
 

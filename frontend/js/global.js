@@ -225,15 +225,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     ajustarNavegacaoParaDono();
 });
 
-// Contas do tipo "dono" não usam Favoritos/Reservas (isso é coisa de quem
-// reserva espaços, não de quem os anuncia) - então, se quem está logado for
-// um dono, troca o item "Favoritos" da barra inferior por "Meus Espaços"
-// (link pro painel de gerenciamento) e remove o item "Reservas". Assim não
-// precisa editar a barra de navegação, que é repetida em várias páginas -
-// um lugar só (aqui) resolve pra todas elas de uma vez.
+// Contas do tipo "proprietario" não usam Favoritos/Reservas (isso é coisa de
+// quem reserva espaços, não de quem os anuncia) - então, se quem está logado
+// for um proprietário, troca o item "Favoritos" da barra inferior por "Meus
+// Espaços" (link pro painel de gerenciamento) e remove o item "Reservas".
+// Assim não precisa editar a barra de navegação, que é repetida em várias
+// páginas - um lugar só (aqui) resolve pra todas elas de uma vez.
 function ajustarNavegacaoParaDono() {
     const usuario = obterUsuarioLogado();
-    if (!usuario || usuario.tipo !== 'dono') return;
+    if (!usuario || usuario.tipo !== 'proprietario') return;
 
     // A própria página do painel já nasce com a barra correta - não mexe nela
     if (window.location.pathname.includes('painel-dono.html')) return;

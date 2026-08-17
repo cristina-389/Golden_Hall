@@ -383,6 +383,45 @@ body.dark .card-reserva-corpo strong {
     box-shadow: 0 4px 15px rgba(231, 76, 60, 0.25);
 }
 
+/* BOTÃO DE AVALIAR (mesmo estilo do cancelar, só que dourado em vez de vermelho) */
+.btn-avaliar-reserva {
+    font-family: 'Poppins', sans-serif;
+    margin-top: 20px;
+    width: 100%;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 11px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-avaliar-reserva:hover {
+    background-color: #d4af37;
+    color: #111111;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+/* Selo mostrado no lugar do botão quando a reserva já foi avaliada */
+.ja-avaliado {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #d4af37;
+    opacity: .85;
+}
+
 /* ESTADO VAZIO */
 .reservas-vazias {
     grid-column: 1 / -1;
