@@ -12,7 +12,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 60px;
+    padding: 12px 60px;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
     position: sticky;
@@ -23,23 +23,23 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .logo img {
-    width: 90px;
+    width: 60px;
     object-fit: contain;
 }
 
 .logo-text h1 {
     font-family: 'Cinzel', serif;
     color: var(--gold);
-    font-size: 30px;
+    font-size: 22px;
 }
 
 .logo-text p {
-    font-size: 12px;
-    letter-spacing: 4px;
+    font-size: 10px;
+    letter-spacing: 3px;
     color: var(--gold);
 }
 
@@ -68,6 +68,20 @@ nav a.active::after {
     display: flex;
     align-items: center;
     gap: 15px;
+}
+
+/* Versões menores do botão de tema e dos botões "Entrar"/"Criar conta"
+   só dentro do cabeçalho - as classes .btn/.theme-toggle continuam no
+   tamanho normal nos outros lugares do site que as usam */
+.header-buttons .theme-toggle {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+}
+
+.header-buttons .btn {
+    padding: 9px 22px;
+    font-size: 0.9rem;
 }
 
 /* HERO SECTION: primeira seção grande da home, com o título de impacto de
@@ -195,6 +209,30 @@ nav a.active::after {
     margin-bottom: 15px;
 }
 
+/* Selo que identifica pra qual público (cliente ou proprietário) uma seção
+   é voltada - usado em como-funciona.html pra deixar isso óbvio antes
+   mesmo de ler o título, sem precisar repetir "para alugar"/"para
+   anunciar" dentro do próprio h2. */
+.badge-secao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    margin: 0 auto 15px;
+    background: rgba(212, 175, 55, .12);
+    border: 1px solid rgba(212, 175, 55, .4);
+    color: var(--gold);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.badge-secao .material-icons-round {
+    font-size: 18px;
+}
+
 .section-subtitle {
     text-align: center;
     font-size: 20px;
@@ -210,15 +248,14 @@ nav a.active::after {
     margin-top: 10px;
 }
 
-/* Mockup mostrando pro proprietário o caminho completo: o card de busca ->
-   (seta) -> a página de detalhes. Reaproveita o .card/.card-content de
-   verdade, só limitando a largura pra ficar do tamanho de UMA coluna do
-   grid de busca (senão o card estica e vira essa medida gigante estranha). */
+/* Mockup mostrando pro proprietário como o espaço aparece na busca depois
+   de cadastrado. Reaproveita o .card/.card-content de verdade, só
+   limitando a largura pra ficar do tamanho de UMA coluna do grid de busca
+   (senão o card estica e vira essa medida gigante estranha). */
 .preview-fluxo {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 25px;
     margin: 30px 0 10px;
     flex-wrap: wrap;
 }
@@ -230,30 +267,6 @@ nav a.active::after {
     max-width: 450px;
     width: 100%;
     position: relative;
-}
-
-.seta-preview {
-    color: var(--gold);
-    font-size: 36px !important;
-}
-
-/* Botão que envolve a seta - clicar nele alterna entre o card de anúncio e
-   o preview da página de detalhes (ver alternarPreviewAnuncio() em
-   js/paginas/index-home.js) */
-.seta-preview-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    transition: .2s;
-}
-
-.seta-preview-btn:hover {
-    background: rgba(212, 175, 55, .15);
-    transform: scale(1.1);
 }
 
 /* Selo "Exemplo" no canto do mockup - deixa bem claro que os dados
@@ -272,43 +285,8 @@ nav a.active::after {
     letter-spacing: .5px;
 }
 
-/* Os dois "chips" de Capacidade/Valor no mockup da página de detalhes */
-.preview-detalhe-mini {
-    display: flex;
-    gap: 10px;
-    margin: 14px 0;
-}
-
-.preview-detalhe-stat {
-    flex: 1;
-    text-align: center;
-    padding: 10px 6px;
-    border-radius: 12px;
-    border: 1px solid rgba(212, 175, 55, .3);
-}
-
-.preview-detalhe-stat .label {
-    display: block;
-    font-size: .72rem;
-    color: var(--gold);
-    font-family: "Cinzel", serif;
-    margin-bottom: 4px;
-}
-
-.preview-detalhe-stat .valor {
-    display: block;
-    font-size: .82rem;
-}
-
 .legenda-exemplo {
     margin-top: 20px;
-}
-
-/* Em telas estreitas, a seta fica esquisita na horizontal entre dois cards
-   empilhados - gira 90° pra apontar pra baixo, que faz mais sentido */
-@media (max-width: 700px) {
-    .preview-fluxo { flex-direction: column; }
-    .seta-preview { transform: rotate(90deg); }
 }
 
 /* Título menor que o padrão .search-section h2 (52px), mas ainda dourado -
@@ -427,6 +405,65 @@ footer {
 .page-content ul,
 .page-content ol {
     margin-left: 30px;
+}
+
+/* Espaçamento do topo de duvidas.html - bem menor que o padrão de
+   60px do <main> + 80px de margem do .search-section, que juntos
+   deixavam um vão grande demais entre o cabeçalho e "Dúvidas Frequentes" */
+.main-duvidas {
+    padding: 20px 60px 60px;
+}
+
+.secao-topo-duvidas {
+    margin-top: 10px;
+}
+
+/* ACORDEÃO DE DÚVIDAS (duvidas.html)
+   Cada pergunta é um botão que ocupa a largura toda do card - clicar
+   alterna a classe "aberta" no .faq-item (ver alternarFaq() em
+   js/paginas/duvidas.js), que é o que mostra a resposta e gira a seta. */
+/* "button.faq-pergunta" (elemento + classe) pra ter prioridade maior que a
+   regra genérica ".card button" (que pinta os botões de dourado) - senão
+   ela ganhava e a pergunta ficava com fundo dourado sem querer */
+button.faq-pergunta {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: "Cinzel", serif;
+    font-size: 22px;
+    text-align: left;
+    cursor: pointer;
+    padding: 0;
+}
+
+button.faq-pergunta:hover {
+    background: none;
+    color: var(--gold);
+    transform: none;
+}
+
+.faq-seta {
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform .25s ease;
+}
+
+.faq-item.aberta .faq-seta {
+    transform: rotate(180deg);
+}
+
+.faq-resposta {
+    display: none;
+}
+
+.faq-item.aberta .faq-resposta {
+    display: block;
+    margin-top: 15px;
 }
 
 /* RESPONSIVIDADE DA HOME: em telas médias (tablet) o hero vira 1 coluna

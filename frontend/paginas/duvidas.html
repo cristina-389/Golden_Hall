@@ -15,7 +15,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+
+  <!--==========Ícones (seta do acordeão de dúvidas)=============-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
   <!---------------CSS------------------------->
   <link rel="stylesheet" href="../css/style.css">
 
@@ -56,7 +59,7 @@
             Entrar
           </button>
       
-          <button class="btn btn-gold" onclick="abrirModal()">
+          <button class="btn btn-gold" onclick="abrirModalTipoConta()">
             Criar conta
           </button>
       
@@ -64,110 +67,155 @@
       
       </header>
 
-  <main style="padding: 60px;">
+  <main class="main-duvidas">
 
     <!-- ================= CONTEÚDO ================= -->
 
-    <section class="search-section">
+    <section class="search-section secao-topo-duvidas">
 
       <h2>Dúvidas Frequentes</h2>
 
-      <h3 class="titulo-central">Para quem vai alugar um espaço</h3>
+      <span class="badge-secao"><span class="material-icons-round">search</span> Para quem vai alugar</span>
 
       <div class="cards">
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Como faço uma reserva?</h3>
-            <p>
-              Escolha o espaço desejado, clique em "Reservar este espaço",
-              preencha os dados do evento e envie o pedido. O proprietário do
-              espaço recebe a solicitação e aprova (ou recusa) pelo painel dele.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Como faço uma reserva?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Escolha o espaço desejado, clique em "Reservar este espaço",
+                preencha os dados do evento e envie o pedido. O proprietário do
+                espaço recebe a solicitação e aprova (ou recusa) pelo painel dele.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Como funciona o pagamento?</h3>
-            <p>
-              As formas de pagamento são definidas por cada estabelecimento e
-              serão informadas durante o processo de reserva.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Como funciona o pagamento?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                As formas de pagamento são definidas por cada estabelecimento e
+                serão informadas durante o processo de reserva.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Posso cancelar uma reserva?</h3>
-            <p>
-              Sim. Você pode cancelar gratuitamente a qualquer momento pela
-              tela "Minhas Reservas".
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Posso cancelar uma reserva?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Sim. Você pode cancelar gratuitamente a qualquer momento pela
+                tela "Minhas Reservas".
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Como sei a capacidade do espaço?</h3>
-            <p>
-              Cada anúncio informa o número máximo de pessoas permitido no
-              local para ajudar na sua escolha.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Como sei a capacidade do espaço?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Cada anúncio informa o número máximo de pessoas permitido no
+                local para ajudar na sua escolha.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Posso visitar o salão antes?</h3>
-            <p>
-              Sim. Recomendamos agendar uma visita com o responsável pelo
-              espaço antes de confirmar a reserva.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Posso visitar o salão antes?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Sim. Recomendamos agendar uma visita com o responsável pelo
+                espaço antes de confirmar a reserva.
+              </p>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <h3 class="titulo-central titulo-central-separador">Para quem vai anunciar um espaço</h3>
+      <span class="badge-secao titulo-central-separador"><span class="material-icons-round">storefront</span> Para quem vai anunciar</span>
 
       <div class="cards">
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Como cadastro meu espaço?</h3>
-            <p>
-              Crie uma conta escolhendo a opção "Proprietário de espaço" no cadastro
-              e acesse o Painel do Proprietário para cadastrar seus espaços.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Como cadastro meu espaço?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Crie uma conta escolhendo a opção "Proprietário de espaço" no cadastro
+                e acesse o Painel do Proprietário para cadastrar seus espaços.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Preciso pagar para anunciar?</h3>
-            <p>
-              Não. Cadastrar espaços no Golden Hall é gratuito.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Preciso pagar para anunciar?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Não. Cadastrar espaços no Golden Hall é gratuito.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Como funciona a aprovação das reservas?</h3>
-            <p>
-              Cada pedido chega no seu painel como "Pendente" e você decide
-              se aprova ou recusa.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Como funciona a aprovação das reservas?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Cada pedido chega no seu painel como "Pendente" e você decide
+                se aprova ou recusa.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card faq-item">
           <div class="card-content">
-            <h3>Posso editar ou remover um espaço já cadastrado?</h3>
-            <p>
-              Sim, a qualquer momento, direto pelo Painel do Proprietário.
-            </p>
+            <button class="faq-pergunta" onclick="alternarFaq(this)">
+              <span>Posso editar ou remover um espaço já cadastrado?</span>
+              <span class="material-icons-round faq-seta">expand_more</span>
+            </button>
+            <div class="faq-resposta">
+              <p>
+                Sim, a qualquer momento, direto pelo Painel do Proprietário.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -184,11 +232,13 @@
   </footer>
 
     <!--=======Cadrastro==========-->
+    <div id="container-modal-tipo-conta"></div>
     <div id="container-modal-cadastro"></div>
     <div id="container-modal-login"></div>
   
   <!-----------JAVASCRIPT--------->
   <script src="../js/global.js"></script>
   <script src="../js/modais.js"></script>
+  <script src="../js/paginas/duvidas.js"></script>
 </body>
 </html>

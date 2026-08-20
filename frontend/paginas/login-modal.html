@@ -2,8 +2,8 @@
   GOLDEN HALL - FRAGMENTO DO MODAL DE LOGIN
   Mesma ideia do cadastro-modal.html: um pedaço de HTML carregado via
   fetch() por abrirModalLogin() (js/modais.js) e injetado dentro da div
-  #container-modal-login. Não tem validação real de senha - qualquer
-  e-mail/senha preenchidos "logam" com sucesso (ver adicionarLogicaLogin()).
+  #container-modal-login. O e-mail/senha são conferidos de verdade contra o
+  banco de dados em POST /api/login (ver adicionarLogicaLogin() em modais.js).
 -->
 <div id="modal-login" class="modal-overlay">
     <div class="modal-box">
@@ -23,7 +23,12 @@
 
                 <div class="input-grupo col-total">
                     <label for="login-senha">Senha</label>
-                    <input type="password" id="login-senha" name="senha" placeholder="••••••••" required>
+                    <div class="campo-senha">
+                        <input type="password" id="login-senha" name="senha" placeholder="••••••••" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('login-senha', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-gold btn-bloco">Entrar</button>

@@ -38,6 +38,12 @@ router.post('/cadastro', (req, res) => {
         return res.status(400).json({ erro: 'Preencha nome, e-mail e senha.' });
     }
 
+    // Confere de novo aqui no servidor - o front-end já barra isso, mas
+    // alguém poderia mandar o pedido pra API direto, pulando o formulário
+    if (senha.length < 6) {
+        return res.status(400).json({ erro: 'A senha precisa ter pelo menos 6 caracteres.' });
+    }
+
     // Só aceita "proprietario" se vier explicitamente escrito assim; qualquer
     // outra coisa (ou nada) vira "cliente", que é o tipo padrão de conta
     const tipoFinal = tipo === 'proprietario' ? 'proprietario' : 'cliente';

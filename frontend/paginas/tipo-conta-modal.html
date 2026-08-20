@@ -1,0 +1,33 @@
+<!--
+  GOLDEN HALL - FRAGMENTO DO MODAL "COMO VOCÊ QUER USAR O GOLDEN HALL?"
+  Carregado via fetch() por abrirModalTipoConta() (js/modais.js). Aparece
+  ANTES do formulário de cadastro de verdade, só quando ainda não se sabe
+  se a pessoa quer alugar ou anunciar um espaço (o botão genérico "Criar
+  conta" do cabeçalho). Escolher uma opção aqui fecha este modal e abre o
+  cadastro (cadastro-modal.html) já com o tipo certo marcado.
+-->
+<div id="modal-tipo-conta" class="modal-overlay">
+    <div class="modal-box">
+        <button class="fechar-modal" onclick="fecharModalTipoConta()">&times;</button>
+
+        <h2>Como você quer usar o Golden Hall?</h2>
+        <div class="linha-dourada-form"></div>
+        <p class="subtitulo-form">Escolha uma opção pra gente preparar o cadastro certo pra você.</p>
+
+        <div class="opcoes-tipo-conta">
+
+            <button type="button" class="opcao-tipo-conta" onclick="escolherTipoConta('cliente')">
+                <span class="material-icons-round">search</span>
+                <h3>Quero alugar um espaço</h3>
+                <p>Buscar e reservar salões, chácaras e outros espaços para o meu evento.</p>
+            </button>
+
+            <button type="button" class="opcao-tipo-conta" onclick="escolherTipoConta('proprietario')">
+                <span class="material-icons-round">storefront</span>
+                <h3>Quero anunciar um espaço</h3>
+                <p>Cadastrar meu espaço e receber pedidos de reserva.</p>
+            </button>
+
+        </div>
+    </div>
+</div>

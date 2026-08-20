@@ -122,6 +122,55 @@ body:not(.dark) {
     gap: 15px 20px;
 }
 
+/* Os dois botões grandes do modal "Como você quer usar o Golden Hall?"
+   (tipo-conta-modal.html) - cada um é um <button> inteiro clicável, não só
+   um texto, pra área de clique ficar bem generosa. */
+.opcoes-tipo-conta {
+    display: flex;
+    gap: 18px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+}
+
+.opcao-tipo-conta {
+    flex: 1;
+    min-width: 190px;
+    background: none;
+    border: 1px solid rgba(212, 175, 55, .3);
+    border-radius: 16px;
+    padding: 25px 18px;
+    cursor: pointer;
+    color: inherit;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    transition: .25s;
+}
+
+.opcao-tipo-conta:hover {
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, .08);
+    transform: translateY(-4px);
+}
+
+.opcao-tipo-conta .material-icons-round {
+    font-size: 32px;
+    color: #d4af37;
+    margin-bottom: 10px;
+}
+
+.opcao-tipo-conta h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.opcao-tipo-conta p {
+    font-size: .82rem;
+    opacity: .75;
+    line-height: 1.5;
+    margin: 0;
+}
+
 .input-grupo {
     text-align: left;
 }
@@ -142,6 +191,14 @@ body:not(.dark) {
     font-weight: 600;
 }
 
+/* Texto pequeno de dica embaixo de um campo (ex: "Mínimo de 6 caracteres") */
+.dica-campo {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
 .input-grupo input {
     width: 100%;
     padding: 10px 14px;
@@ -157,6 +214,37 @@ body:not(.dark) {
 .input-grupo input:focus {
     border-color: #d4af37;
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+/* Campo de senha com o botão de "mostrar/esconder" (o olhinho) dentro dele -
+   ver alternarVisibilidadeSenha() em modais.js */
+.campo-senha {
+    position: relative;
+}
+
+.campo-senha input {
+    padding-right: 38px;
+}
+
+.btn-mostrar-senha {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    color: #888;
+}
+
+.btn-mostrar-senha:hover {
+    color: #d4af37;
+}
+
+.btn-mostrar-senha .material-icons-round {
+    font-size: 19px;
 }
 
 .checkbox-grupo {

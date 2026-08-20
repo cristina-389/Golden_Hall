@@ -34,6 +34,9 @@
     <!--Bootstrap icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <!--Ícones (modal "como você quer usar o Golden Hall?")-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
     <!-- CSS -->
     <link rel="stylesheet" href="/frontend/css/style.css">
 
@@ -59,7 +62,7 @@
                 Entrar
             </button>
 
-            <button class="btn btn-gold" onclick="abrirModal()">
+            <button class="btn btn-gold" onclick="abrirModalTipoConta()">
                 Criar conta
             </button>
 
@@ -238,6 +241,7 @@
 
     <!-- Gavetas onde o modais.js injeta o HTML dos modais via fetch()
          (cadastro/login/agenda/reserva) - ficam vazias até serem usadas -->
+    <div id="container-modal-tipo-conta"></div>
     <div id="container-modal-cadastro"></div>
     <div id="container-modal-login"></div>
     <div id="container-modal-agenda"></div>

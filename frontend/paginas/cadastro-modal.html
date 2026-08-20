@@ -33,23 +33,32 @@
 
                 <!-- Decide se a conta é de quem RESERVA espaços ou de quem ANUNCIA
                      um espaço - ver adicionarValidacaoSenha() em modais.js, que lê
-                     esse valor e manda como "tipo" pra API -->
-                <div class="input-grupo col-total">
-                    <label for="cadastro-tipo-conta">Quero me cadastrar como</label>
-                    <select id="cadastro-tipo-conta" name="tipo">
-                        <option value="cliente">Cliente — quero reservar espaços</option>
-                        <option value="proprietario">Proprietário de espaço — quero anunciar meu espaço</option>
-                    </select>
-                </div>
+                     esse valor e manda como "tipo" pra API. Não é mais um campo
+                     visível: a pessoa já escolheu isso no modal anterior ("Como você
+                     quer usar o Golden Hall?" - ver tipo-conta-modal.html), então
+                     abrirModal(tipo) já chega aqui preenchendo esse campo escondido -
+                     perguntar nos dois modais seria repetir a mesma pergunta duas vezes. -->
+                <input type="hidden" id="cadastro-tipo-conta" name="tipo" value="cliente">
 
                 <div class="input-grupo">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                    <div class="campo-senha">
+                        <input type="password" id="senha" name="senha" placeholder="••••••••" minlength="6" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('senha', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                    <small class="dica-campo">Mínimo de 6 caracteres</small>
                 </div>
 
                 <div class="input-grupo">
                     <label for="confirmar-senha">Confirmar Senha</label>
-                    <input type="password" id="confirmar-senha" name="confirmar-senha" placeholder="••••••••" required>
+                    <div class="campo-senha">
+                        <input type="password" id="confirmar-senha" name="confirmar-senha" placeholder="••••••••" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('confirmar-senha', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="checkbox-grupo">

@@ -3,6 +3,62 @@
    ========================================================================== */
 
 // --------------------------------------------------------------------------
+// 0. MODAL "COMO VOCÊ QUER USAR O GOLDEN HALL?"
+// --------------------------------------------------------------------------
+// Pergunta o tipo de conta ANTES de abrir o formulário de cadastro de
+// verdade - só é usado quando isso ainda não é óbvio pelo contexto (ex: o
+// botão genérico "Criar conta" do cabeçalho). Botões que já sabem a
+// resposta (como "Cadastre seu espaço") continuam chamando
+// abrirModal('proprietario') direto, sem passar por essa pergunta.
+function abrirModalTipoConta() {
+    const container = document.getElementById('container-modal-tipo-conta');
+    if (!container) return;
+
+    if (container.innerHTML === "") {
+        fetch('/frontend/paginas/tipo-conta-modal.html')
+            .then(resposta => resposta.text())
+            .then(html => {
+                container.innerHTML = html;
+                setTimeout(() => {
+                    const modal = document.getElementById('modal-tipo-conta');
+                    if (modal) modal.classList.add('ativo');
+                }, 50);
+            })
+            .catch(erro => console.error('Erro ao carregar a escolha de tipo de conta:', erro));
+    } else {
+        const modal = document.getElementById('modal-tipo-conta');
+        if (modal) modal.classList.add('ativo');
+    }
+}
+
+function fecharModalTipoConta() {
+    const modal = document.getElementById('modal-tipo-conta');
+    if (modal) modal.classList.remove('ativo');
+}
+
+// Ao escolher uma opção: fecha essa pergunta e abre o cadastro de verdade
+// já com o tipo certo pré-selecionado (mesma função de sempre)
+function escolherTipoConta(tipo) {
+    fecharModalTipoConta();
+    abrirModal(tipo);
+}
+
+// Botão de "olhinho" nos campos de senha (cadastro, confirmar senha e
+// login) - alterna o campo entre escondido (type="password") e visível
+// (type="text"), e troca o ícone pra indicar o estado atual. Uma função só,
+// reaproveitada pelos 3 campos - "idCampo" diz qual input alternar.
+function alternarVisibilidadeSenha(idCampo, botao) {
+    const campo = document.getElementById(idCampo);
+    const icone = botao.querySelector('.material-icons-round');
+    if (!campo || !icone) return;
+
+    const estaEscondida = campo.type === 'password';
+    campo.type = estaEscondida ? 'text' : 'password';
+    icone.textContent = estaEscondida ? 'visibility_off' : 'visibility';
+    botao.title = estaEscondida ? 'Esconder senha' : 'Mostrar senha';
+}
+
+// --------------------------------------------------------------------------
 // 1. MODAL DE CADASTRO
 // --------------------------------------------------------------------------
 
@@ -73,6 +129,11 @@ function adicionarValidacaoSenha() {
             event.preventDefault();
             const senha = document.getElementById('senha').value;
             const confirmarSenha = document.getElementById('confirmar-senha').value;
+
+            if (senha.length < 6) {
+                alert('A senha precisa ter pelo menos 6 caracteres.');
+                return;
+            }
 
             if (senha !== confirmarSenha) {
                 alert('As senhas não coincidem!');
@@ -448,10 +509,12 @@ function irParaMinhasReservas() {
 // 6. ATALHOS E EVENTOS DE FECHAMENTO
 // --------------------------------------------------------------------------
 
-// Troca do modal de login pro de cadastro (usado no link "Não tem conta? Cadastre-se")
+// Troca do modal de login pro de cadastro (usado no link "Não tem conta? Cadastre-se") -
+// passa primeiro pela pergunta de tipo de conta, já que aqui também não se
+// sabe se a pessoa quer alugar ou anunciar um espaço
 function alternarParaCadastro() {
     fecharModalLogin();
-    setTimeout(() => abrirModal(), 300); // pequeno delay pra esperar a animação de fechar terminar
+    setTimeout(() => abrirModalTipoConta(), 300); // pequeno delay pra esperar a animação de fechar terminar
 }
 
 // Troca do modal de cadastro pro de login (usado no link "Já tem conta? Entrar")
@@ -464,6 +527,7 @@ function alternarParaLogin() {
 // Funciona porque o "event.target" só é o próprio elemento do modal (que ocupa
 // a tela toda) quando o clique foi na área vazia, e não em algum filho dele.
 window.addEventListener('click', function(event) {
+    const modalTipoConta = document.getElementById('modal-tipo-conta');
     const modalCadastro = document.getElementById('modal-cadastro');
     const modalLogin = document.getElementById('modal-login');
     const modalAgenda = document.getElementById('modal-agenda');
@@ -471,6 +535,7 @@ window.addEventListener('click', function(event) {
     const modalAlerta = document.getElementById('modal-alerta-cancelamento');
     const modalSucesso = document.getElementById('modal-sucesso-reserva');
 
+    if (event.target === modalTipoConta) fecharModalTipoConta();
     if (event.target === modalCadastro) fecharModal();
     if (event.target === modalLogin) fecharModalLogin();
     if (event.target === modalAgenda) fecharModalAgenda();
