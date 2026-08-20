@@ -54,7 +54,6 @@ Isso cria uma conta de proprietário de exemplo (`contato@goldenhall.com` / `gol
 
 ## Divisão do trabalho
 
-- **Front-end**: Cristina
-- **Back-end**: João Paulo
+- **Front-end e back-end**: Cristina
 
-Cada um trabalha na sua parte, mas commitem e enviem (`git push`) as mudanças com frequência, em pedaços pequenos - e sempre deem um `git pull` antes de começar a trabalhar, pra puxar o que a outra pessoa já enviou. Isso evita editar em cima de uma versão desatualizada do código.
+Commite e envie (`git push`) as mudanças com frequência, em pedaços pequenos - e sempre dê um `git pull` antes de começar a trabalhar, pra garantir que está partindo da versão mais atual do código.
