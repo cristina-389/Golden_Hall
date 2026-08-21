@@ -32,8 +32,9 @@ app.use(cors());
 
 // Sem isso, quando o front-end mandar dados em JSON (ex: o formulário de
 // cadastro), o Express não saberia ler - com isso, tudo que chegar em JSON
-// vira automaticamente um objeto JavaScript em "req.body"
-app.use(express.json());
+// vira automaticamente um objeto JavaScript em "req.body". O limite padrão
+// (100kb) é pequeno demais pra receber a foto de perfil em base64.
+app.use(express.json({ limit: '3mb' }));
 
 // --------------------------------------------------------------------------
 // SERVE OS ARQUIVOS DO FRONT-END

@@ -38,10 +38,26 @@ db.exec(`
     email TEXT NOT NULL UNIQUE,
     senha TEXT NOT NULL,
     telefone TEXT,
+    foto TEXT,
+    preferencia_aluguel TEXT,
+    bio TEXT,
     tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'proprietario')),
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )
 `);
+
+// As colunas abaixo foram adicionadas depois que a tabela já existia em
+// alguns bancos criados antes delas - "CREATE TABLE IF NOT EXISTS" não
+// adiciona colunas novas numa tabela que já existe, então tenta adicionar
+// aqui por fora; se a coluna já existir (bancos criados a partir de agora,
+// já com ela no CREATE TABLE acima), o SQLite recusa e a gente ignora o erro.
+for (const coluna of ['foto TEXT', 'preferencia_aluguel TEXT', 'bio TEXT']) {
+    try {
+        db.exec(`ALTER TABLE usuarios ADD COLUMN ${coluna}`);
+    } catch (erro) {
+        // "duplicate column name" é o esperado quando a coluna já existe
+    }
+}
 
 // --------------------------------------------------------------------------
 // TABELA DE ESPAÇOS

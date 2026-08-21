@@ -8,7 +8,7 @@
 
 /* Container Principal Centralizado */
 .central-busca {
-    margin: 50px auto 30px auto;
+    margin: 60px auto 30px auto;
     text-align: center;
     max-width: 1000px;
     padding: 0 20px;
@@ -17,39 +17,41 @@
     align-items: center;
 }
 
-/* --- TÍTULO (Adaptável) --- */
+/* --- TÍTULO (Adaptável) ---
+   Sem uppercase forçado - o Cinzel já tem aquele desenho elegante de
+   maiúsculas/versalete sozinho (é assim que os outros títulos do site,
+   tipo "Como funciona?", ficam com aquele ar refinado). */
 .central-busca h2 {
     font-family: 'Cinzel', serif;
-    font-size: 38px;
+    font-size: 42px;
     line-height: 1.3;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    font-weight: 700;
-    transition: color 0.3s ease;
+    font-weight: 600;
 }
 
-/* Cor do título no modo escuro */
 body.dark .central-busca h2 {
     color: #ffffff;
 }
 
-/* Cor do título no modo claro (Evita sumir no fundo branco) */
 body:not(.dark) .central-busca h2 {
-    color: #111111;
+    color: #1a1a1a;
 }
 
 .central-busca h2 .gold-text {
-    color: #c59b27;
+    color: var(--gold);
 }
 
 .section-subtitle {
     font-size: 15px;
     color: #888888;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- BARRA DE PESQUISA PRINCIPAL (Sempre Branca) --- */
+/* --- BARRA DE PESQUISA PRINCIPAL ---
+   Continua clara (pra destacar do fundo escuro, como um "holofote"), mas
+   agora com uma borda e um brilho dourado - o mesmo tipo de acabamento
+   usado nos modais do site (.modal-box) - em vez de uma sombra cinza
+   genérica que não combinava com o resto da identidade visual. */
 .busca-container-box {
     background: #ffffff !important;
     border-radius: 50px;
@@ -57,14 +59,23 @@ body:not(.dark) .central-busca h2 {
     width: 100%;
     max-width: 720px;
     margin: 0 auto 25px auto;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     box-sizing: border-box;
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(212, 164, 55, .35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .15), 0 0 30px rgba(212, 164, 55, .18);
+    transition: box-shadow .3s ease;
+}
+
+.busca-container-box:focus-within {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .15), 0 0 40px rgba(212, 164, 55, .35);
 }
 
 body.dark .busca-container-box {
-    border: 1px solid transparent;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    border: 1px solid rgba(212, 164, 55, .3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .5), 0 0 35px rgba(212, 164, 55, .2);
+}
+
+body.dark .busca-container-box:focus-within {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .5), 0 0 45px rgba(212, 164, 55, .4);
 }
 
 .busca-linha-principal {
@@ -92,10 +103,12 @@ body.dark .busca-container-box {
 .icone-busca { color: #888888; font-size: 18px; }
 .icone-limpar { color: #888888; font-size: 16px; cursor: pointer; }
 
-/* Botão Dourado de Busca */
+/* Botão de Busca - mesmo gradiente dourado usado nos outros botões de
+   destaque do site (.search-btn, .btn-gold), em vez de um dourado sólido
+   diferente do resto da identidade visual */
 .btn-buscar-principal {
-    background: #c59b27 !important;
-    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
+    color: #000000 !important;
     border: none !important;
     padding: 14px 50px;
     font-weight: 600;
@@ -104,12 +117,16 @@ body.dark .busca-container-box {
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 25px;
-    box-shadow: 0 4px 15px rgba(197, 155, 39, 0.3);
+    box-shadow: 0 4px 18px rgba(212, 164, 55, 0.35);
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    transition: transform .25s ease, box-shadow .25s ease;
 }
-.btn-buscar-principal:hover { background: #b0871e !important; }
+.btn-buscar-principal:hover {
+    transform: scale(1.04);
+    box-shadow: 0 6px 24px rgba(212, 164, 55, 0.5);
+}
 
 /* Link de Filtros */
 .filtros-trigger {
@@ -120,11 +137,12 @@ body.dark .busca-container-box {
     align-items: center;
     gap: 8px;
     user-select: none;
+    transition: color .25s ease;
 }
 body:not(.dark) .filtros-trigger {
     color: #555555;
 }
-.filtros-trigger:hover { color: #c59b27; }
+.filtros-trigger:hover { color: var(--gold); }
 
 /* --- PAINEL FLUTUANTE DOS FILTROS (Adaptável) --- */
 .painel-filtros-avancados {
@@ -146,7 +164,8 @@ body.dark .painel-filtros-avancados {
     border: 1px solid transparent;
 }
 body.dark .painel-filtros-avancados.ativo {
-    border: 1px solid #222222;
+    border: 1px solid rgba(212, 164, 55, .25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
 }
 
 /* Cores do painel no Modo Claro */
@@ -155,7 +174,7 @@ body:not(.dark) .painel-filtros-avancados {
     border: 1px solid transparent;
 }
 body:not(.dark) .painel-filtros-avancados.ativo {
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(212, 164, 55, .3);
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
@@ -193,7 +212,7 @@ body:not(.dark) .campo-filtro label { color: #444444; }
 .input-wrapper i {
     position: absolute;
     left: 12px;
-    color: #c59b27;
+    color: var(--gold);
     font-size: 15px;
 }
 
@@ -214,6 +233,9 @@ body.dark .input-wrapper input {
     border: 1px solid #222222 !important;
     color: #ffffff !important;
 }
+body.dark .input-wrapper input:focus {
+    border-color: var(--gold) !important;
+}
 
 /* Inputs no Modo Claro */
 body:not(.dark) .input-wrapper input {
@@ -222,7 +244,7 @@ body:not(.dark) .input-wrapper input {
     color: #111111 !important;
 }
 body:not(.dark) .input-wrapper input:focus {
-    border-color: #c59b27 !important;
+    border-color: var(--gold) !important;
 }
 
 /* Botões do Painel */
@@ -250,13 +272,17 @@ body:not(.dark) .btn-limpar-filtros { color: #888888; }
 body:not(.dark) .btn-limpar-filtros:hover { color: #000000; }
 
 .btn-aplicar-filtros {
-    background: #c59b27;
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000000;
     border: none;
     padding: 10px 30px;
-    border-radius: 4px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
+    transition: transform .25s ease;
+}
+.btn-aplicar-filtros:hover {
+    transform: scale(1.04);
 }
 
 /* Informações de Resultados */
@@ -315,9 +341,9 @@ body:not(.dark) .alerta-vazio-container {
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    color: #c59b27;
-    border: 1px solid rgba(197, 155, 39, 0.3);
-    background: rgba(197, 155, 39, 0.05);
+    color: var(--gold);
+    border: 1px solid rgba(212, 164, 55, 0.3);
+    background: rgba(212, 164, 55, 0.05);
 }
 
 .alerta-vazio-texto {
@@ -341,8 +367,8 @@ body:not(.dark) .alerta-vazio-texto h3 { color: #111111; }
 
 /* Botão Nova Busca */
 .btn-nova-busca {
-    background: #c59b27;
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000000;
     border: none;
     padding: 12px 30px;
     font-family: 'Poppins', sans-serif;
@@ -350,10 +376,10 @@ body:not(.dark) .alerta-vazio-texto h3 { color: #111111; }
     font-weight: 500;
     border-radius: 8px;
     cursor: pointer;
-    transition:  0.2s;
+    transition: transform .25s ease;
 }
 .btn-nova-busca:hover {
-    background: #b0871e;
+    transform: scale(1.04);
 }
 
 /* --- BOTÃO DE FAVORITAR (coração) NO CANTO DOS CARDS DE RESULTADO --- */

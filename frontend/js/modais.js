@@ -43,20 +43,10 @@ function escolherTipoConta(tipo) {
     abrirModal(tipo);
 }
 
-// Botão de "olhinho" nos campos de senha (cadastro, confirmar senha e
-// login) - alterna o campo entre escondido (type="password") e visível
-// (type="text"), e troca o ícone pra indicar o estado atual. Uma função só,
-// reaproveitada pelos 3 campos - "idCampo" diz qual input alternar.
-function alternarVisibilidadeSenha(idCampo, botao) {
-    const campo = document.getElementById(idCampo);
-    const icone = botao.querySelector('.material-icons-round');
-    if (!campo || !icone) return;
-
-    const estaEscondida = campo.type === 'password';
-    campo.type = estaEscondida ? 'text' : 'password';
-    icone.textContent = estaEscondida ? 'visibility_off' : 'visibility';
-    botao.title = estaEscondida ? 'Esconder senha' : 'Mostrar senha';
-}
+// (o botão de "olhinho" dos campos de senha usa a função
+// alternarVisibilidadeSenha(), que mora em global.js - assim a página de
+// perfil, que tem seu próprio formulário de trocar senha mas não carrega
+// este arquivo (que é só sobre modais), também consegue usá-la)
 
 // --------------------------------------------------------------------------
 // 1. MODAL DE CADASTRO

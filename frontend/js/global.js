@@ -45,6 +45,22 @@ function toggleTheme() {
     }
 }
 
+// Botão de "olhinho" nos campos de senha (cadastro, login, e a troca de
+// senha do perfil) - alterna o campo entre escondido (type="password") e
+// visível (type="text"), e troca o ícone pra indicar o estado atual. Uma
+// função só, reaproveitada por todos os campos - "idCampo" diz qual input
+// alternar.
+function alternarVisibilidadeSenha(idCampo, botao) {
+    const campo = document.getElementById(idCampo);
+    const icone = botao.querySelector('.material-icons-round');
+    if (!campo || !icone) return;
+
+    const estaEscondida = campo.type === 'password';
+    campo.type = estaEscondida ? 'text' : 'password';
+    icone.textContent = estaEscondida ? 'visibility_off' : 'visibility';
+    botao.title = estaEscondida ? 'Esconder senha' : 'Mostrar senha';
+}
+
 // Função global para deslogar o usuário de qualquer página (chamada pelo botão "Sair")
 function confirmarSaida() {
     const certeza = confirm("Tem certeza que deseja sair da sua conta no Golden Hall?");

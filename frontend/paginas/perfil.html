@@ -2,12 +2,12 @@
   GOLDEN HALL - PÁGINA DE PERFIL (paginas/perfil.html)
   Mostra os dados de verdade de quem está logado, buscados em GET
   /api/perfil (ver js/paginas/perfil.js) e editáveis (nome e telefone, via
-  PUT /api/perfil) - o e-mail fica travado de propósito. Os cards de
-  "Segurança" (trocar senha) e "Golden Club" (fidelidade), e a foto de
-  perfil, foram removidos por serem só decorativos - não existe coluna
-  nenhuma no banco pra pontos de fidelidade ou foto, e trocar senha exigiria
-  confirmar a senha atual, o que ainda não foi construído. Dá pra adicionar
-  de verdade mais pra frente, se fizer sentido pro projeto.
+  PUT /api/perfil) - o e-mail fica travado de propósito. A foto de perfil
+  (PUT /api/perfil/foto), a troca de senha (PUT /api/perfil/senha) e o card
+  "Sobre Você" (preferência de aluguel e bio, via PUT /api/perfil/sobre)
+  também são de verdade, ligados no banco - inclusive as contagens
+  ("Reservas realizadas", "Membro desde") vêm de consultas reais nas
+  tabelas reservas/usuarios, não são números inventados.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -26,16 +26,27 @@
         <section class="secao-perfil">
             <div class="perfil-header">
                 <div class="avatar-container">
-                    <!-- Ícone genérico no lugar de uma foto - o banco não guarda
-                         foto de perfil, então mostrar uma imagem de banco de
-                         imagens fingindo ser "a foto da pessoa" seria enganoso -->
-                    <span class="material-icons-round avatar-icone-generico">account_circle</span>
+                    <!-- Sem foto salva ainda: mostra o ícone genérico. Assim que a
+                         pessoa escolhe uma foto (input escondido abaixo), ela é lida
+                         em base64 e vira essa <img>, salva de verdade em
+                         PUT /api/perfil/foto - ver trocarFoto()/preencherPerfil() em
+                         js/paginas/perfil.js -->
+                    <div class="avatar-circulo">
+                        <span class="material-icons-round avatar-icone-generico" id="perfil-avatar-icone">account_circle</span>
+                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;">
+                    </div>
+
+                    <button class="btn-trocar-foto" type="button" onclick="document.getElementById('perfil-input-foto').click()" title="Trocar foto">
+                        <span class="material-icons-round">photo_camera</span>
+                    </button>
+                    <input type="file" id="perfil-input-foto" accept="image/*" style="display: none;" onchange="trocarFoto(event)">
                 </div>
                 <h2 class="perfil-nome" id="perfil-nome-cabecalho">Carregando...</h2>
                 <span class="status-badge" id="perfil-status-badge">-</span>
+                <button class="btn-remover-foto" id="btn-remover-foto" onclick="removerFoto()" style="display: none;">Remover foto</button>
             </div>
 
-            <div class="perfil-grid perfil-grid-unico">
+            <div class="perfil-grid">
                 <div class="perfil-card">
                     <h3><span class="material-icons-round">person</span> Dados Pessoais</h3>
                     <div class="campo-grupo">
@@ -50,17 +61,97 @@
                         <label>WhatsApp</label>
                         <input type="text" id="perfil-input-telefone" readonly>
                     </div>
+                    <!-- Só aparece durante a edição (junto com os campos liberados) -
+                         ver alternarEdicaoPerfil() em js/paginas/perfil.js -->
+                    <button class="link-trocar-senha" id="btn-abrir-trocar-senha" onclick="abrirModalTrocarSenha()" style="display: none;">
+                        <span class="material-icons-round">lock</span> Alterar senha
+                    </button>
+
                     <button class="btn-ajuste" id="btn-editar-dados" onclick="alternarEdicaoPerfil()">Editar Dados</button>
+                </div>
+
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">auto_awesome</span> Sobre Você</h3>
+
+                    <!-- Números de verdade, vindos do banco (contagem da tabela
+                         reservas e a data de cadastro) - não são inventados -->
+                    <div class="perfil-stats">
+                        <div class="perfil-stat">
+                            <span class="perfil-stat-numero" id="perfil-stat-reservas">-</span>
+                            <span class="perfil-stat-label">Reservas realizadas</span>
+                        </div>
+                        <div class="perfil-stat">
+                            <span class="perfil-stat-numero" id="perfil-stat-desde">-</span>
+                            <span class="perfil-stat-label">Membro desde</span>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Preferência de Aluguel</label>
+                        <input type="text" id="perfil-input-preferencia" placeholder="Ex: Casamentos ao ar livre" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Bio</label>
+                        <textarea id="perfil-input-bio" rows="3" maxlength="300" placeholder="Conte um pouco sobre você..." readonly></textarea>
+                    </div>
+                    <button class="btn-ajuste" id="btn-editar-sobre" onclick="alternarEdicaoSobre()">Editar</button>
                 </div>
             </div>
 
             <div class="perfil-actions">
-                <button class="btn-gold-outline btn-sair-perfil" onclick="confirmarSaida()">
+                <button class="btn-sair-perfil" onclick="confirmarSaida()">
                     <span class="material-icons-round">logout</span> Sair da Conta
                 </button>
             </div>
         </section>
     </main>
+
+    <!-- Modal de trocar senha - aberto a partir do link "Alterar senha" que
+         aparece dentro do card "Dados Pessoais" durante a edição. Fica
+         direto aqui (em vez de ser buscado via fetch, como os modais
+         globais de js/modais.js) porque só é usado nesta página. -->
+    <div id="modal-trocar-senha" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalTrocarSenha()">&times;</button>
+
+            <h2>Alterar Senha</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">Confirme sua senha atual para definir uma nova.</p>
+
+            <form id="form-trocar-senha" class="form-grid" onsubmit="return alterarSenha(event)">
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-atual">Senha Atual</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-atual" autocomplete="current-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-atual', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-nova">Nova Senha</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-nova" minlength="6" autocomplete="new-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-nova', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                    <small class="dica-campo">Mínimo de 6 caracteres</small>
+                </div>
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-confirmar">Confirmar Nova Senha</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-confirmar" autocomplete="new-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-confirmar', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-bloco">Alterar Senha</button>
+            </form>
+        </div>
+    </div>
 
     <nav class="barra-navegacao-inferior">
         <a href="/frontend/index-logado.html" class="item-nav">

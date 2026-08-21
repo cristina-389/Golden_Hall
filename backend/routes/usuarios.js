@@ -112,14 +112,29 @@ router.post('/login', (req, res) => {
     res.json({ usuario: dadosUsuario, token });
 });
 
+// Monta o objeto de perfil devolvido pra tela: os dados da tabela usuarios
+// (nunca a coluna "senha") + "total_reservas", que não é uma coluna, é
+// contado na hora a partir da tabela reservas - reaproveitado pelas 3 rotas
+// abaixo que precisam devolver o perfil completo e atualizado.
+function buscarPerfilCompleto(id) {
+    const usuario = db
+        .prepare('SELECT id, nome, email, telefone, foto, preferencia_aluguel, bio, tipo, criado_em FROM usuarios WHERE id = ?')
+        .get(id);
+
+    if (!usuario) return null;
+
+    const { total } = db.prepare('SELECT COUNT(*) AS total FROM reservas WHERE usuario_id = ?').get(id);
+    usuario.total_reservas = total;
+
+    return usuario;
+}
+
 // --------------------------------------------------------------------------
 // GET /api/perfil - dados completos de quem está logado (usado na página
 // "Meu Perfil"). Nunca devolve a coluna "senha" - só o que a tela precisa.
 // --------------------------------------------------------------------------
 router.get('/perfil', autenticar, (req, res) => {
-    const usuario = db
-        .prepare('SELECT id, nome, email, telefone, tipo, criado_em FROM usuarios WHERE id = ?')
-        .get(req.usuario.id);
+    const usuario = buscarPerfilCompleto(req.usuario.id);
 
     if (!usuario) {
         return res.status(404).json({ erro: 'Usuário não encontrado.' });
@@ -143,11 +158,81 @@ router.put('/perfil', autenticar, (req, res) => {
 
     db.prepare('UPDATE usuarios SET nome = ?, telefone = ? WHERE id = ?').run(nome, telefone || null, req.usuario.id);
 
-    const usuario = db
-        .prepare('SELECT id, nome, email, telefone, tipo, criado_em FROM usuarios WHERE id = ?')
-        .get(req.usuario.id);
+    res.json(buscarPerfilCompleto(req.usuario.id));
+});
 
-    res.json(usuario);
+// --------------------------------------------------------------------------
+// PUT /api/perfil/sobre - edita a preferência de aluguel e a bio de quem
+// está logado (o card "Sobre Você" do perfil). Os dois campos são opcionais
+// e podem ficar em branco.
+// --------------------------------------------------------------------------
+router.put('/perfil/sobre', autenticar, (req, res) => {
+    const { preferencia_aluguel, bio } = req.body;
+
+    if (preferencia_aluguel && preferencia_aluguel.length > 100) {
+        return res.status(400).json({ erro: 'A preferência de aluguel pode ter no máximo 100 caracteres.' });
+    }
+
+    if (bio && bio.length > 300) {
+        return res.status(400).json({ erro: 'A bio pode ter no máximo 300 caracteres.' });
+    }
+
+    db.prepare('UPDATE usuarios SET preferencia_aluguel = ?, bio = ? WHERE id = ?')
+        .run(preferencia_aluguel || null, bio || null, req.usuario.id);
+
+    res.json(buscarPerfilCompleto(req.usuario.id));
+});
+
+// --------------------------------------------------------------------------
+// PUT /api/perfil/senha - troca a senha de quem está logado. Exige a senha
+// ATUAL como confirmação (senão qualquer um com o token de outra pessoa,
+// ex: sessão esquecida aberta num computador compartilhado, poderia trocar
+// a senha dela sem saber qual era).
+// --------------------------------------------------------------------------
+router.put('/perfil/senha', autenticar, (req, res) => {
+    const { senhaAtual, novaSenha } = req.body;
+
+    if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({ erro: 'Preencha a senha atual e a nova senha.' });
+    }
+
+    if (novaSenha.length < 6) {
+        return res.status(400).json({ erro: 'A nova senha precisa ter pelo menos 6 caracteres.' });
+    }
+
+    const usuario = db.prepare('SELECT senha FROM usuarios WHERE id = ?').get(req.usuario.id);
+
+    if (!usuario || !bcrypt.compareSync(senhaAtual, usuario.senha)) {
+        return res.status(401).json({ erro: 'A senha atual está incorreta.' });
+    }
+
+    const novaSenhaCriptografada = bcrypt.hashSync(novaSenha, CUSTO_HASH);
+    db.prepare('UPDATE usuarios SET senha = ? WHERE id = ?').run(novaSenhaCriptografada, req.usuario.id);
+
+    res.json({ mensagem: 'Senha alterada com sucesso.' });
+});
+
+// --------------------------------------------------------------------------
+// PUT /api/perfil/foto - salva (ou remove, se "foto" vier null/vazio) a
+// foto de perfil de quem está logado. A imagem chega já como base64 (o
+// front-end lê o arquivo escolhido com FileReader antes de mandar) e é
+// guardada direto na coluna "foto" - não existe upload de arquivo de
+// verdade pro disco neste projeto, então isso evita depender de uma pasta
+// de uploads separada só pra um avatar pequeno.
+// --------------------------------------------------------------------------
+router.put('/perfil/foto', autenticar, (req, res) => {
+    const { foto } = req.body;
+
+    // Limite generoso o bastante pra uma foto de perfil comprimida (a tela
+    // já redimensiona antes de mandar), mas que evita alguém mandar um
+    // arquivo enorme e inchar o banco de dados
+    if (foto && foto.length > 2_000_000) {
+        return res.status(413).json({ erro: 'Essa imagem é grande demais. Escolha uma foto menor.' });
+    }
+
+    db.prepare('UPDATE usuarios SET foto = ? WHERE id = ?').run(foto || null, req.usuario.id);
+
+    res.json({ foto: foto || null });
 });
 
 // Monta o token JWT com o id e o tipo da pessoa. Esses dois dados ficam

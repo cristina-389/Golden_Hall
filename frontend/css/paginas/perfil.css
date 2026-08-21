@@ -17,24 +17,84 @@
     margin-bottom: 50px;
 }
 
+/* Só posiciona o botão de câmera no canto - o recorte circular (overflow
+   hidden) mora no .avatar-circulo AQUI DENTRO, não neste elemento, senão o
+   próprio botão de câmera também seria cortado pela borda redonda (ficava
+   parecendo um pedaço de ícone quebrado no canto, em vez de um botão
+   redondo inteiro por cima do avatar) */
 .avatar-container {
+    position: relative;
     width: 150px;
     height: 150px;
     margin: 0 auto 20px;
+}
+
+.avatar-circulo {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    border: 3px solid #d4af37;
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 25px rgba(212, 164, 55, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
-/* Ícone genérico de pessoa, no lugar de uma foto de perfil de verdade
-   (o banco de dados não guarda foto de usuário) */
+/* Ícone genérico de pessoa, mostrado até a pessoa escolher uma foto de
+   verdade (guardada em base64 na coluna "foto" do banco) */
 .avatar-icone-generico {
     font-size: 110px;
-    color: #d4af37;
+    color: var(--gold);
     opacity: 0.85;
+}
+
+.avatar-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Botão de câmera sobreposto no canto do avatar - abre o seletor de
+   arquivo escondido (ver #perfil-input-foto no HTML) */
+.btn-trocar-foto {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-secondary);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+}
+
+.btn-trocar-foto .material-icons-round {
+    font-size: 20px;
+}
+
+.btn-trocar-foto:hover {
+    transform: scale(1.08);
+}
+
+.btn-remover-foto {
+    display: block;
+    margin: 10px auto 0;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btn-remover-foto:hover {
+    color: var(--gold);
 }
 
 .perfil-nome {
@@ -44,13 +104,13 @@
 }
 
 .status-badge {
-    background: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
+    background: rgba(212, 164, 55, 0.1);
+    color: var(--gold);
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid rgba(212, 164, 55, 0.3);
 }
 
 /* Grade de cartões abaixo do cabeçalho - quantas colunas cabem, cada uma
@@ -81,7 +141,7 @@
 .perfil-card h3 {
     font-family: 'Cinzel', serif;
     font-size: 18px;
-    color: #d4af37;
+    color: var(--gold);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -100,61 +160,87 @@
     font-weight: 600;
 }
 
-.campo-grupo input {
+.campo-grupo input,
+.campo-grupo textarea {
     width: 100%;
     background: transparent;
     border: none;
     padding: 8px 0;
     font-size: 15px;
+    font-family: 'Poppins', sans-serif;
     outline: none;
+    resize: none;
+}
+
+/* Estatísticas do card "Sobre Você" (quantidade de reservas, data de
+   cadastro) - números de verdade, calculados no back-end */
+.perfil-stats {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.perfil-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-stat-numero {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.perfil-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+}
+
+/* Link "Alterar senha" - só aparece durante a edição dos dados (mesmo
+   momento em que nome/telefone ficam editáveis), abre o modal de senha */
+.link-trocar-senha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+.link-trocar-senha .material-icons-round {
+    font-size: 16px;
+    color: var(--gold);
+}
+
+.link-trocar-senha:hover {
+    color: var(--gold);
 }
 
 .btn-ajuste {
     background: transparent;
-    border: 1px solid #d4af37;
-    color: #d4af37;
+    border: 1px solid var(--gold);
+    color: var(--gold);
     padding: 8px 20px;
     border-radius: 8px;
     font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     margin-top: 15px;
-    transition: 0.3s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn-ajuste:hover {
-    background: #d4af37;
-    color: #000;
-}
-
-/* Barra de progresso do "Programa de fidelidade" (ex: rumo ao próximo
-   nível VIP). .progresso-preenchido é a parte colorida por dentro, cuja
-   largura o HTML/JS ajusta com um "style width: X%" pra indicar o progresso. */
-.barra-progresso {
-    background: rgba(255, 255, 255, 0.1);
-    height: 8px;
-    border-radius: 10px;
-    margin: 15px 0;
-}
-
-.progresso-preenchido {
-    background: linear-gradient(90deg, #d4af37, #ffcc00);
-    height: 100%;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-}
-
-.lista-beneficios {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-.lista-beneficios li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 164, 55, 0.3);
 }
 
 /* CONTAINER DO BOTÃO - CONFIGURADO PARA A DIREITA */
@@ -166,12 +252,30 @@
     padding-right: 10px;
 }
 
+/* Segue o mesmo padrão de botão contornado dourado usado no resto do site
+   (mesma cor var(--gold), mesmo efeito de preencher no hover) - antes essa
+   classe dependia de .btn-gold-outline, que tinha um dourado meio
+   transparente/apagado só nela, destoando dos outros botões */
 .btn-sair-perfil {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 30px;
     font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-sair-perfil:hover {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 164, 55, 0.3);
 }
 
 /* ==================== CALIBRAÇÃO DE TEMAS (PERFIL) ====================
@@ -185,17 +289,15 @@ body.dark .perfil-card {
     border: 1px solid rgba(255, 204, 0, 0.1);
 }
 body.dark .perfil-card:hover {
-    border-color: rgba(212, 175, 55, 0.4);
+    border-color: rgba(212, 164, 55, 0.4);
 }
-body.dark .campo-grupo input {
+body.dark .campo-grupo input,
+body.dark .campo-grupo textarea {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
 }
 body.dark .campo-grupo label {
     color: #666;
-}
-body.dark .lista-beneficios li {
-    color: #888;
 }
 
 /* TEMA CLARO CORRIGIDO (Bordas e linhas nítidas que não somem) */
@@ -204,18 +306,11 @@ body:not(.dark) .perfil-card {
     border: 1px solid rgba(179, 143, 0, 0.35); /* Borda dourada bronze marcante */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
-body:not(.dark) .campo-grupo input {
+body:not(.dark) .campo-grupo input,
+body:not(.dark) .campo-grupo textarea {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25); /* Linhas dos inputs bem visíveis */
     color: #111111; /* Texto puro para leitura fácil */
 }
 body:not(.dark) .campo-grupo label {
     color: #444444; /* Etiquetas em cinza grafite */
-}
-body:not(.dark) .lista-beneficios li {
-    color: #333333;
-}
-body:not(.dark) .btn-sair-perfil {
-    color: #8a6d1c; /* Dourado escuro de alta legibilidade */
-    border: 2px solid #8a6d1c; /* Contorno mais firme e robusto */
-    font-weight: 600;
 }
