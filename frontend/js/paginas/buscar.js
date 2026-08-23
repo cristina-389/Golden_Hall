@@ -41,11 +41,25 @@ function limparFiltros() {
 
 // Filtra "todosEspacos" com base no que foi digitado e desenha os cards que sobrarem
 function filtrarEspacos() {
-    const buscaPrincipal = document.getElementById('input-busca').value.toLowerCase();
-    const txtCidade = document.getElementById('filtro-cidade').value.toLowerCase();
-    const txtEvento = document.getElementById('filtro-evento').value.toLowerCase();
-    const numCapacidade = parseInt(document.getElementById('filtro-capacidade').value) || 0;
-    const numPrecoMax = parseFloat(document.getElementById('filtro-preco').value) || Infinity;
+    const buscaPrincipal = document.getElementById('input-busca').value.trim();
+    const txtCidade = document.getElementById('filtro-cidade').value.trim();
+    const txtEvento = document.getElementById('filtro-evento').value.trim();
+    const txtCapacidade = document.getElementById('filtro-capacidade').value.trim();
+    const txtPreco = document.getElementById('filtro-preco').value.trim();
+
+    // Sem nada preenchido (nem a busca principal, nem nenhum filtro), não
+    // tem o que buscar de verdade - em vez de mostrar TODOS os espaços sem
+    // a pessoa ter pedido nada, avisa e não faz a busca
+    if (!buscaPrincipal && !txtCidade && !txtEvento && !txtCapacidade && !txtPreco) {
+        alert('Digite algo na busca ou escolha pelo menos um filtro antes de buscar.');
+        return;
+    }
+
+    const numCapacidade = parseInt(txtCapacidade) || 0;
+    const numPrecoMax = parseFloat(txtPreco) || Infinity;
+    const buscaPrincipalMinusculo = buscaPrincipal.toLowerCase();
+    const txtCidadeMinusculo = txtCidade.toLowerCase();
+    const txtEventoMinusculo = txtEvento.toLowerCase();
 
     const resultado = todosEspacos.filter(espaco => {
         const tags = `${espaco.nome} ${espaco.descricao || ''} ${espaco.local || ''}`.toLowerCase();
@@ -53,9 +67,9 @@ function filtrarEspacos() {
         const capacidade = espaco.capacidade || 0;
         const preco = espaco.preco || 0;
 
-        const bateBusca = buscaPrincipal === "" || tags.includes(buscaPrincipal);
-        const bateCidade = txtCidade === "" || cidade.includes(txtCidade);
-        const bateEvento = txtEvento === "" || tags.includes(txtEvento);
+        const bateBusca = buscaPrincipalMinusculo === "" || tags.includes(buscaPrincipalMinusculo);
+        const bateCidade = txtCidadeMinusculo === "" || cidade.includes(txtCidadeMinusculo);
+        const bateEvento = txtEventoMinusculo === "" || tags.includes(txtEventoMinusculo);
         const bateCapacidade = numCapacidade === 0 || capacidade >= numCapacidade;
         const batePreco = preco <= numPrecoMax;
 
@@ -72,6 +86,11 @@ function filtrarEspacos() {
     // O alerta de "Não encontrou?" sempre aparece junto com a busca (mesmo
     // quando encontrou resultados - serve como um lembrete/CTA no fim da lista)
     document.getElementById('alerta-vazio').style.display = "block";
+
+    // Rola suavemente até o resultado - sem isso, em telas menores a pessoa
+    // clicava em "Buscar espaços" e não via nada acontecer (o resultado
+    // aparecia mais embaixo, fora da área visível, sem indicar isso)
+    document.querySelector('.barra-resultados-info').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Desenha os cards dos espaços passados dentro de ".resultados-busca .cards",

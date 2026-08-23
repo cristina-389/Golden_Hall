@@ -128,7 +128,14 @@
     justify-content: center;
 }
 
+/* Coluna flexível (em vez de bloco comum) pra poder empurrar o botão
+   "Editar..." pro rodapé do card com margin-top: auto (ver .btn-ajuste) -
+   assim os dois botões ("Editar Dados" e "Editar" do card "Sobre Você")
+   ficam na mesma altura, mesmo os dois cards tendo quantidades diferentes
+   de campo acima do botão. */
 .perfil-card {
+    display: flex;
+    flex-direction: column;
     border-radius: 15px;
     padding: 30px;
     transition: transform 0.3s ease, border-color 0.3s ease;
@@ -185,9 +192,12 @@
     flex-direction: column;
 }
 
+/* Agora mostra a data de cadastro por extenso ("22 de agosto de 2026"),
+   não um número curto - fonte menor que a original pra não pesar demais
+   numa frase inteira */
 .perfil-stat-numero {
     font-family: 'Cinzel', serif;
-    font-size: 26px;
+    font-size: 19px;
     font-weight: 600;
     color: var(--gold);
 }
@@ -232,7 +242,8 @@
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 15px;
+    align-self: flex-start; /* não deixa o botão esticar pra largura toda do card flex */
+    margin-top: auto; /* empurra pro rodapé do card - ver .perfil-card (display: flex) */
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 

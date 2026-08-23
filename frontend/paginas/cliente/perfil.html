@@ -1,5 +1,5 @@
 <!--
-  GOLDEN HALL - PÁGINA DE PERFIL (paginas/perfil.html)
+  GOLDEN HALL - PÁGINA DE PERFIL DO CLIENTE (paginas/cliente/perfil.html)
   Mostra os dados de verdade de quem está logado, buscados em GET
   /api/perfil (ver js/paginas/perfil.js) e editáveis (nome e telefone, via
   PUT /api/perfil) - o e-mail fica travado de propósito. A foto de perfil
@@ -61,6 +61,10 @@
                         <label>WhatsApp</label>
                         <input type="text" id="perfil-input-telefone" readonly>
                     </div>
+                    <div class="campo-grupo">
+                        <label>Cidade</label>
+                        <input type="text" id="perfil-input-cidade" placeholder="Ex: Americana" readonly>
+                    </div>
                     <!-- Só aparece durante a edição (junto com os campos liberados) -
                          ver alternarEdicaoPerfil() em js/paginas/perfil.js -->
                     <button class="link-trocar-senha" id="btn-abrir-trocar-senha" onclick="abrirModalTrocarSenha()" style="display: none;">
@@ -73,13 +77,9 @@
                 <div class="perfil-card">
                     <h3><span class="material-icons-round">auto_awesome</span> Sobre Você</h3>
 
-                    <!-- Números de verdade, vindos do banco (contagem da tabela
-                         reservas e a data de cadastro) - não são inventados -->
+                    <!-- Data de cadastro de verdade, vinda do banco (usuarios.criado_em)
+                         - não é inventada -->
                     <div class="perfil-stats">
-                        <div class="perfil-stat">
-                            <span class="perfil-stat-numero" id="perfil-stat-reservas">-</span>
-                            <span class="perfil-stat-label">Reservas realizadas</span>
-                        </div>
                         <div class="perfil-stat">
                             <span class="perfil-stat-numero" id="perfil-stat-desde">-</span>
                             <span class="perfil-stat-label">Membro desde</span>
@@ -154,7 +154,7 @@
     </div>
 
     <nav class="barra-navegacao-inferior">
-        <a href="/frontend/index-logado.html" class="item-nav">
+        <a href="/frontend/paginas/cliente/index-logado.html" class="item-nav">
             <span class="material-icons-round icone">home</span>
             <span class="texto">Início</span>
         </a>
@@ -170,7 +170,7 @@
             <span class="material-icons-round icone">calendar_month</span>
             <span class="texto">Reservas</span>
         </a>
-        <a href="/frontend/paginas/perfil.html" class="item-nav ativo">
+        <a href="/frontend/paginas/cliente/perfil.html" class="item-nav ativo">
             <span class="material-icons-round icone">person</span>
             <span class="texto">Perfil</span>
         </a>

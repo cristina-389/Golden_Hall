@@ -1,0 +1,184 @@
+<!--
+  GOLDEN HALL - HOME DO CLIENTE JÁ LOGADO (js/paginas/index-logado.js)
+  Home exclusiva de contas "cliente" - se um proprietário cair aqui (ex:
+  digitando a URL direto), index-logado.js já redireciona ele pro painel
+  dele (paginas/dono/painel-dono.html), que é o "home" dele por enquanto.
+  Mostra uma saudação com o nome de quem está logado, um card com números
+  reais de atividade (favoritos, reservas, visualizações, avaliações -
+  tudo vindo de GET /api/estatisticas), atalhos rápidos e um convite pra
+  buscar espaços.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Golden Hall</title>
+
+  <!-- FONTES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!--icones dourados-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/frontend/css/style.css">
+
+</head>
+
+<body class="dark">
+
+  <!-- ================= HEADER ================= -->
+
+  <header>
+
+    <div class="logo">
+
+      <img src="/frontend/Imagens/logo.png" alt="Logo Golden Hall">
+
+      <div class="logo-text">
+
+        <h1>GOLDEN HALL</h1>
+        <p>SALÃO DE FESTAS</p>
+
+      </div>
+
+    </div>
+
+    <div class="header-buttons">
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        🌙
+      </button>
+
+      <button class="btn btn-outline" onclick="confirmarSaida()">Sair</button>
+
+    </div>
+
+  </header>
+  
+
+  <!-- ================= SAUDAÇÃO ================= -->
+
+  <section class="secao-saudacao">
+    <div class="secao-saudacao-topo">
+      <!-- Sem foto salva ainda: mostra o ícone genérico. A foto de verdade
+           (base64 salva em PUT /api/perfil/foto, mesma coluna usada em
+           perfil.html) é buscada em GET /api/perfil - ver carregarFotoPerfil()
+           em js/paginas/index-logado.js -->
+      <div class="avatar-saudacao">
+        <span class="material-icons-round avatar-saudacao-icone" id="saudacao-avatar-icone">account_circle</span>
+        <img class="avatar-saudacao-foto" id="saudacao-avatar-foto" alt="Foto de perfil" style="display: none;">
+      </div>
+
+      <h2>Olá, <span class="gold-text" id="saudacao-nome">...</span>!</h2>
+    </div>
+
+    <div class="linha-elegante">
+      <span>✦</span>
+    </div>
+  </section>
+
+  <!-- ================= SEU DESENVOLVIMENTO ================= -->
+  <!-- Números de verdade (GET /api/estatisticas), não inventados - ver
+       carregarEstatisticas() em js/paginas/index-logado.js -->
+
+  <section class="card-desenvolvimento">
+    <h3>Seu desenvolvimento no Golden Hall</h3>
+    <p class="subtitulo">Seu consumo e atividade na plataforma</p>
+
+    <div class="grafico-estatisticas">
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-favoritos">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-favoritos"></div></div>
+        <span class="barra-label">Favoritados</span>
+      </div>
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-reservas">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-reservas"></div></div>
+        <span class="barra-label">Reservas feitas</span>
+      </div>
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-visualizacoes">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-visualizacoes"></div></div>
+        <span class="barra-label">Visualizados</span>
+      </div>
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-comentarios">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-comentarios"></div></div>
+        <span class="barra-label">Comentários</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACESSO RÁPIDO ================= -->
+
+  <section class="secao-acesso-rapido">
+    <h3>Acesso rápido</h3>
+
+    <div class="grid-acesso-rapido">
+      <a class="card-acesso" href="/frontend/paginas/cliente/buscar.html">
+        <div class="icone-contorno"><span class="material-icons-round">search</span></div>
+        <span>Buscar espaços</span>
+      </a>
+      <a class="card-acesso" href="/frontend/paginas/cliente/favoritos.html">
+        <div class="icone-contorno"><span class="material-icons-round">favorite</span></div>
+        <span>Meus favoritos</span>
+      </a>
+      <a class="card-acesso" href="/frontend/paginas/cliente/reservas.html">
+        <div class="icone-contorno"><span class="material-icons-round">calendar_month</span></div>
+        <span>Minhas reservas</span>
+      </a>
+      <a class="card-acesso" href="/frontend/paginas/cliente/perfil.html">
+        <div class="icone-contorno"><span class="material-icons-round">person</span></div>
+        <span>Meu perfil</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= CONVITE PRA BUSCAR ================= -->
+
+  <section class="cta-proximo-evento">
+    <div class="cta-texto">
+      <h3>Vamos planejar o seu próximo evento?</h3>
+      <p>Descubra espaços incríveis para casamentos, aniversários e muito mais — o lugar perfeito pode estar a um clique de distância.</p>
+    </div>
+    <a class="btn btn-gold" href="/frontend/paginas/cliente/buscar.html">Buscar espaços</a>
+  </section>
+
+<nav class="barra-navegacao-inferior">
+    <a href="/frontend/paginas/cliente/index-logado.html" class="item-nav ativo">
+        <span class="material-icons-round icone">home</span>
+        <span class="texto">Início</span>
+    </a>
+    <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
+        <span class="material-icons-round icone">search</span>
+        <span class="texto">Buscar</span>
+    </a>
+    <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
+        <span class="material-icons-round icone">favorite</span>
+        <span class="texto">Favoritos</span>
+    </a>
+    <a href="/frontend/paginas/cliente/reservas.html" class="item-nav">
+        <span class="material-icons-round icone">calendar_month</span>
+        <span class="texto">Reservas</span>
+    </a>
+    <a href="/frontend/paginas/cliente/perfil.html" class="item-nav">
+        <span class="material-icons-round icone">person</span>
+        <span class="texto">Perfil</span>
+    </a>
+</nav>
+
+  <!-- JS -->
+  <script src="/frontend/js/global.js"></script>
+  <script src="/frontend/js/paginas/index-logado.js"></script>
+
+</body>
+
+</html>

@@ -15,8 +15,20 @@ document.addEventListener("DOMContentLoaded", function() {
     Promise.all([carregarEspaco(), atualizarCacheFavoritos()]).then(([espaco]) => {
         if (!espaco) return; // espaço não encontrado - carregarEspaco() já mostrou a mensagem de erro
         inicializarBotaoFavoritoDetalhe(espaco);
+        registrarVisualizacao(espaco.slug);
     });
 });
+
+// Loga a visita pra estatística "Visualizados" da home do cliente (ver GET
+// /api/estatisticas) - só registra se tiver alguém logado (é uma métrica
+// pessoal) e não trava nada se falhar, já que não é essencial pra página
+// de detalhes funcionar.
+function registrarVisualizacao(slug) {
+    if (!obterUsuarioLogado()) return;
+
+    chamarAPI(`/api/espacos/${slug}/visualizacao`, { method: 'POST' })
+        .catch(erro => console.error('Erro ao registrar visualização:', erro));
+}
 
 /* ==========================================================================
    BUSCA OS DADOS DO ESPAÇO NA API E PREENCHE A PÁGINA

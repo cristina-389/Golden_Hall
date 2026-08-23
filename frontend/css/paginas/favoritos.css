@@ -19,6 +19,7 @@
     background: url('../../Imagens/banner-favoritos.jpg') center/cover no-repeat;
     text-align: center;
     overflow: hidden;
+    border-bottom: 2px solid var(--gold); /* mesma linha separando a foto do resto do fundo que a página de reservas já tem */
 }
 
 /* Camada escura por cima da foto no tema DARK */
@@ -72,6 +73,14 @@ body:not(.dark) .overlay-favoritos {
     text-transform: uppercase;
     color: var(--gold);
     font-weight: 700;
+}
+
+/* No tema claro, o dourado padrão (var(--gold)) fica com pouco contraste
+   em cima do overlay claro do banner - troca por um dourado mais escuro,
+   só nesse título, pra continuar legível (mesmo ajuste já usado em outros
+   textos dourados do site sobre fundo claro, ex: .btn-consulte-datas) */
+body:not(.dark) .cabecalho-favoritos h2 {
+    color: #a88414;
 }
 
 /* Espaçamento do divisor "✦" (a classe .linha-elegante em si já vem de detalhe.css, global no site) */

@@ -28,28 +28,34 @@ async function carregarPerfil() {
 
 // Escreve os dados do usuário na tela (cabeçalho + campos do formulário)
 function preencherPerfil(usuario) {
-    document.getElementById('perfil-nome-cabecalho').textContent = usuario.nome;
+    document.getElementById('perfil-nome-cabecalho').textContent = primeiroEUltimoNome(usuario.nome);
     document.getElementById('perfil-status-badge').textContent =
         usuario.tipo === 'proprietario' ? 'Proprietário de Espaço ⚜️' : 'Cliente Golden Hall ⚜️';
 
     document.getElementById('perfil-input-nome').value = usuario.nome;
     document.getElementById('perfil-input-email').value = usuario.email;
     document.getElementById('perfil-input-telefone').value = usuario.telefone || '';
+    document.getElementById('perfil-input-cidade').value = usuario.cidade || '';
 
     exibirFotoPerfil(usuario.foto);
 
-    document.getElementById('perfil-stat-reservas').textContent = usuario.total_reservas;
-    document.getElementById('perfil-stat-desde').textContent = formatarMesAno(usuario.criado_em);
+    document.getElementById('perfil-stat-desde').textContent = formatarDataCompleta(usuario.criado_em);
     document.getElementById('perfil-input-preferencia').value = usuario.preferencia_aluguel || '';
     document.getElementById('perfil-input-bio').value = usuario.bio || '';
 }
 
-// "2026-08-20 14:32:10" (formato que o SQLite grava em criado_em) -> "ago/2026"
-function formatarMesAno(dataTexto) {
+// "Cristina Gabriely Pinto Campos" -> "Cristina Campos" - só pro nome grande
+// do cabeçalho (o campo "Nome Completo", que é editável, continua mostrando
+// o nome inteiro)
+function primeiroEUltimoNome(nomeCompleto) {
+    const partes = nomeCompleto.trim().split(/\s+/);
+    return partes.length === 1 ? partes[0] : `${partes[0]} ${partes[partes.length - 1]}`;
+}
+
+// "2026-08-22 14:32:10" (formato que o SQLite grava em criado_em) -> "22 de agosto de 2026"
+function formatarDataCompleta(dataTexto) {
     const data = new Date(dataTexto.replace(' ', 'T'));
-    const mes = data.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
-    const ano = data.getFullYear();
-    return `${mes}/${ano}`;
+    return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 // Alterna entre mostrar a <img> (quando existe foto salva) e o ícone
@@ -214,9 +220,11 @@ function alternarEdicaoPerfil() {
     if (!emEdicao) {
         const inputNome = document.getElementById('perfil-input-nome');
         const inputTelefone = document.getElementById('perfil-input-telefone');
+        const inputCidade = document.getElementById('perfil-input-cidade');
 
         inputNome.removeAttribute('readonly');
         inputTelefone.removeAttribute('readonly');
+        inputCidade.removeAttribute('readonly');
         inputNome.focus();
 
         document.getElementById('btn-editar-dados').textContent = 'Salvar Dados';
@@ -231,23 +239,25 @@ function alternarEdicaoPerfil() {
 async function salvarPerfil() {
     const inputNome = document.getElementById('perfil-input-nome');
     const inputTelefone = document.getElementById('perfil-input-telefone');
+    const inputCidade = document.getElementById('perfil-input-cidade');
     const botao = document.getElementById('btn-editar-dados');
 
     try {
         const usuarioAtualizado = await chamarAPI('/api/perfil', {
             method: 'PUT',
-            body: JSON.stringify({ nome: inputNome.value, telefone: inputTelefone.value })
+            body: JSON.stringify({ nome: inputNome.value, telefone: inputTelefone.value, cidade: inputCidade.value })
         });
 
         preencherPerfil(usuarioAtualizado);
 
         // Atualiza também a cópia guardada no localStorage, senão outras
-        // páginas continuariam achando que o nome/telefone é o antigo até
-        // a pessoa logar de novo
+        // páginas continuariam achando que o nome/telefone/cidade são os
+        // antigos até a pessoa logar de novo
         atualizarUsuarioLocal(usuarioAtualizado);
 
         inputNome.setAttribute('readonly', true);
         inputTelefone.setAttribute('readonly', true);
+        inputCidade.setAttribute('readonly', true);
         botao.textContent = 'Editar Dados';
         document.getElementById('btn-abrir-trocar-senha').style.display = 'none';
         emEdicao = false;

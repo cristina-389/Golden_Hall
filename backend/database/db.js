@@ -39,6 +39,7 @@ db.exec(`
     senha TEXT NOT NULL,
     telefone TEXT,
     foto TEXT,
+    cidade TEXT,
     preferencia_aluguel TEXT,
     bio TEXT,
     tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'proprietario')),
@@ -51,7 +52,7 @@ db.exec(`
 // adiciona colunas novas numa tabela que já existe, então tenta adicionar
 // aqui por fora; se a coluna já existir (bancos criados a partir de agora,
 // já com ela no CREATE TABLE acima), o SQLite recusa e a gente ignora o erro.
-for (const coluna of ['foto TEXT', 'preferencia_aluguel TEXT', 'bio TEXT']) {
+for (const coluna of ['foto TEXT', 'preferencia_aluguel TEXT', 'bio TEXT', 'cidade TEXT']) {
     try {
         db.exec(`ALTER TABLE usuarios ADD COLUMN ${coluna}`);
     } catch (erro) {
@@ -204,6 +205,25 @@ db.exec(`
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
     FOREIGN KEY (reserva_id) REFERENCES reservas (id),
     UNIQUE (reserva_id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE VISUALIZAÇÕES
+// Uma linha toda vez que um cliente logado abre a página de detalhes de um
+// espaço - alimenta a estatística "Visualizados" da home do cliente
+// (index-logado.html). Não tem UNIQUE: visualizar o mesmo espaço várias
+// vezes conta várias vezes, já que é uma métrica de atividade/consumo, não
+// de "espaços diferentes vistos".
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS visualizacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    espaco_id INTEGER NOT NULL,
+    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+    FOREIGN KEY (espaco_id) REFERENCES espacos (id)
   )
 `);
 

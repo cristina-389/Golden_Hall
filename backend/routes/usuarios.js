@@ -118,7 +118,7 @@ router.post('/login', (req, res) => {
 // abaixo que precisam devolver o perfil completo e atualizado.
 function buscarPerfilCompleto(id) {
     const usuario = db
-        .prepare('SELECT id, nome, email, telefone, foto, preferencia_aluguel, bio, tipo, criado_em FROM usuarios WHERE id = ?')
+        .prepare('SELECT id, nome, email, telefone, foto, cidade, preferencia_aluguel, bio, tipo, criado_em FROM usuarios WHERE id = ?')
         .get(id);
 
     if (!usuario) return null;
@@ -150,13 +150,14 @@ router.get('/perfil', autenticar, (req, res) => {
 // normalmente pede uma confirmação extra, que este projeto não tem ainda).
 // --------------------------------------------------------------------------
 router.put('/perfil', autenticar, (req, res) => {
-    const { nome, telefone } = req.body;
+    const { nome, telefone, cidade } = req.body;
 
     if (!nome) {
         return res.status(400).json({ erro: 'O nome não pode ficar em branco.' });
     }
 
-    db.prepare('UPDATE usuarios SET nome = ?, telefone = ? WHERE id = ?').run(nome, telefone || null, req.usuario.id);
+    db.prepare('UPDATE usuarios SET nome = ?, telefone = ?, cidade = ? WHERE id = ?')
+        .run(nome, telefone || null, cidade || null, req.usuario.id);
 
     res.json(buscarPerfilCompleto(req.usuario.id));
 });
@@ -233,6 +234,21 @@ router.put('/perfil/foto', autenticar, (req, res) => {
     db.prepare('UPDATE usuarios SET foto = ? WHERE id = ?').run(foto || null, req.usuario.id);
 
     res.json({ foto: foto || null });
+});
+
+// --------------------------------------------------------------------------
+// GET /api/estatisticas - números reais de atividade de quem está logado,
+// usados no card "Seu desenvolvimento no Golden Hall" da home do cliente
+// (index-logado.html): quantos espaços favoritou, quantas reservas fez,
+// quantos espaços visualizou e quantas avaliações escreveu.
+// --------------------------------------------------------------------------
+router.get('/estatisticas', autenticar, (req, res) => {
+    const { total: favoritos } = db.prepare('SELECT COUNT(*) AS total FROM favoritos WHERE usuario_id = ?').get(req.usuario.id);
+    const { total: reservas } = db.prepare('SELECT COUNT(*) AS total FROM reservas WHERE usuario_id = ?').get(req.usuario.id);
+    const { total: visualizacoes } = db.prepare('SELECT COUNT(*) AS total FROM visualizacoes WHERE usuario_id = ?').get(req.usuario.id);
+    const { total: comentarios } = db.prepare('SELECT COUNT(*) AS total FROM avaliacoes WHERE usuario_id = ?').get(req.usuario.id);
+
+    res.json({ favoritos, reservas, visualizacoes, comentarios });
 });
 
 // Monta o token JWT com o id e o tipo da pessoa. Esses dois dados ficam

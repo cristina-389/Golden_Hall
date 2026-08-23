@@ -1,8 +1,9 @@
 /* ==========================================================================
-   GOLDEN HALL - INTERFACE EXCLUSIVA DO PAINEL DO USUÁRIO LOGADO
-   Usado por index-logado.html: só o cabeçalho fino do topo, já que a
-   navegação de quem está logado é feita pela barra inferior dourada
-   (essa fica em componentes/navegacao.css, não aqui).
+   GOLDEN HALL - HOME DO CLIENTE LOGADO
+   Usado por paginas/cliente/index-logado.html: cabeçalho fino do topo,
+   saudação, card "Seu desenvolvimento" (gráfico de barras), atalhos rápidos
+   e o convite final pra buscar espaços. A barra de navegação inferior fica
+   em componentes/navegacao.css, não aqui.
    ========================================================================== */
 
 /* Cabeçalho fino e fixo no topo (fica "colado" mesmo rolando a página,
@@ -27,4 +28,230 @@
     height: 70px;
     width: auto;
     display: block;
+}
+
+/* Esconde o cabeçalho ao rolar pra baixo e mostra de novo ao rolar pra
+   cima - a classe é ligada/desligada via scroll em js/paginas/index-logado.js.
+   Fica só nesta página (não mexe no "header" das outras) porque só o JS
+   desta página adiciona essa classe. */
+header.header-escondido {
+    transform: translateY(-100%);
+}
+
+header {
+    transition: transform 0.3s ease;
+}
+
+/* ================= SAUDAÇÃO ================= */
+.secao-saudacao {
+    max-width: 1100px;
+    margin: 50px auto 0;
+    padding: 0 20px;
+    text-align: left;
+}
+
+/* Foto + "Olá, Nome!" na mesma linha, centralizados um com o outro - a
+   linha dourada (.linha-elegante) fica FORA desse grupo, embaixo dos dois,
+   pra não interferir na centralização vertical entre a foto e o texto */
+.secao-saudacao-topo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar-saudacao {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-saudacao-icone {
+    font-size: 50px;
+    color: var(--gold);
+    opacity: 0.85;
+}
+
+.avatar-saudacao-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.secao-saudacao h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.secao-saudacao .linha-elegante {
+    justify-content: flex-start;
+    margin: 15px 0 0;
+}
+
+/* ================= CARD "SEU DESENVOLVIMENTO" ================= */
+.card-desenvolvimento {
+    max-width: 1100px;
+    margin: 35px auto 0;
+    padding: 30px 35px;
+    border-radius: 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    box-shadow: 0 5px 15px var(--shadow);
+}
+
+.card-desenvolvimento h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold);
+}
+
+.card-desenvolvimento .subtitulo {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 4px;
+    margin-bottom: 30px;
+}
+
+.grafico-estatisticas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.barra-estatistica {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.barra-valor {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+/* Coluna onde a barra "cresce" de baixo pra cima - altura fixa, a barra
+   preenchida por dentro (.barra-preenchida) é quem varia de tamanho,
+   definida via JS (ver definirBarra() em js/paginas/index-logado.js) */
+.barra-coluna {
+    width: 100%;
+    max-width: 40px;
+    height: 90px;
+    display: flex;
+    align-items: flex-end;
+    margin: 0 auto;
+}
+
+.barra-preenchida {
+    width: 100%;
+    height: 6%;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    transition: height 0.6s ease;
+}
+
+.barra-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 10px;
+}
+
+/* ================= ACESSO RÁPIDO ================= */
+.secao-acesso-rapido {
+    max-width: 1100px;
+    margin: 45px auto 0;
+    padding: 0 20px;
+}
+
+.secao-acesso-rapido h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 18px;
+}
+
+.grid-acesso-rapido {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.card-acesso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 25px 15px;
+    border-radius: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.card-acesso:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold);
+}
+
+.card-acesso .icone-contorno {
+    margin: 0;
+}
+
+/* ================= CONVITE PRA BUSCAR ================= */
+.cta-proximo-evento {
+    max-width: 1100px;
+    margin: 45px auto 100px;
+    padding: 30px 35px;
+    border-radius: 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    box-shadow: 0 5px 15px var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.cta-texto h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 8px;
+}
+
+.cta-texto p {
+    font-size: 14px;
+    color: var(--text-light);
+    max-width: 520px;
+}
+
+/* Estreita o suficiente pra empilhar o botão embaixo do texto em vez de
+   espremer os dois lado a lado */
+@media (max-width: 700px) {
+    .grafico-estatisticas {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 30px;
+    }
+
+    .cta-proximo-evento {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

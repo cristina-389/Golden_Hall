@@ -153,6 +153,24 @@ router.get('/espacos/:slug', (req, res) => {
 });
 
 // --------------------------------------------------------------------------
+// POST /api/espacos/:slug/visualizacao - registra que quem está logado abriu
+// a página de detalhes deste espaço. Alimenta a estatística "Visualizados"
+// da home do cliente (index-logado.html) - ver registrarVisualizacao() em
+// js/paginas/detalhes.js.
+// --------------------------------------------------------------------------
+router.post('/espacos/:slug/visualizacao', autenticar, (req, res) => {
+    const espaco = db.prepare('SELECT id FROM espacos WHERE slug = ?').get(req.params.slug);
+
+    if (!espaco) {
+        return res.status(404).json({ erro: 'Espaço não encontrado.' });
+    }
+
+    db.prepare('INSERT INTO visualizacoes (usuario_id, espaco_id) VALUES (?, ?)').run(req.usuario.id, espaco.id);
+
+    res.status(201).json({ ok: true });
+});
+
+// --------------------------------------------------------------------------
 // GET /api/meus-espacos - só os espaços do proprietário que está logado
 // --------------------------------------------------------------------------
 router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
