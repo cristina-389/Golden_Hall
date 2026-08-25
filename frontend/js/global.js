@@ -84,6 +84,14 @@ function salvarSessao(usuario, token) {
     localStorage.setItem('gh_usuario', JSON.stringify(usuario));
 }
 
+// Cada tipo de conta tem sua própria home - usado por js/modais.js pra
+// mandar a pessoa pro lugar certo assim que ela cadastra/loga
+function caminhoHomeDoUsuario(usuario) {
+    return usuario.tipo === 'proprietario'
+        ? '/frontend/paginas/dono/index-logado-dono.html'
+        : '/frontend/paginas/cliente/index-logado.html';
+}
+
 // Retorna o token guardado, ou null se ninguém estiver logado
 function obterToken() {
     return localStorage.getItem('gh_token');

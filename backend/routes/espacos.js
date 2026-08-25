@@ -182,6 +182,44 @@ router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
+// GET /api/estatisticas-dono - números reais de atividade do proprietário
+// que está logado, usados no card "Seu desempenho" da home dele
+// (paginas/dono/index-logado.html): quantos espaços cadastrou, quantas
+// reservas ainda estão pendentes de resposta (em QUALQUER espaço dele) e a
+// média das avaliações recebidas em todos os espaços juntos.
+// --------------------------------------------------------------------------
+router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
+    const { total: totalEspacos } = db
+        .prepare('SELECT COUNT(*) AS total FROM espacos WHERE dono_id = ?')
+        .get(req.usuario.id);
+
+    const { total: reservasPendentes } = db
+        .prepare(`
+            SELECT COUNT(*) AS total
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE espacos.dono_id = ? AND reservas.status = 'Pendente'
+        `)
+        .get(req.usuario.id);
+
+    const resumoAvaliacoes = db
+        .prepare(`
+            SELECT COUNT(*) AS total, AVG(nota) AS media
+            FROM avaliacoes
+            JOIN espacos ON espacos.id = avaliacoes.espaco_id
+            WHERE espacos.dono_id = ?
+        `)
+        .get(req.usuario.id);
+
+    res.json({
+        total_espacos: totalEspacos,
+        reservas_pendentes: reservasPendentes,
+        avaliacao_media: resumoAvaliacoes.media, // null se ainda não tiver nenhuma avaliação
+        total_avaliacoes: resumoAvaliacoes.total
+    });
+});
+
+// --------------------------------------------------------------------------
 // GET /api/espacos/:id/reservas - lista as reservas recebidas NESTE espaço
 // (o painel do proprietário usa isso pra mostrar quem quer reservar cada espaço dele)
 // --------------------------------------------------------------------------

@@ -1,6 +1,8 @@
 /* ==========================================================================
-   GOLDEN HALL - DESIGN PREMIUM DA PÁGINA DE PERFIL E AJUSTES DO CLIENTE
-   Usado por perfil.html. A "animation: fadeIn" do container principal usa
+   GOLDEN HALL - DESIGN PREMIUM DA PÁGINA DE PERFIL (cliente E proprietário)
+   Usado tanto por paginas/cliente/perfil.html quanto por
+   paginas/dono/perfil-dono.html - mesmo layout, só o conteúdo dos campos
+   muda entre as duas. A "animation: fadeIn" do container principal usa
    o @keyframes fadeIn definido em componentes/global.css.
    ========================================================================== */
 

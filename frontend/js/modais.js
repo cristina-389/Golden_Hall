@@ -148,7 +148,7 @@ function adicionarValidacaoSenha() {
 
                 salvarSessao(dados.usuario, dados.token);
                 fecharModal();
-                window.location.href = '/frontend/paginas/cliente/index-logado.html';
+                window.location.href = caminhoHomeDoUsuario(dados.usuario);
             } catch (erro) {
                 alert(erro.message);
             }
@@ -210,7 +210,7 @@ function adicionarLogicaLogin() {
 
                 salvarSessao(dados.usuario, dados.token);
                 fecharModalLogin();
-                window.location.href = '/frontend/paginas/cliente/index-logado.html';
+                window.location.href = caminhoHomeDoUsuario(dados.usuario);
             } catch (erro) {
                 alert(erro.message);
             }

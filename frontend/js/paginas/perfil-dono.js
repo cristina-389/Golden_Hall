@@ -1,5 +1,7 @@
 /* ==========================================================================
-   GOLDEN HALL - PÁGINA DE PERFIL (ligada na API de verdade)
+   GOLDEN HALL - PÁGINA DE PERFIL DO PROPRIETÁRIO (ligada na API de verdade)
+   Praticamente idêntica a js/paginas/perfil.js (a do cliente) - só não tem
+   o campo "Preferência de Aluguel", que não existe nesta versão do HTML.
    Busca os dados de quem está logado em GET /api/perfil e preenche a tela.
    O botão "Editar Dados" funciona como uma alternância (toggle): no primeiro
    clique, libera os campos pra digitar; no segundo clique, salva (PUT
@@ -13,23 +15,22 @@ let emEdicao = false; // controla se os campos estão liberados pra digitar ou t
 async function carregarPerfil() {
     const usuario = obterUsuarioLogado();
 
-    // Sem login, não tem perfil nenhum pra mostrar
     if (!usuario) {
         alert('Você precisa entrar na sua conta para ver o perfil.');
         window.location.href = '/frontend/index.html';
         return;
     }
 
-    // Essa página é a versão do cliente - proprietário que cair aqui (ex:
+    // Essa página é a versão do proprietário - cliente que cair aqui (ex:
     // digitando a URL direto) vai pro perfil dele
-    if (usuario.tipo === 'proprietario') {
-        window.location.href = '/frontend/paginas/dono/perfil-dono.html';
+    if (usuario.tipo !== 'proprietario') {
+        window.location.href = '/frontend/paginas/cliente/perfil.html';
         return;
     }
 
     try {
-        const usuario = await chamarAPI('/api/perfil');
-        preencherPerfil(usuario);
+        const dados = await chamarAPI('/api/perfil');
+        preencherPerfil(dados);
     } catch (erro) {
         alert(erro.message);
     }
@@ -38,8 +39,7 @@ async function carregarPerfil() {
 // Escreve os dados do usuário na tela (cabeçalho + campos do formulário)
 function preencherPerfil(usuario) {
     document.getElementById('perfil-nome-cabecalho').textContent = primeiroEUltimoNome(usuario.nome);
-    document.getElementById('perfil-status-badge').textContent =
-        usuario.tipo === 'proprietario' ? 'Proprietário de Espaço ⚜️' : 'Cliente Golden Hall ⚜️';
+    document.getElementById('perfil-status-badge').textContent = 'Proprietário de Espaço ⚜️';
 
     document.getElementById('perfil-input-nome').value = usuario.nome;
     document.getElementById('perfil-input-email').value = usuario.email;
@@ -49,7 +49,6 @@ function preencherPerfil(usuario) {
     exibirFotoPerfil(usuario.foto);
 
     document.getElementById('perfil-stat-desde').textContent = formatarDataCompleta(usuario.criado_em);
-    document.getElementById('perfil-input-preferencia').value = usuario.preferencia_aluguel || '';
     document.getElementById('perfil-input-bio').value = usuario.bio || '';
 }
 
@@ -280,17 +279,16 @@ async function salvarPerfil() {
 // Botão "Editar" / "Salvar" do card "Sobre Você" - mesmo esquema de
 // alternância do card "Dados Pessoais", só que numa variável própria
 // (emEdicaoSobre), já que os dois cards podem ser editados de forma
-// independente.
+// independente. Aqui só existe o campo "Bio" (sem "Preferência de
+// Aluguel", que é coisa de quem aluga espaço, não de quem anuncia).
 let emEdicaoSobre = false;
 
 function alternarEdicaoSobre() {
     if (!emEdicaoSobre) {
-        const inputPreferencia = document.getElementById('perfil-input-preferencia');
         const inputBio = document.getElementById('perfil-input-bio');
 
-        inputPreferencia.removeAttribute('readonly');
         inputBio.removeAttribute('readonly');
-        inputPreferencia.focus();
+        inputBio.focus();
 
         document.getElementById('btn-editar-sobre').textContent = 'Salvar';
         emEdicaoSobre = true;
@@ -301,20 +299,18 @@ function alternarEdicaoSobre() {
 }
 
 async function salvarSobre() {
-    const inputPreferencia = document.getElementById('perfil-input-preferencia');
     const inputBio = document.getElementById('perfil-input-bio');
     const botao = document.getElementById('btn-editar-sobre');
 
     try {
         const usuarioAtualizado = await chamarAPI('/api/perfil/sobre', {
             method: 'PUT',
-            body: JSON.stringify({ preferencia_aluguel: inputPreferencia.value, bio: inputBio.value })
+            body: JSON.stringify({ bio: inputBio.value })
         });
 
         preencherPerfil(usuarioAtualizado);
         atualizarUsuarioLocal(usuarioAtualizado);
 
-        inputPreferencia.setAttribute('readonly', true);
         inputBio.setAttribute('readonly', true);
         botao.textContent = 'Editar';
         emEdicaoSobre = false;

@@ -1,0 +1,170 @@
+<!--
+  GOLDEN HALL - PÁGINA DE PERFIL DO PROPRIETÁRIO (paginas/dono/perfil-dono.html)
+  Praticamente idêntica a paginas/cliente/perfil.html (mesmas classes de CSS
+  em css/paginas/perfil.css, mesma lógica de edição/foto/senha) - a única
+  diferença de conteúdo é que não tem o campo "Preferência de Aluguel" (não
+  faz sentido pra quem ANUNCIA espaço, não pra quem aluga). Foto de perfil
+  (PUT /api/perfil/foto), troca de senha (PUT /api/perfil/senha) e o card
+  "Sobre Você" (bio, via PUT /api/perfil/sobre) são de verdade, ligados no
+  banco - a data de cadastro vem de usuarios.criado_em.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Meu Perfil</title>
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+<body class="logado-layout dark">
+
+    <main>
+        <section class="secao-perfil">
+            <div class="perfil-header">
+                <div class="avatar-container">
+                    <!-- Sem foto salva ainda: mostra o ícone genérico. Assim que a
+                         pessoa escolhe uma foto (input escondido abaixo), ela é lida
+                         em base64 e vira essa <img>, salva de verdade em
+                         PUT /api/perfil/foto - ver trocarFoto()/preencherPerfil() em
+                         js/paginas/perfil-dono.js -->
+                    <div class="avatar-circulo">
+                        <span class="material-icons-round avatar-icone-generico" id="perfil-avatar-icone">account_circle</span>
+                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;">
+                    </div>
+
+                    <button class="btn-trocar-foto" type="button" onclick="document.getElementById('perfil-input-foto').click()" title="Trocar foto">
+                        <span class="material-icons-round">photo_camera</span>
+                    </button>
+                    <input type="file" id="perfil-input-foto" accept="image/*" style="display: none;" onchange="trocarFoto(event)">
+                </div>
+                <h2 class="perfil-nome" id="perfil-nome-cabecalho">Carregando...</h2>
+                <span class="status-badge" id="perfil-status-badge">-</span>
+                <button class="btn-remover-foto" id="btn-remover-foto" onclick="removerFoto()" style="display: none;">Remover foto</button>
+            </div>
+
+            <div class="perfil-grid">
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">person</span> Dados Pessoais</h3>
+                    <div class="campo-grupo">
+                        <label>Nome Completo</label>
+                        <input type="text" id="perfil-input-nome" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>E-mail</label>
+                        <input type="email" id="perfil-input-email" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>WhatsApp</label>
+                        <input type="text" id="perfil-input-telefone" readonly>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Cidade</label>
+                        <input type="text" id="perfil-input-cidade" placeholder="Ex: Americana" readonly>
+                    </div>
+                    <!-- Só aparece durante a edição (junto com os campos liberados) -
+                         ver alternarEdicaoPerfil() em js/paginas/perfil-dono.js -->
+                    <button class="link-trocar-senha" id="btn-abrir-trocar-senha" onclick="abrirModalTrocarSenha()" style="display: none;">
+                        <span class="material-icons-round">lock</span> Alterar senha
+                    </button>
+
+                    <button class="btn-ajuste" id="btn-editar-dados" onclick="alternarEdicaoPerfil()">Editar Dados</button>
+                </div>
+
+                <div class="perfil-card">
+                    <h3><span class="material-icons-round">auto_awesome</span> Sobre Você</h3>
+
+                    <!-- Data de cadastro de verdade, vinda do banco (usuarios.criado_em)
+                         - não é inventada -->
+                    <div class="perfil-stats">
+                        <div class="perfil-stat">
+                            <span class="perfil-stat-numero" id="perfil-stat-desde">-</span>
+                            <span class="perfil-stat-label">Membro desde</span>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Bio</label>
+                        <textarea id="perfil-input-bio" rows="3" maxlength="300" placeholder="Conte um pouco sobre você ou os espaços que você oferece..." readonly></textarea>
+                    </div>
+                    <button class="btn-ajuste" id="btn-editar-sobre" onclick="alternarEdicaoSobre()">Editar</button>
+                </div>
+            </div>
+
+            <div class="perfil-actions">
+                <button class="btn-sair-perfil" onclick="confirmarSaida()">
+                    <span class="material-icons-round">logout</span> Sair da Conta
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de trocar senha - aberto a partir do link "Alterar senha" que
+         aparece dentro do card "Dados Pessoais" durante a edição. Fica
+         direto aqui (em vez de ser buscado via fetch, como os modais
+         globais de js/modais.js) porque só é usado nesta página. -->
+    <div id="modal-trocar-senha" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalTrocarSenha()">&times;</button>
+
+            <h2>Alterar Senha</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">Confirme sua senha atual para definir uma nova.</p>
+
+            <form id="form-trocar-senha" class="form-grid" onsubmit="return alterarSenha(event)">
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-atual">Senha Atual</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-atual" autocomplete="current-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-atual', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-nova">Nova Senha</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-nova" minlength="6" autocomplete="new-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-nova', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                    <small class="dica-campo">Mínimo de 6 caracteres</small>
+                </div>
+                <div class="input-grupo col-total">
+                    <label for="perfil-senha-confirmar">Confirmar Nova Senha</label>
+                    <div class="campo-senha">
+                        <input type="password" id="perfil-senha-confirmar" autocomplete="new-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('perfil-senha-confirmar', this)" title="Mostrar senha">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-bloco">Alterar Senha</button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <span class="material-icons-round icone">home</span>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <span class="material-icons-round icone">storefront</span>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav ativo">
+            <span class="material-icons-round icone">person</span>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/perfil-dono.js"></script>
+
+</body>
+</html>

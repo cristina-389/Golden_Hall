@@ -1,0 +1,162 @@
+<!--
+  GOLDEN HALL - HOME DO PROPRIETÁRIO JÁ LOGADO (paginas/dono/index-logado-dono.html)
+  Mesmo layout da home do cliente (paginas/cliente/index-logado.html, mesmas
+  classes de CSS em css/paginas/index-logado.css) - só o conteúdo muda:
+  estatísticas de quem ANUNCIA espaços (GET /api/estatisticas-dono) e atalhos
+  pra gerenciar espaços em vez de buscar/reservar. Se um cliente cair aqui
+  (ex: digitando a URL direto), js/paginas/index-logado-dono.js manda ele de
+  volta pra home dele.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Golden Hall | Painel</title>
+
+  <!-- FONTES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!--icones dourados-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/frontend/css/style.css">
+
+</head>
+
+<body class="dark">
+
+  <!-- ================= HEADER ================= -->
+
+  <header>
+
+    <div class="logo">
+
+      <img src="/frontend/Imagens/logo.png" alt="Logo Golden Hall">
+
+      <div class="logo-text">
+
+        <h1>GOLDEN HALL</h1>
+        <p>SALÃO DE FESTAS</p>
+
+      </div>
+
+    </div>
+
+    <div class="header-buttons">
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        🌙
+      </button>
+
+      <button class="btn btn-outline" onclick="confirmarSaida()">Sair</button>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= SAUDAÇÃO ================= -->
+
+  <section class="secao-saudacao">
+    <div class="secao-saudacao-topo">
+      <!-- Sem foto salva ainda: mostra o ícone genérico. A foto de verdade
+           (base64 salva em PUT /api/perfil/foto, mesma coluna usada em
+           perfil-dono.html) é buscada em GET /api/perfil - ver
+           carregarFotoPerfil() em js/paginas/index-logado-dono.js -->
+      <div class="avatar-saudacao">
+        <span class="material-icons-round avatar-saudacao-icone" id="saudacao-avatar-icone">account_circle</span>
+        <img class="avatar-saudacao-foto" id="saudacao-avatar-foto" alt="Foto de perfil" style="display: none;">
+      </div>
+
+      <h2>Olá, <span class="gold-text" id="saudacao-nome">...</span>!</h2>
+    </div>
+
+    <div class="linha-elegante">
+      <span>✦</span>
+    </div>
+  </section>
+
+  <!-- ================= SEU DESEMPENHO ================= -->
+  <!-- Números de verdade (GET /api/estatisticas-dono), não inventados - ver
+       carregarEstatisticas() em js/paginas/index-logado-dono.js -->
+
+  <section class="card-desenvolvimento">
+    <h3>Seu desempenho no Golden Hall</h3>
+    <p class="subtitulo">Como estão seus espaços na plataforma</p>
+
+    <div class="grafico-estatisticas">
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-espacos">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-espacos"></div></div>
+        <span class="barra-label">Espaços cadastrados</span>
+      </div>
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-pendentes">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-pendentes"></div></div>
+        <span class="barra-label">Reservas pendentes</span>
+      </div>
+      <div class="barra-estatistica">
+        <span class="barra-valor" id="stat-avaliacao">-</span>
+        <div class="barra-coluna"><div class="barra-preenchida" id="barra-avaliacao"></div></div>
+        <span class="barra-label">Avaliação média</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACESSO RÁPIDO ================= -->
+
+  <section class="secao-acesso-rapido">
+    <h3>Acesso rápido</h3>
+
+    <div class="grid-acesso-rapido">
+      <a class="card-acesso" href="/frontend/paginas/dono/painel-dono.html">
+        <div class="icone-contorno"><span class="material-icons-round">storefront</span></div>
+        <span>Meus espaços</span>
+      </a>
+      <a class="card-acesso" href="/frontend/paginas/dono/perfil-dono.html">
+        <div class="icone-contorno"><span class="material-icons-round">person</span></div>
+        <span>Meu perfil</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= CONVITE PRA CADASTRAR ================= -->
+
+  <section class="cta-proximo-evento">
+    <div class="cta-texto">
+      <h3>Pronto para receber mais reservas?</h3>
+      <p>Cadastre um novo espaço e aumente as chances de ser encontrado por quem está planejando o próximo evento.</p>
+    </div>
+    <a class="btn btn-gold" href="/frontend/paginas/dono/painel-dono.html">Cadastrar espaço</a>
+  </section>
+
+<nav class="barra-navegacao-inferior">
+    <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav ativo">
+        <span class="material-icons-round icone">home</span>
+        <span class="texto">Início</span>
+    </a>
+    <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+        <span class="material-icons-round icone">storefront</span>
+        <span class="texto">Meus Espaços</span>
+    </a>
+    <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
+        <span class="material-icons-round icone">person</span>
+        <span class="texto">Perfil</span>
+    </a>
+</nav>
+
+  <!-- JS -->
+  <script src="/frontend/js/global.js"></script>
+  <script src="/frontend/js/paginas/index-logado-dono.js"></script>
+
+</body>
+
+</html>
