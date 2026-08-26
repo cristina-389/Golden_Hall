@@ -1,12 +1,13 @@
 <!--
   GOLDEN HALL - PÁGINA DE PERFIL DO PROPRIETÁRIO (paginas/dono/perfil-dono.html)
-  Praticamente idêntica a paginas/cliente/perfil.html (mesmas classes de CSS
-  em css/paginas/perfil.css, mesma lógica de edição/foto/senha) - a única
-  diferença de conteúdo é que não tem o campo "Preferência de Aluguel" (não
-  faz sentido pra quem ANUNCIA espaço, não pra quem aluga). Foto de perfil
-  (PUT /api/perfil/foto), troca de senha (PUT /api/perfil/senha) e o card
-  "Sobre Você" (bio, via PUT /api/perfil/sobre) são de verdade, ligados no
-  banco - a data de cadastro vem de usuarios.criado_em.
+  Card "Dados Pessoais" é praticamente idêntico a paginas/cliente/perfil.html
+  (mesmas classes de CSS em css/paginas/perfil.css, mesma lógica de edição/
+  foto/senha) - o segundo card é diferente: em vez de "Sobre Você" (que não
+  fazia sentido pro proprietário - "Preferência de Aluguel" é coisa de quem
+  aluga, não de quem anuncia), aqui é "Meus Espaços", com a lista de verdade
+  dos espaços cadastrados (GET /api/meus-espacos). Foto de perfil (PUT
+  /api/perfil/foto) e troca de senha (PUT /api/perfil/senha) continuam de
+  verdade, ligadas no banco.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -19,7 +20,7 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 </head>
-<body class="logado-layout dark">
+<body class="logado-layout dark perfil-logado-premium">
 
     <main>
         <section class="secao-perfil">
@@ -32,17 +33,18 @@
                          js/paginas/perfil-dono.js -->
                     <div class="avatar-circulo">
                         <span class="material-icons-round avatar-icone-generico" id="perfil-avatar-icone">account_circle</span>
-                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;">
+                        <!-- Clicar na foto (não no ícone genérico) abre ela ampliada -
+                             ver abrirVisualizacaoFoto() em js/paginas/perfil-dono.js -->
+                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;" onclick="abrirVisualizacaoFoto()" title="Ver foto ampliada">
                     </div>
 
-                    <button class="btn-trocar-foto" type="button" onclick="document.getElementById('perfil-input-foto').click()" title="Trocar foto">
+                    <button class="btn-trocar-foto" type="button" onclick="abrirModalFoto()" title="Trocar foto">
                         <span class="material-icons-round">photo_camera</span>
                     </button>
                     <input type="file" id="perfil-input-foto" accept="image/*" style="display: none;" onchange="trocarFoto(event)">
                 </div>
                 <h2 class="perfil-nome" id="perfil-nome-cabecalho">Carregando...</h2>
                 <span class="status-badge" id="perfil-status-badge">-</span>
-                <button class="btn-remover-foto" id="btn-remover-foto" onclick="removerFoto()" style="display: none;">Remover foto</button>
             </div>
 
             <div class="perfil-grid">
@@ -74,22 +76,15 @@
                 </div>
 
                 <div class="perfil-card">
-                    <h3><span class="material-icons-round">auto_awesome</span> Sobre Você</h3>
+                    <h3><span class="material-icons-round">storefront</span> Meus Espaços</h3>
 
-                    <!-- Data de cadastro de verdade, vinda do banco (usuarios.criado_em)
-                         - não é inventada -->
-                    <div class="perfil-stats">
-                        <div class="perfil-stat">
-                            <span class="perfil-stat-numero" id="perfil-stat-desde">-</span>
-                            <span class="perfil-stat-label">Membro desde</span>
-                        </div>
-                    </div>
+                    <!-- Lista de verdade (GET /api/meus-espacos, a mesma rota que o
+                         painel usa) - não é um resumo/bio genérico, é o espaço
+                         cadastrado de fato - ver carregarMeusEspacos() em
+                         js/paginas/perfil-dono.js -->
+                    <div id="perfil-lista-espacos" class="perfil-lista-espacos"></div>
 
-                    <div class="campo-grupo">
-                        <label>Bio</label>
-                        <textarea id="perfil-input-bio" rows="3" maxlength="300" placeholder="Conte um pouco sobre você ou os espaços que você oferece..." readonly></textarea>
-                    </div>
-                    <button class="btn-ajuste" id="btn-editar-sobre" onclick="alternarEdicaoSobre()">Editar</button>
+                    <a href="/frontend/paginas/dono/painel-dono.html" class="btn-ajuste">Gerenciar Espaços</a>
                 </div>
             </div>
 
@@ -100,6 +95,66 @@
             </div>
         </section>
     </main>
+
+    <!-- Modal de "ver foto ampliada" - abre ao clicar na própria foto do
+         avatar (não no botão de câmera). Só mostra a imagem grande, sem
+         nenhuma ação - ver abrirVisualizacaoFoto() em js/paginas/perfil-dono.js -->
+    <div id="modal-ver-foto" class="modal-overlay">
+        <div class="visualizacao-foto-container">
+            <button class="fechar-modal" onclick="fecharVisualizacaoFoto()">&times;</button>
+            <img id="imagem-visualizacao-foto" src="" alt="Foto de perfil ampliada">
+        </div>
+    </div>
+
+    <!-- Modal aberto pelo botão de câmera do avatar - pergunta se a pessoa
+         quer escolher uma foto da galeria, tirar uma foto na hora, ou
+         remover a foto atual (essa última opção só aparece se já tiver
+         uma foto salva - ver abrirModalFoto() em js/paginas/perfil-dono.js) -->
+    <div id="modal-foto-perfil" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalFoto()">&times;</button>
+
+            <h2>Foto de Perfil</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">O que você quer fazer?</p>
+
+            <div class="opcoes-foto-perfil">
+                <button type="button" class="opcao-foto-perfil" onclick="escolherOrigemFoto('galeria')">
+                    <span class="material-icons-round">photo_library</span>
+                    <span>Escolher da Galeria</span>
+                </button>
+                <button type="button" class="opcao-foto-perfil" onclick="escolherOrigemFoto('camera')">
+                    <span class="material-icons-round">photo_camera</span>
+                    <span>Tirar uma Foto</span>
+                </button>
+                <button type="button" class="opcao-foto-perfil opcao-foto-remover" id="btn-opcao-remover-foto" onclick="escolherOrigemFoto('remover')" style="display: none;">
+                    <span class="material-icons-round">delete</span>
+                    <span>Remover Foto Atual</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal da câmera de verdade (getUserMedia) - aberto pela opção
+         "Tirar uma Foto" do modal acima. Fica escondido até a pessoa clicar
+         em "Capturar", que desenha o frame atual do vídeo num canvas - ver
+         abrirModalCamera()/capturarFotoCamera() em js/paginas/perfil-dono.js -->
+    <div id="modal-camera-foto" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalCamera()">&times;</button>
+
+            <h2>Tirar uma Foto</h2>
+            <div class="linha-dourada-form"></div>
+
+            <div class="camera-preview-container">
+                <video id="video-camera-foto" autoplay playsinline muted></video>
+            </div>
+
+            <button type="button" class="btn btn-gold btn-bloco" onclick="capturarFotoCamera()">
+                <span class="material-icons-round">photo_camera</span> Capturar
+            </button>
+        </div>
+    </div>
 
     <!-- Modal de trocar senha - aberto a partir do link "Alterar senha" que
          aparece dentro do card "Dados Pessoais" durante a edição. Fica

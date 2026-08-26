@@ -55,6 +55,35 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: zoom-in; /* só aparece quando existe foto de verdade - ver abrirVisualizacaoFoto() no JS */
+}
+
+/* "Ver foto ampliada" - sem caixa/moldura de modal nenhuma, só a própria
+   foto flutuando sobre o fundo escuro do overlay (clicar fora dela já
+   fecha, igual aos outros modais - ver o "window click" no JS) */
+.visualizacao-foto-container {
+    position: relative;
+}
+
+.visualizacao-foto-container .fechar-modal {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    color: #ffffff;
+    font-size: 34px;
+}
+
+.visualizacao-foto-container .fechar-modal:hover {
+    color: var(--gold);
+}
+
+#imagem-visualizacao-foto {
+    display: block;
+    width: min(80vw, 380px);
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(212, 164, 55, 0.35);
 }
 
 /* Botão de câmera sobreposto no canto do avatar - abre o seletor de
@@ -84,19 +113,77 @@
     transform: scale(1.08);
 }
 
-.btn-remover-foto {
-    display: block;
-    margin: 10px auto 0;
-    background: none;
-    border: none;
-    color: var(--text-light);
-    font-size: 12px;
-    text-decoration: underline;
-    cursor: pointer;
+/* Opções dentro do modal "Foto de Perfil" (aberto pelo botão de câmera) */
+.opcoes-foto-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
 }
 
-.btn-remover-foto:hover {
+.opcao-foto-perfil {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 164, 55, 0.3);
+    background: none;
+    color: inherit;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.opcao-foto-perfil .material-icons-round {
     color: var(--gold);
+    font-size: 22px;
+}
+
+.opcao-foto-perfil:hover {
+    border-color: var(--gold);
+    background: rgba(212, 164, 55, 0.08);
+}
+
+/* A opção de remover usa um tom avermelhado, pra ficar claro que é uma
+   ação diferente (destrutiva) das outras duas */
+.opcao-foto-remover {
+    border-color: rgba(255, 107, 107, 0.35);
+}
+
+.opcao-foto-remover .material-icons-round {
+    color: #ff6b6b;
+}
+
+.opcao-foto-remover:hover {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.08);
+}
+
+/* Preview ao vivo da câmera (modal "Tirar uma Foto") - quadrado, cantos
+   arredondados, e espelhado (scaleX(-1)) só na tela, pra parecer um espelho
+   de verdade enquanto a pessoa se enquadra (a foto capturada é desfeita
+   desse espelhamento antes de salvar - ver capturarFotoCamera() no JS) */
+.camera-preview-container {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1;
+    margin: 15px auto 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000000;
+    border: 1px solid rgba(212, 164, 55, 0.3);
+}
+
+.camera-preview-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
 }
 
 .perfil-nome {
@@ -243,6 +330,7 @@
     border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
+    text-decoration: none; /* essa classe também é usada num <a> (perfil-dono.html) */
     cursor: pointer;
     align-self: flex-start; /* não deixa o botão esticar pra largura toda do card flex */
     margin-top: auto; /* empurra pro rodapé do card - ver .perfil-card (display: flex) */
@@ -326,4 +414,110 @@ body:not(.dark) .campo-grupo textarea {
 }
 body:not(.dark) .campo-grupo label {
     color: #444444; /* Etiquetas em cinza grafite */
+}
+
+/* ==================== CARD "MEUS ESPAÇOS" (só no perfil do proprietário) ====================
+   Lista de verdade dos espaços cadastrados (GET /api/meus-espacos) - cada
+   item já é um link pra ver como o espaço aparece pra um cliente. */
+.perfil-lista-espacos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.perfil-espaco-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(212, 164, 55, 0.06);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.perfil-espaco-item:hover {
+    border-color: var(--gold);
+    transform: translateX(3px);
+}
+
+.perfil-espaco-item .material-icons-round {
+    color: var(--gold);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.perfil-espaco-item-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* deixa o text-overflow funcionar dentro do flex */
+}
+
+.perfil-espaco-item-textos strong {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.perfil-espaco-item-textos span {
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+.perfil-espacos-vazio {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   VISUAL "PREMIUM" DAS DUAS PÁGINAS DE PERFIL (.perfil-logado-premium)
+   Usado tanto por paginas/cliente/perfil.html quanto por
+   paginas/dono/perfil-dono.html. Mesma linguagem de brilho dourado usada na
+   home logada (ver .home-logado-premium em css/paginas/index-logado.css) -
+   reaproveita até o mesmo @keyframes (brilhoAvatarDono), já carregado
+   globalmente via style.css. A regra de ".perfil-espaco-item" só tem efeito
+   no perfil do proprietário (só ele tem esse elemento no HTML).
+   ========================================================================== */
+
+.perfil-logado-premium .avatar-circulo {
+    animation: brilhoAvatarDono 3s ease-in-out infinite;
+}
+
+/* Fundo com contraste dourado só no tema claro (dourado com branco) - no
+   tema escuro fica sem esse brilho. "fixed" faz o brilho ficar parado no
+   lugar mesmo quando a página rola. */
+.perfil-logado-premium:not(.dark) {
+    background:
+        radial-gradient(ellipse 1300px 850px at 50% 0%, rgba(212, 164, 55, 0.14) 0%, transparent 70%),
+        var(--bg);
+    background-attachment: fixed;
+}
+
+.perfil-logado-premium .perfil-card {
+    border: 1px solid rgba(255, 215, 0, 0.35) !important;
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Ícone da lista "Meus Espaços" vira um círculo preenchido em degradê,
+   igual aos cards de "Acesso rápido" da home, em vez do ícone solto */
+.perfil-logado-premium .perfil-espaco-item .material-icons-round {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #1a1305;
+    font-size: 16px !important;
+}
+
+.perfil-logado-premium .perfil-espaco-item:hover {
+    box-shadow: 0 0 18px hsla(46, 100%, 55%, 0.2);
+}
 }

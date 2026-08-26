@@ -216,6 +216,21 @@ body:not(.dark) {
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
 }
 
+/* O navegador (Chrome/Edge) pinta os campos que ele "lembra" (e-mail,
+   telefone, nome já usados antes) com um fundo branco/amarelado próprio,
+   que "background-color" normal não consegue sobrescrever - o truque é
+   forçar essa cor de fundo através de um "box-shadow" bem grande por
+   dentro do campo (isso o navegador respeita), e adiar pra sempre a
+   transição de cor que ele tentaria aplicar. */
+.input-grupo input:-webkit-autofill,
+.input-grupo input:-webkit-autofill:hover,
+.input-grupo input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+    -webkit-text-fill-color: var(--modal-text);
+    caret-color: var(--modal-text);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 /* Campo de senha com o botão de "mostrar/esconder" (o olhinho) dentro dele -
    ver alternarVisibilidadeSenha() em modais.js */
 .campo-senha {

@@ -53,6 +53,79 @@ a {
     color: var(--text);    /* links usam a cor do texto normal, não o azul padrão do navegador */
 }
 
+/* ==========================================================================
+   BARRA DE ROLAGEM PERSONALIZADA (todo o site)
+   Firefox usa "scrollbar-width"/"scrollbar-color"; Chrome, Edge e Safari
+   usam os pseudo-elementos "::-webkit-scrollbar*" - por isso as duas
+   versões, cobrindo os navegadores mais comuns.
+
+   IMPORTANTE: aqui embaixo as cores de fundo são escritas na mão (#f5f5f5 /
+   #050505, os mesmos valores de --bg no tema claro/escuro), em vez de usar
+   var(--bg) ou "body.dark" - a barra de rolagem pertence ao <html>, que
+   fica ACIMA do <body> na árvore. Variável CSS só desce de pai pra filho
+   (então var(--bg) aqui sempre pegava o valor do tema claro do :root,
+   nunca o do body.dark), e um seletor "body.dark ::-webkit-scrollbar-x"
+   também não funciona pelo mesmo motivo: o <html> não é descendente do
+   <body>, é o contrário. Por isso global.js também coloca a classe "dark"
+   no <html> (não só no <body>) - ver toggleTheme()/DOMContentLoaded ali. */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #d4a437 #f5f5f5;
+}
+
+html.dark {
+    scrollbar-color: #d4a437 #050505;
+}
+
+::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+/* As setinhas de cima/baixo da barra clássica do Windows vêm brancas por
+   padrão do navegador - escondidas aqui, senão sobra um quadradinho branco
+   destoando do tema escuro mesmo com o resto da barra já dourada/escura */
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* Quadradinho onde a barra vertical encontra a horizontal (quando as duas
+   aparecem juntas) - mesma cor do fundo, em vez do branco padrão */
+::-webkit-scrollbar-corner {
+    background: #f5f5f5;
+}
+
+html.dark ::-webkit-scrollbar-corner {
+    background: #050505;
+}
+
+/* A borda com a mesma cor do fundo + "background-clip: padding-box" cria
+   aquele efeito de "trilho" em volta do polegar dourado, em vez dele
+   ocupar a barra inteira de lado a lado */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #f5d26a, #d4a437);
+    border-radius: 10px;
+    border: 2px solid #f5f5f5;
+    background-clip: padding-box;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+    border-color: #050505;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-light);
+    background-clip: padding-box;
+}
+
 /* Utilitários Comuns de Animação: efeito de "aparecer suavemente subindo",
    usado em elementos com "animation: fadeIn ..." (ex: .secao-perfil) */
 @keyframes fadeIn {

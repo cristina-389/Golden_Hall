@@ -31,7 +31,7 @@
 
 </head>
 
-<body class="dark">
+<body class="dark home-logado-premium">
 
   <!-- ================= HEADER ================= -->
 
@@ -85,30 +85,41 @@
   </section>
 
   <!-- ================= SEU DESEMPENHO ================= -->
-  <!-- Números de verdade (GET /api/estatisticas-dono), não inventados - ver
-       carregarEstatisticas() em js/paginas/index-logado-dono.js -->
+  <!-- Números de verdade (GET /api/estatisticas-dono) e o gráfico de linhas
+       (GET /api/estatisticas-dono/grafico) - nada inventado, ver
+       js/paginas/index-logado-dono.js -->
 
   <section class="card-desenvolvimento">
     <h3>Seu desempenho no Golden Hall</h3>
     <p class="subtitulo">Como estão seus espaços na plataforma</p>
 
-    <div class="grafico-estatisticas">
-      <div class="barra-estatistica">
-        <span class="barra-valor" id="stat-espacos">-</span>
-        <div class="barra-coluna"><div class="barra-preenchida" id="barra-espacos"></div></div>
-        <span class="barra-label">Espaços cadastrados</span>
+    <div class="resumo-numeros-dono">
+      <div class="numero-resumo" id="resumo-espacos">
+        <div class="numero-resumo-icone"><span class="material-icons-round">storefront</span></div>
+        <span class="numero-resumo-valor" id="stat-espacos">-</span>
+        <span class="numero-resumo-label">Espaços cadastrados</span>
       </div>
-      <div class="barra-estatistica">
-        <span class="barra-valor" id="stat-pendentes">-</span>
-        <div class="barra-coluna"><div class="barra-preenchida" id="barra-pendentes"></div></div>
-        <span class="barra-label">Reservas pendentes</span>
+      <div class="numero-resumo" id="resumo-pendentes">
+        <div class="numero-resumo-icone"><span class="material-icons-round">pending_actions</span></div>
+        <span class="numero-resumo-valor" id="stat-pendentes">-</span>
+        <span class="numero-resumo-label">Reservas pendentes</span>
       </div>
-      <div class="barra-estatistica">
-        <span class="barra-valor" id="stat-avaliacao">-</span>
-        <div class="barra-coluna"><div class="barra-preenchida" id="barra-avaliacao"></div></div>
-        <span class="barra-label">Avaliação média</span>
+      <div class="numero-resumo" id="resumo-avaliacao">
+        <div class="numero-resumo-icone"><span class="material-icons-round">star</span></div>
+        <span class="numero-resumo-valor" id="stat-avaliacao">-</span>
+        <span class="numero-resumo-label">Avaliação média</span>
       </div>
     </div>
+
+    <!-- Uma linha por espaço, cada uma somando visualizações + reservas +
+         favoritos + avaliações ACUMULADOS dia a dia - assim dá pra comparar
+         quais espaços estão ganhando mais destaque com o tempo -->
+    <div class="grafico-linhas-cabecalho">
+      <h4>Evolução dos seus espaços</h4>
+      <p>Visualizações, reservas, favoritos e avaliações somados, últimos 30 dias</p>
+    </div>
+    <div id="grafico-linhas-espacos" class="grafico-linhas-container"></div>
+    <div id="legenda-grafico-espacos" class="legenda-grafico"></div>
   </section>
 
   <!-- ================= ACESSO RÁPIDO ================= -->

@@ -20,7 +20,7 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 </head>
-<body class="logado-layout dark">
+<body class="logado-layout dark perfil-logado-premium">
 
     <main>
         <section class="secao-perfil">
@@ -33,17 +33,18 @@
                          js/paginas/perfil.js -->
                     <div class="avatar-circulo">
                         <span class="material-icons-round avatar-icone-generico" id="perfil-avatar-icone">account_circle</span>
-                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;">
+                        <!-- Clicar na foto (não no ícone genérico) abre ela ampliada -
+                             ver abrirVisualizacaoFoto() em js/paginas/perfil.js -->
+                        <img class="avatar-foto" id="perfil-avatar-foto" alt="Foto de perfil" style="display: none;" onclick="abrirVisualizacaoFoto()" title="Ver foto ampliada">
                     </div>
 
-                    <button class="btn-trocar-foto" type="button" onclick="document.getElementById('perfil-input-foto').click()" title="Trocar foto">
+                    <button class="btn-trocar-foto" type="button" onclick="abrirModalFoto()" title="Trocar foto">
                         <span class="material-icons-round">photo_camera</span>
                     </button>
                     <input type="file" id="perfil-input-foto" accept="image/*" style="display: none;" onchange="trocarFoto(event)">
                 </div>
                 <h2 class="perfil-nome" id="perfil-nome-cabecalho">Carregando...</h2>
                 <span class="status-badge" id="perfil-status-badge">-</span>
-                <button class="btn-remover-foto" id="btn-remover-foto" onclick="removerFoto()" style="display: none;">Remover foto</button>
             </div>
 
             <div class="perfil-grid">
@@ -105,6 +106,66 @@
             </div>
         </section>
     </main>
+
+    <!-- Modal de "ver foto ampliada" - abre ao clicar na própria foto do
+         avatar (não no botão de câmera). Só mostra a imagem grande, sem
+         nenhuma ação - ver abrirVisualizacaoFoto() em js/paginas/perfil.js -->
+    <div id="modal-ver-foto" class="modal-overlay">
+        <div class="visualizacao-foto-container">
+            <button class="fechar-modal" onclick="fecharVisualizacaoFoto()">&times;</button>
+            <img id="imagem-visualizacao-foto" src="" alt="Foto de perfil ampliada">
+        </div>
+    </div>
+
+    <!-- Modal aberto pelo botão de câmera do avatar - pergunta se a pessoa
+         quer escolher uma foto da galeria, tirar uma foto na hora, ou
+         remover a foto atual (essa última opção só aparece se já tiver
+         uma foto salva - ver abrirModalFoto() em js/paginas/perfil.js) -->
+    <div id="modal-foto-perfil" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalFoto()">&times;</button>
+
+            <h2>Foto de Perfil</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">O que você quer fazer?</p>
+
+            <div class="opcoes-foto-perfil">
+                <button type="button" class="opcao-foto-perfil" onclick="escolherOrigemFoto('galeria')">
+                    <span class="material-icons-round">photo_library</span>
+                    <span>Escolher da Galeria</span>
+                </button>
+                <button type="button" class="opcao-foto-perfil" onclick="escolherOrigemFoto('camera')">
+                    <span class="material-icons-round">photo_camera</span>
+                    <span>Tirar uma Foto</span>
+                </button>
+                <button type="button" class="opcao-foto-perfil opcao-foto-remover" id="btn-opcao-remover-foto" onclick="escolherOrigemFoto('remover')" style="display: none;">
+                    <span class="material-icons-round">delete</span>
+                    <span>Remover Foto Atual</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal da câmera de verdade (getUserMedia) - aberto pela opção
+         "Tirar uma Foto" do modal acima. Fica escondido até a pessoa clicar
+         em "Capturar", que desenha o frame atual do vídeo num canvas - ver
+         abrirModalCamera()/capturarFotoCamera() em js/paginas/perfil.js -->
+    <div id="modal-camera-foto" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalCamera()">&times;</button>
+
+            <h2>Tirar uma Foto</h2>
+            <div class="linha-dourada-form"></div>
+
+            <div class="camera-preview-container">
+                <video id="video-camera-foto" autoplay playsinline muted></video>
+            </div>
+
+            <button type="button" class="btn btn-gold btn-bloco" onclick="capturarFotoCamera()">
+                <span class="material-icons-round">photo_camera</span> Capturar
+            </button>
+        </div>
+    </div>
 
     <!-- Modal de trocar senha - aberto a partir do link "Alterar senha" que
          aparece dentro do card "Dados Pessoais" durante a edição. Fica

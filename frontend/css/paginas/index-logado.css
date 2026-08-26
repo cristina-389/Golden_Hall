@@ -166,6 +166,106 @@ header {
     transition: height 0.6s ease;
 }
 
+/* ================= "SEU DESEMPENHO" DO PROPRIETÁRIO =================
+   Só usado em paginas/dono/index-logado-dono.html: os 3 números-resumo no
+   topo do card (sem barra, só o número) + o gráfico de linhas embaixo. */
+.resumo-numeros-dono {
+    display: flex;
+    gap: 35px;
+    flex-wrap: wrap;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.numero-resumo {
+    display: flex;
+    flex-direction: column;
+}
+
+.numero-resumo-valor {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.numero-resumo-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.grafico-linhas-cabecalho h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.grafico-linhas-cabecalho p {
+    font-size: 12px;
+    color: var(--text-light);
+    margin: 3px 0 15px;
+}
+
+.grafico-linhas-container {
+    width: 100%;
+}
+
+.svg-grafico-linhas {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.linha-grade-grafico {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.texto-eixo-grafico {
+    font-size: 10px;
+    fill: var(--text-light);
+    font-family: 'Poppins', sans-serif;
+}
+
+.linha-espaco-grafico {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.grafico-vazio {
+    font-size: 13px;
+    color: var(--text-light);
+    text-align: center;
+    padding: 30px 0;
+}
+
+.legenda-grafico {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    margin-top: 18px;
+}
+
+.legenda-item-grafico {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.legenda-cor-grafico {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
 .barra-label {
     font-size: 12px;
     color: var(--text-light);
@@ -259,4 +359,113 @@ header {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* ==========================================================================
+   VISUAL "PREMIUM" DAS DUAS HOMES LOGADAS (.home-logado-premium)
+   Usado tanto pela home do cliente quanto pela do proprietário. Reaproveita
+   a mesma linguagem de "brilho dourado premium" que os modais do site já
+   usam (.modal-box, em componentes/modal-login.css), pra deixar o card
+   principal, os cards de acesso rápido e o convite final com mais destaque.
+   Os estilos de "resumo-numeros-dono"/"numero-resumo" abaixo só têm efeito
+   na home do proprietário (só ela tem esses elementos no HTML).
+   ========================================================================== */
+
+/* Anel de brilho suave ao redor do avatar, pulsando bem devagar */
+.home-logado-premium .avatar-saudacao {
+    animation: brilhoAvatarDono 3s ease-in-out infinite;
+}
+
+@keyframes brilhoAvatarDono {
+    0%, 100% { box-shadow: 0 0 12px hsla(46, 100%, 60%, 0.35), 0 0 28px hsla(46, 100%, 55%, 0.18); }
+    50%      { box-shadow: 0 0 18px hsla(46, 100%, 60%, 0.55), 0 0 40px hsla(46, 100%, 55%, 0.3); }
+}
+
+/* O card principal ganha a borda + o brilho dourado dos modais, em vez do
+   contorno discreto padrão - vira o "centro das atenções" da página */
+.home-logado-premium .card-desenvolvimento {
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.8s ease;
+}
+
+/* Números-resumo maiores, cada um com um ícone redondo em cima */
+.home-logado-premium .resumo-numeros-dono {
+    justify-content: space-around;
+    text-align: center;
+}
+
+.home-logado-premium .numero-resumo {
+    align-items: center;
+    flex: 1;
+    min-width: 130px;
+}
+
+.home-logado-premium .numero-resumo-icone {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(212, 164, 55, 0.18), rgba(212, 164, 55, 0.05));
+    border: 1px solid rgba(212, 164, 55, 0.35);
+    color: var(--gold);
+    font-size: 18px;
+    margin-bottom: 10px;
+    transition: transform 0.25s ease;
+}
+
+.home-logado-premium .numero-resumo-valor {
+    font-size: 30px;
+}
+
+/* Quando existe reserva pendente, o número (e o ícone dele) mudam pra uma
+   cor de alerta - é o dado mais "acionável" da página, então merece se
+   destacar dos outros dois, que são só informativos */
+.home-logado-premium .numero-resumo.tem-pendencia .numero-resumo-valor {
+    color: #ff9d4d;
+}
+
+.home-logado-premium .numero-resumo.tem-pendencia .numero-resumo-icone {
+    background: linear-gradient(135deg, rgba(255, 157, 77, 0.22), rgba(255, 157, 77, 0.05));
+    border-color: rgba(255, 157, 77, 0.45);
+    color: #ff9d4d;
+}
+
+/* Cards de "Acesso rápido": mesma borda + brilho dourado do card "Seu
+   desempenho", e o ícone preenchido em degradê em vez do contorno vazado
+   padrão, com um brilho mais forte ainda no hover */
+.home-logado-premium .card-acesso {
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.home-logado-premium .card-acesso .icone-contorno {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.home-logado-premium .card-acesso .icone-contorno .material-icons-round {
+    color: #1a1305 !important;
+    font-size: 26px !important;
+}
+
+.home-logado-premium .card-acesso:hover {
+    box-shadow: 0 0 30px hsla(46, 100%, 55%, 0.22), 0 10px 28px rgba(212, 164, 55, 0.25);
+}
+
+.home-logado-premium .card-acesso:hover .icone-contorno {
+    transform: scale(1.08);
+}
+
+/* Convite final ("Pronto para receber mais reservas?") ganha o mesmo
+   brilho dourado dos outros cards, pra fechar a página com a mesma
+   identidade visual */
+.home-logado-premium .cta-proximo-evento {
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3);
 }

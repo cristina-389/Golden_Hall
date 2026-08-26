@@ -183,10 +183,10 @@ router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
 
 // --------------------------------------------------------------------------
 // GET /api/estatisticas-dono - números reais de atividade do proprietário
-// que está logado, usados no card "Seu desempenho" da home dele
-// (paginas/dono/index-logado.html): quantos espaços cadastrou, quantas
-// reservas ainda estão pendentes de resposta (em QUALQUER espaço dele) e a
-// média das avaliações recebidas em todos os espaços juntos.
+// que está logado: quantos espaços cadastrou, quantas reservas ainda estão
+// pendentes de resposta (em QUALQUER espaço dele) e a média das avaliações
+// recebidas em todos os espaços juntos. (O gráfico de linhas da home dele
+// usa a rota abaixo, /estatisticas-dono/grafico, não esta aqui.)
 // --------------------------------------------------------------------------
 router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
     const { total: totalEspacos } = db
@@ -217,6 +217,66 @@ router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
         avaliacao_media: resumoAvaliacoes.media, // null se ainda não tiver nenhuma avaliação
         total_avaliacoes: resumoAvaliacoes.total
     });
+});
+
+// --------------------------------------------------------------------------
+// GET /api/estatisticas-dono/grafico - uma linha por espaço do proprietário,
+// com o total acumulado (visualizações + reservas + favoritos + avaliações)
+// dia a dia, nos últimos 30 dias. Usado no gráfico de linhas "Seu
+// desempenho" da home dele, pra comparar como cada espaço está evoluindo.
+// --------------------------------------------------------------------------
+router.get('/estatisticas-dono/grafico', autenticar, exigirProprietario, (req, res) => {
+    const espacos = db
+        .prepare('SELECT id, nome FROM espacos WHERE dono_id = ? ORDER BY criado_em ASC')
+        .all(req.usuario.id);
+
+    if (espacos.length === 0) {
+        return res.json({ dias: [], espacos: [] });
+    }
+
+    const idsEspacos = espacos.map(espaco => espaco.id);
+    const placeholders = idsEspacos.map(() => '?').join(',');
+
+    // Junta a data de cada "evento" (visualização, reserva, favorito ou
+    // avaliação) de todos os espaços do proprietário numa lista só - depois
+    // é só contar, pra cada espaço e cada dia, quantos eventos aconteceram
+    // até aquele dia (contagem acumulada, por isso a linha só sobe).
+    const eventos = [
+        ...db.prepare(`SELECT espaco_id, criado_em FROM visualizacoes WHERE espaco_id IN (${placeholders})`).all(...idsEspacos),
+        ...db.prepare(`SELECT espaco_id, criado_em FROM reservas WHERE espaco_id IN (${placeholders})`).all(...idsEspacos),
+        ...db.prepare(`SELECT espaco_id, criado_em FROM favoritos WHERE espaco_id IN (${placeholders})`).all(...idsEspacos),
+        ...db.prepare(`SELECT espaco_id, criado_em FROM avaliacoes WHERE espaco_id IN (${placeholders})`).all(...idsEspacos)
+    ];
+
+    // Últimos 30 dias, do mais antigo pro mais recente, no formato "AAAA-MM-DD"
+    const dias = [];
+    for (let i = 29; i >= 0; i--) {
+        const data = new Date();
+        data.setDate(data.getDate() - i);
+        dias.push(data.toISOString().slice(0, 10));
+    }
+
+    const resultado = espacos.map(espaco => {
+        const eventosDoEspaco = eventos
+            .filter(evento => evento.espaco_id === espaco.id)
+            .map(evento => evento.criado_em.slice(0, 10))
+            .sort();
+
+        // Pra cada dia, conta quantos eventos aconteceram até ali (<=) -
+        // como "eventosDoEspaco" já está ordenado, dá pra avançar um
+        // ponteiro em vez de refiltrar a lista inteira a cada dia
+        let ponteiro = 0;
+        const pontos = dias.map(dia => {
+            while (ponteiro < eventosDoEspaco.length && eventosDoEspaco[ponteiro] <= dia) {
+                ponteiro++;
+            }
+            return ponteiro;
+        });
+
+        return { id: espaco.id, nome: espaco.nome, pontos };
+    });
+
+    res.json({ dias, espacos: resultado });
 });
 
 // --------------------------------------------------------------------------

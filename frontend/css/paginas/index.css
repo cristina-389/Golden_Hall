@@ -51,6 +51,15 @@ nav {
 nav a {
     font-size: 17px;
     position: relative;
+    transition: color 0.25s ease;
+}
+
+/* Destaque dourado ao passar o mouse (ou tocar, no celular) e também no
+   link da página em que a pessoa já está - antes só existia o sublinhado
+   embaixo do link ativo, sem nenhum feedback visual ao passar por cima */
+nav a:hover,
+nav a.active {
+    color: var(--gold);
 }
 
 /* Sublinhado dourado embaixo do link do menu que está na página atual */

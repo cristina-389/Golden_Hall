@@ -1,11 +1,11 @@
 /* ==========================================================================
    GOLDEN HALL - PÁGINA DE PERFIL DO PROPRIETÁRIO (ligada na API de verdade)
-   Praticamente idêntica a js/paginas/perfil.js (a do cliente) - só não tem
-   o campo "Preferência de Aluguel", que não existe nesta versão do HTML.
    Busca os dados de quem está logado em GET /api/perfil e preenche a tela.
    O botão "Editar Dados" funciona como uma alternância (toggle): no primeiro
    clique, libera os campos pra digitar; no segundo clique, salva (PUT
-   /api/perfil) e trava os campos de novo.
+   /api/perfil) e trava os campos de novo. O segundo card ("Meus Espaços")
+   não é editável - é só uma lista de verdade dos espaços cadastrados
+   (GET /api/meus-espacos, a mesma rota que o painel usa).
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', carregarPerfil);
@@ -34,6 +34,8 @@ async function carregarPerfil() {
     } catch (erro) {
         alert(erro.message);
     }
+
+    carregarMeusEspacos();
 }
 
 // Escreve os dados do usuário na tela (cabeçalho + campos do formulário)
@@ -47,9 +49,6 @@ function preencherPerfil(usuario) {
     document.getElementById('perfil-input-cidade').value = usuario.cidade || '';
 
     exibirFotoPerfil(usuario.foto);
-
-    document.getElementById('perfil-stat-desde').textContent = formatarDataCompleta(usuario.criado_em);
-    document.getElementById('perfil-input-bio').value = usuario.bio || '';
 }
 
 // "Cristina Gabriely Pinto Campos" -> "Cristina Campos" - só pro nome grande
@@ -60,11 +59,54 @@ function primeiroEUltimoNome(nomeCompleto) {
     return partes.length === 1 ? partes[0] : `${partes[0]} ${partes[partes.length - 1]}`;
 }
 
-// "2026-08-22 14:32:10" (formato que o SQLite grava em criado_em) -> "22 de agosto de 2026"
-function formatarDataCompleta(dataTexto) {
-    const data = new Date(dataTexto.replace(' ', 'T'));
-    return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+// Card "Meus Espaços": lista de verdade (GET /api/meus-espacos), cada item
+// já é um link pra ver como o espaço aparece pra um cliente de verdade.
+async function carregarMeusEspacos() {
+    const container = document.getElementById('perfil-lista-espacos');
+
+    try {
+        const espacos = await chamarAPI('/api/meus-espacos');
+
+        if (espacos.length === 0) {
+            const vazio = document.createElement('p');
+            vazio.className = 'perfil-espacos-vazio';
+            vazio.textContent = 'Você ainda não cadastrou nenhum espaço.';
+            container.appendChild(vazio);
+            return;
+        }
+
+        espacos.forEach(espaco => {
+            const item = document.createElement('a');
+            item.className = 'perfil-espaco-item';
+            item.href = '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
+
+            const icone = document.createElement('span');
+            icone.className = 'material-icons-round';
+            icone.textContent = 'storefront';
+
+            const textos = document.createElement('div');
+            textos.className = 'perfil-espaco-item-textos';
+
+            const nome = document.createElement('strong');
+            nome.textContent = espaco.nome; // textContent, não innerHTML - previne XSS
+
+            const local = document.createElement('span');
+            local.textContent = espaco.local || 'Local a definir';
+
+            textos.appendChild(nome);
+            textos.appendChild(local);
+            item.appendChild(icone);
+            item.appendChild(textos);
+            container.appendChild(item);
+        });
+    } catch (erro) {
+        console.error('Erro ao carregar meus espaços:', erro);
+    }
 }
+
+// Guarda se já existe foto salva ou não - abrirModalFoto() usa isso pra
+// decidir se mostra a opção "Remover Foto Atual"
+let temFotoAtual = false;
 
 // Alterna entre mostrar a <img> (quando existe foto salva) e o ícone
 // genérico (quando não existe) - chamada tanto ao carregar a página quanto
@@ -72,23 +114,96 @@ function formatarDataCompleta(dataTexto) {
 function exibirFotoPerfil(foto) {
     const icone = document.getElementById('perfil-avatar-icone');
     const img = document.getElementById('perfil-avatar-foto');
-    const botaoRemover = document.getElementById('btn-remover-foto');
+
+    temFotoAtual = !!foto;
 
     if (foto) {
         img.src = foto;
         img.style.display = 'block';
         icone.style.display = 'none';
-        botaoRemover.style.display = 'inline-block';
     } else {
         img.style.display = 'none';
         icone.style.display = 'block';
-        botaoRemover.style.display = 'none';
     }
 }
 
-// Botão de câmera no avatar - lê a foto escolhida como base64 (FileReader)
-// e manda pro back-end salvar. Redimensiona antes num <canvas> pra não
-// mandar fotos de câmera de celular gigantes (vira alguns KB em vez de MB)
+// Abre a própria foto ampliada (clicando nela, não no botão de câmera) -
+// só existe o <img> pra clicar quando já tem foto salva (ver
+// exibirFotoPerfil() acima), então não precisa checar "tem foto" aqui
+function abrirVisualizacaoFoto() {
+    document.getElementById('imagem-visualizacao-foto').src = document.getElementById('perfil-avatar-foto').src;
+    document.getElementById('modal-ver-foto').classList.add('ativo');
+}
+
+function fecharVisualizacaoFoto() {
+    document.getElementById('modal-ver-foto').classList.remove('ativo');
+}
+
+window.addEventListener('click', function (event) {
+    if (event.target === document.getElementById('modal-ver-foto')) {
+        fecharVisualizacaoFoto();
+    }
+});
+
+// Modal "Foto de Perfil" (aberto pelo botão de câmera) - pergunta se a
+// pessoa quer escolher da galeria, tirar uma foto na hora, ou remover a
+// foto atual. A opção de remover só aparece se já tiver uma foto salva.
+function abrirModalFoto() {
+    document.getElementById('btn-opcao-remover-foto').style.display = temFotoAtual ? 'flex' : 'none';
+    document.getElementById('modal-foto-perfil').classList.add('ativo');
+}
+
+function fecharModalFoto() {
+    document.getElementById('modal-foto-perfil').classList.remove('ativo');
+}
+
+window.addEventListener('click', function (event) {
+    if (event.target === document.getElementById('modal-foto-perfil')) {
+        fecharModalFoto();
+    }
+});
+
+// "galeria" abre o seletor de arquivo normal; "camera" abre o modal com a
+// câmera de verdade (ver abrirModalCamera() mais abaixo); "remover" chama
+// removerFoto() direto, sem precisar escolher arquivo nenhum
+function escolherOrigemFoto(origem) {
+    fecharModalFoto();
+
+    if (origem === 'remover') {
+        removerFoto();
+        return;
+    }
+
+    if (origem === 'camera') {
+        abrirModalCamera();
+        return;
+    }
+
+    document.getElementById('perfil-input-foto').click();
+}
+
+// Manda a foto (já em base64) pro back-end salvar e atualiza a tela e o
+// localStorage - usado tanto por quem escolhe um arquivo (trocarFoto)
+// quanto por quem tira a foto na hora (capturarFotoCamera)
+async function salvarFotoBase64(fotoBase64) {
+    try {
+        const resultado = await chamarAPI('/api/perfil/foto', {
+            method: 'PUT',
+            body: JSON.stringify({ foto: fotoBase64 })
+        });
+
+        exibirFotoPerfil(resultado.foto);
+
+        const usuarioLogado = obterUsuarioLogado();
+        atualizarUsuarioLocal({ ...usuarioLogado, foto: resultado.foto });
+    } catch (erro) {
+        alert(erro.message || 'Não foi possível salvar a foto.');
+    }
+}
+
+// Botão de câmera no avatar (opção "Escolher da Galeria") - lê a foto
+// escolhida como base64 (FileReader) e redimensiona antes num <canvas> pra
+// não mandar fotos de celular gigantes (vira alguns KB em vez de MB)
 async function trocarFoto(event) {
     const arquivo = event.target.files[0];
     if (!arquivo) return;
@@ -99,23 +214,9 @@ async function trocarFoto(event) {
         return;
     }
 
-    try {
-        const fotoRedimensionada = await redimensionarImagem(arquivo, 300);
-
-        const resultado = await chamarAPI('/api/perfil/foto', {
-            method: 'PUT',
-            body: JSON.stringify({ foto: fotoRedimensionada })
-        });
-
-        exibirFotoPerfil(resultado.foto);
-
-        const usuarioLogado = obterUsuarioLogado();
-        atualizarUsuarioLocal({ ...usuarioLogado, foto: resultado.foto });
-    } catch (erro) {
-        alert(erro.message || 'Não foi possível salvar a foto.');
-    } finally {
-        event.target.value = ''; // permite escolher o mesmo arquivo de novo depois
-    }
+    const fotoRedimensionada = await redimensionarImagem(arquivo, 300);
+    await salvarFotoBase64(fotoRedimensionada);
+    event.target.value = ''; // permite escolher o mesmo arquivo de novo depois
 }
 
 async function removerFoto() {
@@ -135,6 +236,70 @@ async function removerFoto() {
     } catch (erro) {
         alert(erro.message);
     }
+}
+
+/* ==========================================================================
+   CÂMERA DE VERDADE (opção "Tirar uma Foto")
+   Usa getUserMedia pra acessar a webcam/câmera do dispositivo de verdade,
+   mostra o preview ao vivo num <video>, e "tira a foto" desenhando o
+   frame atual num <canvas> - sem isso, o atributo "capture" do input de
+   arquivo funciona só em celular (e olhe lá), não abre nenhuma câmera de
+   verdade em computador.
+   ========================================================================== */
+
+let streamCameraAtual = null; // guarda o stream ativo pra poder desligar a câmera depois
+
+async function abrirModalCamera() {
+    document.getElementById('modal-camera-foto').classList.add('ativo');
+
+    try {
+        streamCameraAtual = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        document.getElementById('video-camera-foto').srcObject = streamCameraAtual;
+    } catch (erro) {
+        alert('Não foi possível acessar a câmera. Verifique se você deu permissão pro navegador usá-la.');
+        fecharModalCamera();
+    }
+}
+
+function fecharModalCamera() {
+    document.getElementById('modal-camera-foto').classList.remove('ativo');
+
+    // Desliga a câmera de verdade (senão a luzinha/indicador de câmera
+    // ativa do dispositivo continuaria acesa mesmo com o modal fechado)
+    if (streamCameraAtual) {
+        streamCameraAtual.getTracks().forEach(faixa => faixa.stop());
+        streamCameraAtual = null;
+    }
+}
+
+window.addEventListener('click', function (event) {
+    if (event.target === document.getElementById('modal-camera-foto')) {
+        fecharModalCamera();
+    }
+});
+
+// Desenha o frame atual do vídeo num <canvas> (já no tamanho reduzido, igual
+// redimensionarImagem faz pras fotos escolhidas por arquivo) e salva -
+// desfaz o espelhamento do preview (que existe só pra parecer um espelho de
+// verdade na tela), senão a foto salva sairia com tudo invertido
+function capturarFotoCamera() {
+    const video = document.getElementById('video-camera-foto');
+
+    const tamanhoMaximo = 300;
+    const escala = Math.min(1, tamanhoMaximo / Math.max(video.videoWidth, video.videoHeight));
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth * escala;
+    canvas.height = video.videoHeight * escala;
+
+    const contexto = canvas.getContext('2d');
+    contexto.translate(canvas.width, 0);
+    contexto.scale(-1, 1);
+    contexto.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+    fecharModalCamera();
+    salvarFotoBase64(fotoBase64);
 }
 
 // Desenha a imagem escolhida num <canvas> menor (no máximo "tamanhoMaximo"
@@ -271,51 +436,6 @@ async function salvarPerfil() {
         emEdicao = false;
 
         alert('Dados atualizados com sucesso!');
-    } catch (erro) {
-        alert(erro.message);
-    }
-}
-
-// Botão "Editar" / "Salvar" do card "Sobre Você" - mesmo esquema de
-// alternância do card "Dados Pessoais", só que numa variável própria
-// (emEdicaoSobre), já que os dois cards podem ser editados de forma
-// independente. Aqui só existe o campo "Bio" (sem "Preferência de
-// Aluguel", que é coisa de quem aluga espaço, não de quem anuncia).
-let emEdicaoSobre = false;
-
-function alternarEdicaoSobre() {
-    if (!emEdicaoSobre) {
-        const inputBio = document.getElementById('perfil-input-bio');
-
-        inputBio.removeAttribute('readonly');
-        inputBio.focus();
-
-        document.getElementById('btn-editar-sobre').textContent = 'Salvar';
-        emEdicaoSobre = true;
-        return;
-    }
-
-    salvarSobre();
-}
-
-async function salvarSobre() {
-    const inputBio = document.getElementById('perfil-input-bio');
-    const botao = document.getElementById('btn-editar-sobre');
-
-    try {
-        const usuarioAtualizado = await chamarAPI('/api/perfil/sobre', {
-            method: 'PUT',
-            body: JSON.stringify({ bio: inputBio.value })
-        });
-
-        preencherPerfil(usuarioAtualizado);
-        atualizarUsuarioLocal(usuarioAtualizado);
-
-        inputBio.setAttribute('readonly', true);
-        botao.textContent = 'Editar';
-        emEdicaoSobre = false;
-
-        alert('Perfil atualizado com sucesso!');
     } catch (erro) {
         alert(erro.message);
     }

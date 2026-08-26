@@ -16,10 +16,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (theme === "light") {
         body.classList.remove("dark"); // sem a classe "dark" o CSS já aplica as cores do tema claro
+        // <html> também recebe a classe (além do <body>) porque a barra de
+        // rolagem do navegador pertence a ele - variável CSS só desce de
+        // pai pra filho, então um "dark" só no <body> nunca chegaria nela
+        document.documentElement.classList.remove("dark");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-light.png";
         if (button) button.innerHTML = "☀️";
     } else {
         body.classList.add("dark");
+        document.documentElement.classList.add("dark");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-dark.png";
         if (button) button.innerHTML = "🌙";
     }
@@ -32,6 +37,8 @@ function toggleTheme() {
     const button = document.querySelector(".theme-toggle");
 
     body.classList.toggle("dark"); // inverte: se tinha a classe "dark", tira; se não tinha, coloca
+    // Mantém o <html> sempre igual ao <body> (ver comentário acima, no DOMContentLoaded)
+    document.documentElement.classList.toggle("dark", body.classList.contains("dark"));
 
     // Depois de trocar a classe, salva a escolha no localStorage pra lembrar na próxima visita
     if (body.classList.contains("dark")) {
