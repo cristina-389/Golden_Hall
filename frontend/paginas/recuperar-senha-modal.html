@@ -1,0 +1,32 @@
+<!--
+  GOLDEN HALL - FRAGMENTO DO MODAL DE RECUPERAÇÃO DE SENHA
+  Mesma ideia do login-modal.html: carregado via fetch() por
+  abrirModalRecuperarSenha() (js/modais.js) e injetado dentro da div
+  #container-modal-recuperar-senha. Manda o e-mail pra POST /api/recuperar-senha,
+  que responde sempre com a mesma mensagem genérica (exista ou não a conta).
+-->
+<div id="modal-recuperar-senha" class="modal-overlay">
+    <div class="modal-box">
+        <button class="fechar-modal" onclick="fecharModalRecuperarSenha()">&times;</button>
+
+        <h2>Recuperar Senha</h2>
+        <div class="linha-dourada-form"></div>
+        <p class="subtitulo-form">Informe o e-mail da sua conta e vamos mandar um link para você redefinir sua senha.</p>
+
+        <form action="#" method="POST" id="form-recuperar-senha">
+            <div class="form-grid">
+
+                <div class="input-grupo col-total">
+                    <label for="recuperar-email">E-mail</label>
+                    <input type="email" id="recuperar-email" name="email" placeholder="seuemail@gmail.com" required>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-bloco">Enviar link de recuperação</button>
+            </div>
+        </form>
+
+        <p class="alternativa-form">
+            Lembrou a senha? <a href="#" onclick="alternarParaLoginDeRecuperar()">Voltar para o login</a>
+        </p>
+    </div>
+</div>

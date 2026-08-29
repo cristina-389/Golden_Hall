@@ -18,8 +18,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('node:crypto');
 const db = require('../database/db');
 const { autenticar } = require('../middlewares/autenticacao');
+const { enviarEmailRecuperacao } = require('../utils/email');
 
 const router = express.Router();
 
@@ -249,6 +251,75 @@ router.get('/estatisticas', autenticar, (req, res) => {
     const { total: comentarios } = db.prepare('SELECT COUNT(*) AS total FROM avaliacoes WHERE usuario_id = ?').get(req.usuario.id);
 
     res.json({ favoritos, reservas, visualizacoes, comentarios });
+});
+
+// --------------------------------------------------------------------------
+// POST /api/recuperar-senha
+// Recebe { email } e, se existir uma conta com esse e-mail, gera um token
+// de recuperação (válido por 1 hora) e manda um link por e-mail. Devolve
+// SEMPRE a mesma mensagem, exista ou não o e-mail - assim ninguém consegue
+// usar essa rota pra descobrir quais e-mails estão cadastrados no site.
+// --------------------------------------------------------------------------
+router.post('/recuperar-senha', async (req, res) => {
+    const { email } = req.body;
+
+    const mensagemGenerica = { mensagem: 'Se esse e-mail estiver cadastrado, você vai receber um link de recuperação em instantes.' };
+
+    if (!email) {
+        return res.status(400).json({ erro: 'Informe o e-mail.' });
+    }
+
+    const usuario = db.prepare('SELECT id, email FROM usuarios WHERE email = ?').get(email);
+
+    if (!usuario) {
+        return res.json(mensagemGenerica);
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expira = String(Date.now() + 60 * 60 * 1000); // 1 hora a partir de agora
+
+    db.prepare('UPDATE usuarios SET token_recuperacao = ?, token_recuperacao_expira = ? WHERE id = ?')
+        .run(token, expira, usuario.id);
+
+    const linkRedefinicao = `${req.protocol}://${req.get('host')}/frontend/paginas/redefinir-senha.html?token=${token}`;
+
+    try {
+        await enviarEmailRecuperacao(usuario.email, linkRedefinicao);
+    } catch (erro) {
+        console.error('Erro ao enviar e-mail de recuperação:', erro);
+    }
+
+    res.json(mensagemGenerica);
+});
+
+// --------------------------------------------------------------------------
+// POST /api/redefinir-senha
+// Recebe { token, novaSenha }. Confere se o token existe e ainda não
+// expirou, e se sim, troca a senha e apaga o token (pra não poder ser usado
+// de novo).
+// --------------------------------------------------------------------------
+router.post('/redefinir-senha', (req, res) => {
+    const { token, novaSenha } = req.body;
+
+    if (!token || !novaSenha) {
+        return res.status(400).json({ erro: 'Preencha a nova senha.' });
+    }
+
+    if (novaSenha.length < 6) {
+        return res.status(400).json({ erro: 'A nova senha precisa ter pelo menos 6 caracteres.' });
+    }
+
+    const usuario = db.prepare('SELECT id, token_recuperacao_expira FROM usuarios WHERE token_recuperacao = ?').get(token);
+
+    if (!usuario || Number(usuario.token_recuperacao_expira) < Date.now()) {
+        return res.status(400).json({ erro: 'Esse link de recuperação é inválido ou já expirou. Solicite um novo.' });
+    }
+
+    const novaSenhaCriptografada = bcrypt.hashSync(novaSenha, CUSTO_HASH);
+    db.prepare('UPDATE usuarios SET senha = ?, token_recuperacao = NULL, token_recuperacao_expira = NULL WHERE id = ?')
+        .run(novaSenhaCriptografada, usuario.id);
+
+    res.json({ mensagem: 'Senha redefinida com sucesso.' });
 });
 
 // Monta o token JWT com o id e o tipo da pessoa. Esses dois dados ficam

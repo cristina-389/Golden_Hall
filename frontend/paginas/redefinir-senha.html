@@ -1,0 +1,77 @@
+<!--
+  GOLDEN HALL - PÁGINA DE REDEFINIÇÃO DE SENHA
+  Página separada (não é um modal) porque é aberta a partir do link que
+  chega por e-mail (ver POST /api/recuperar-senha), então precisa funcionar
+  sozinha, sem a pessoa precisar estar em nenhuma outra tela do site antes.
+  O token vem na URL como "?token=..." e é lido em js/paginas/redefinir-senha.js.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redefinir Senha | Golden Hall</title>
+
+  <!-------------------FONTES------------------->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <!---------------CSS------------------------->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="dark">
+
+  <main class="pagina-redefinir-senha">
+    <div class="modal-box">
+      <div class="logo logo-redefinir-senha">
+        <img src="../Imagens/logo.png" alt="Logo Golden Hall">
+        <div class="logo-text">
+          <h1>GOLDEN HALL</h1>
+          <p>SALÃO DE FESTAS</p>
+        </div>
+      </div>
+
+      <h2>Redefinir Senha</h2>
+      <div class="linha-dourada-form"></div>
+
+      <div id="redefinir-conteudo">
+        <p class="subtitulo-form">Escolha uma nova senha para a sua conta.</p>
+
+        <form id="form-redefinir-senha">
+          <div class="form-grid">
+
+            <div class="input-grupo col-total">
+              <label for="nova-senha">Nova senha</label>
+              <div class="campo-senha">
+                <input type="password" id="nova-senha" name="novaSenha" placeholder="••••••••" required minlength="6">
+                <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('nova-senha', this)" title="Mostrar senha">
+                  <span class="material-icons-round">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-grupo col-total">
+              <label for="confirmar-nova-senha">Confirmar nova senha</label>
+              <div class="campo-senha">
+                <input type="password" id="confirmar-nova-senha" name="confirmarNovaSenha" placeholder="••••••••" required minlength="6">
+                <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('confirmar-nova-senha', this)" title="Mostrar senha">
+                  <span class="material-icons-round">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold btn-bloco">Redefinir senha</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-----------JAVASCRIPT--------->
+  <script src="../js/global.js"></script>
+  <script src="../js/paginas/redefinir-senha.js"></script>
+</body>
+</html>

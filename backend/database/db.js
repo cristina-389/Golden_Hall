@@ -42,6 +42,8 @@ db.exec(`
     cidade TEXT,
     preferencia_aluguel TEXT,
     bio TEXT,
+    token_recuperacao TEXT,
+    token_recuperacao_expira TEXT,
     tipo TEXT NOT NULL DEFAULT 'cliente' CHECK (tipo IN ('cliente', 'proprietario')),
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )
@@ -52,7 +54,7 @@ db.exec(`
 // adiciona colunas novas numa tabela que já existe, então tenta adicionar
 // aqui por fora; se a coluna já existir (bancos criados a partir de agora,
 // já com ela no CREATE TABLE acima), o SQLite recusa e a gente ignora o erro.
-for (const coluna of ['foto TEXT', 'preferencia_aluguel TEXT', 'bio TEXT', 'cidade TEXT']) {
+for (const coluna of ['foto TEXT', 'preferencia_aluguel TEXT', 'bio TEXT', 'cidade TEXT', 'token_recuperacao TEXT', 'token_recuperacao_expira TEXT']) {
     try {
         db.exec(`ALTER TABLE usuarios ADD COLUMN ${coluna}`);
     } catch (erro) {

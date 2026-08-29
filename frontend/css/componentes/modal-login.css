@@ -1,4 +1,23 @@
 /* ==========================================================================
+   PÁGINA DE REDEFINIR SENHA (paginas/redefinir-senha.html)
+   Não é um modal (não tem overlay escuro nem precisa de JS pra aparecer) -
+   é uma página inteira que só centraliza o mesmo ".modal-box" reaproveitado
+   dos outros modais, já que ela é aberta direto pelo link do e-mail.
+   ========================================================================== */
+.pagina-redefinir-senha {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo-redefinir-senha {
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
    GOLDEN HALL - SISTEMA DE MODAL DE ACESSO (LOGIN / CADASTRO)
    Este arquivo estiliza a "caixinha" genérica de modal usada por TODOS os
    modais do site (login, cadastro, agenda e reserva) - a lógica de
@@ -292,6 +311,16 @@ body:not(.dark) {
     text-transform: uppercase;
     font-weight: 600;
     margin-top: 5px;
+}
+
+.link-esqueci-senha {
+    display: block;
+    text-align: right;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #d4af37;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 .alternativa-form {

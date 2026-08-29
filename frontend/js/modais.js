@@ -220,6 +220,77 @@ function adicionarLogicaLogin() {
 
 
 // --------------------------------------------------------------------------
+// 2.1 MODAL DE RECUPERAÇÃO DE SENHA
+// --------------------------------------------------------------------------
+
+// Mesma lógica dos outros modais: carrega recuperar-senha-modal.html dentro
+// de #container-modal-recuperar-senha na primeira vez que é aberto
+function abrirModalRecuperarSenha() {
+    const container = document.getElementById('container-modal-recuperar-senha');
+    if (!container) return;
+
+    if (container.innerHTML === "") {
+        fetch('/frontend/paginas/recuperar-senha-modal.html')
+            .then(resposta => resposta.text())
+            .then(html => {
+                container.innerHTML = html;
+                setTimeout(() => {
+                    const modal = document.getElementById('modal-recuperar-senha');
+                    if (modal) modal.classList.add('ativo');
+                    adicionarLogicaRecuperarSenha();
+                }, 50);
+            })
+            .catch(erro => console.error('Erro ao carregar a recuperação de senha:', erro));
+    } else {
+        const modal = document.getElementById('modal-recuperar-senha');
+        if (modal) modal.classList.add('ativo');
+    }
+}
+
+function fecharModalRecuperarSenha() {
+    const modal = document.getElementById('modal-recuperar-senha');
+    if (modal) modal.classList.remove('ativo');
+}
+
+// Troca do modal de login pro de recuperação de senha (e volta)
+function alternarParaRecuperarSenha() {
+    fecharModalLogin();
+    setTimeout(() => abrirModalRecuperarSenha(), 300);
+}
+
+function alternarParaLoginDeRecuperar() {
+    fecharModalRecuperarSenha();
+    setTimeout(() => abrirModalLogin(), 300);
+}
+
+// Liga o envio do formulário: manda o e-mail pra API e mostra a mesma
+// mensagem genérica que ela devolver (não dá pra saber pelo retorno se o
+// e-mail existe ou não - é assim de propósito, ver comentário na rota).
+function adicionarLogicaRecuperarSenha() {
+    const form = document.getElementById('form-recuperar-senha');
+    if (form) {
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('recuperar-email').value;
+
+            try {
+                const dados = await chamarAPI('/api/recuperar-senha', {
+                    method: 'POST',
+                    body: JSON.stringify({ email })
+                });
+
+                alert(dados.mensagem);
+                fecharModalRecuperarSenha();
+            } catch (erro) {
+                alert(erro.message);
+            }
+        });
+    }
+}
+
+
+// --------------------------------------------------------------------------
 // 3. MODAL DE AGENDA (CALENDÁRIO DE DISPONIBILIDADE)
 // --------------------------------------------------------------------------
 let dataAtualAgenda = new Date(); // guarda o mês/ano que está sendo exibido no calendário (começa no mês de hoje)
@@ -520,6 +591,7 @@ window.addEventListener('click', function(event) {
     const modalTipoConta = document.getElementById('modal-tipo-conta');
     const modalCadastro = document.getElementById('modal-cadastro');
     const modalLogin = document.getElementById('modal-login');
+    const modalRecuperarSenha = document.getElementById('modal-recuperar-senha');
     const modalAgenda = document.getElementById('modal-agenda');
     const modalReserva = document.getElementById('modal-reserva');
     const modalAlerta = document.getElementById('modal-alerta-cancelamento');
@@ -528,6 +600,7 @@ window.addEventListener('click', function(event) {
     if (event.target === modalTipoConta) fecharModalTipoConta();
     if (event.target === modalCadastro) fecharModal();
     if (event.target === modalLogin) fecharModalLogin();
+    if (event.target === modalRecuperarSenha) fecharModalRecuperarSenha();
     if (event.target === modalAgenda) fecharModalAgenda();
     if (event.target === modalReserva) fecharModalReserva();
     if (event.target === modalAlerta) cancelarEVoltarReserva();
