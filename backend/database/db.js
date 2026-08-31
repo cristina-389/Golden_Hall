@@ -75,6 +75,7 @@ db.exec(`
     slug TEXT NOT NULL UNIQUE,
     nome TEXT NOT NULL,
     descricao TEXT,
+    sobre TEXT,
     local TEXT,
     capacidade INTEGER,
     preco REAL,
@@ -83,6 +84,15 @@ db.exec(`
     FOREIGN KEY (dono_id) REFERENCES usuarios (id)
   )
 `);
+
+// "sobre" foi adicionada depois que a tabela já existia em bancos criados
+// antes dela - mesma ideia da tabela de usuários (ver comentário lá em
+// cima): tenta adicionar por fora, e ignora o erro se a coluna já existir.
+try {
+    db.exec('ALTER TABLE espacos ADD COLUMN sobre TEXT');
+} catch (erro) {
+    // "duplicate column name" é o esperado quando a coluna já existe
+}
 
 // --------------------------------------------------------------------------
 // TABELA DE RESERVAS
@@ -97,6 +107,7 @@ db.exec(`
     usuario_id INTEGER NOT NULL,
     data TEXT NOT NULL,
     horario TEXT,
+    horario_termino TEXT,
     tipo_evento TEXT,
     convidados INTEGER,
     telefone TEXT,
@@ -107,6 +118,16 @@ db.exec(`
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
   )
 `);
+
+// "horario_termino" foi adicionada depois que a tabela já existia em bancos
+// criados antes dela - mesma ideia das outras colunas (ver comentário lá em
+// cima, na tabela de usuários): tenta adicionar por fora, e ignora o erro
+// se a coluna já existir.
+try {
+    db.exec('ALTER TABLE reservas ADD COLUMN horario_termino TEXT');
+} catch (erro) {
+    // "duplicate column name" é o esperado quando a coluna já existe
+}
 
 // --------------------------------------------------------------------------
 // TABELA DE FAVORITOS

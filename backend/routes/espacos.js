@@ -18,6 +18,28 @@ const { autenticar, exigirProprietario } = require('../middlewares/autenticacao'
 
 const router = express.Router();
 
+// Foto principal e fotos extras podem chegar como link (URL digitada) ou
+// como foto de verdade escolhida da galeria (base64, já redimensionada no
+// navegador antes de mandar - ver redimensionarImagem() em js/global.js).
+// Esse limite é só uma trava de segurança contra um link colado enorme ou
+// um base64 que fugiu do redimensionamento - mesma ideia do limite em
+// PUT /api/perfil/foto.
+const TAMANHO_MAXIMO_FOTO = 3_000_000;
+
+// Confere o tamanho da foto principal e de cada foto extra; devolve uma
+// mensagem de erro (para respender 413) ou null se estiver tudo certo.
+function validarTamanhoFotos(imagem, fotos) {
+    if (imagem && imagem.length > TAMANHO_MAXIMO_FOTO) {
+        return 'A foto principal é grande demais. Escolha uma foto menor.';
+    }
+
+    if (Array.isArray(fotos) && fotos.some(foto => foto && foto.length > TAMANHO_MAXIMO_FOTO)) {
+        return 'Uma das fotos extras é grande demais. Escolha fotos menores.';
+    }
+
+    return null;
+}
+
 // Transforma um nome em slug: "Chácara Golden!" -> "chacara-golden".
 // Usamos isso pra gerar o identificador amigável da URL automaticamente,
 // sem o proprietário do espaço ter que digitar um "chacara-golden" na mão.
@@ -317,18 +339,23 @@ router.get('/espacos/:id/reservas', autenticar, exigirProprietario, (req, res) =
 // POST /api/espacos - cria um espaço novo (só proprietários logados)
 // --------------------------------------------------------------------------
 router.post('/espacos', autenticar, exigirProprietario, (req, res) => {
-    const { nome, descricao, local, capacidade, preco, imagem, beneficios, eventos_permitidos, pontos_referencia, fotos } = req.body;
+    const { nome, descricao, sobre, local, capacidade, preco, imagem, beneficios, eventos_permitidos, pontos_referencia, fotos } = req.body;
 
     if (!nome) {
         return res.status(400).json({ erro: 'O espaço precisa de um nome.' });
+    }
+
+    const erroTamanhoFoto = validarTamanhoFotos(imagem, fotos);
+    if (erroTamanhoFoto) {
+        return res.status(413).json({ erro: erroTamanhoFoto });
     }
 
     const slug = gerarSlugUnico(nome);
 
     const resultado = db
         .prepare(`
-            INSERT INTO espacos (dono_id, slug, nome, descricao, local, capacidade, preco, imagem)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO espacos (dono_id, slug, nome, descricao, sobre, local, capacidade, preco, imagem)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
         .run(
             req.usuario.id, // vem do token, não do que a pessoa mandou no body -
@@ -336,6 +363,7 @@ router.post('/espacos', autenticar, exigirProprietario, (req, res) => {
             slug,
             nome,
             descricao || null,
+            sobre || null,
             local || null,
             capacidade || null,
             preco || null,
@@ -368,17 +396,23 @@ router.put('/espacos/:id', autenticar, exigirProprietario, (req, res) => {
         return res.status(403).json({ erro: 'Você só pode editar espaços que são seus.' });
     }
 
-    const { nome, descricao, local, capacidade, preco, imagem, beneficios, eventos_permitidos, pontos_referencia, fotos } = req.body;
+    const { nome, descricao, sobre, local, capacidade, preco, imagem, beneficios, eventos_permitidos, pontos_referencia, fotos } = req.body;
+
+    const erroTamanhoFoto = validarTamanhoFotos(imagem, fotos);
+    if (erroTamanhoFoto) {
+        return res.status(413).json({ erro: erroTamanhoFoto });
+    }
 
     // "??" (nullish coalescing): se o campo não veio no pedido (undefined),
     // mantém o valor que já estava salvo, em vez de apagar com "null"
     db.prepare(`
         UPDATE espacos
-        SET nome = ?, descricao = ?, local = ?, capacidade = ?, preco = ?, imagem = ?
+        SET nome = ?, descricao = ?, sobre = ?, local = ?, capacidade = ?, preco = ?, imagem = ?
         WHERE id = ?
     `).run(
         nome ?? espaco.nome,
         descricao ?? espaco.descricao,
+        sobre ?? espaco.sobre,
         local ?? espaco.local,
         capacidade ?? espaco.capacidade,
         preco ?? espaco.preco,
@@ -409,8 +443,29 @@ router.delete('/espacos/:id', autenticar, exigirProprietario, (req, res) => {
         return res.status(403).json({ erro: 'Você só pode remover espaços que são seus.' });
     }
 
-    // Precisa apagar primeiro quem depende do espaço (as listas simples e as
-    // fotos), senão o banco recusa apagar o espaço por causa da FOREIGN KEY
+    // Não deixa excluir um espaço que ainda tem reserva ATIVA (Pendente ou
+    // Aprovada) - senão o cliente que reservou perderia a reserva sem
+    // aviso nenhum. Reservas já Canceladas não contam pra essa checagem,
+    // porque não representam mais nenhum compromisso de verdade.
+    const { total: reservasAtivas } = db
+        .prepare(`SELECT COUNT(*) AS total FROM reservas WHERE espaco_id = ? AND status IN ('Pendente', 'Aprovado')`)
+        .get(req.params.id);
+
+    if (reservasAtivas > 0) {
+        return res.status(409).json({
+            erro: 'Este espaço tem reservas pendentes ou aprovadas e não pode ser excluído enquanto elas existirem.'
+        });
+    }
+
+    // Precisa apagar primeiro TUDO que depende do espaço, senão o banco
+    // recusa apagar o espaço por causa da FOREIGN KEY (PRAGMA foreign_keys
+    // está ligado em database/db.js). "avaliacoes" precisa vir antes de
+    // "reservas" porque uma avaliação também depende de uma reserva
+    // específica (reserva_id), não só do espaço.
+    db.prepare('DELETE FROM avaliacoes WHERE espaco_id = ?').run(req.params.id);
+    db.prepare('DELETE FROM reservas WHERE espaco_id = ?').run(req.params.id);
+    db.prepare('DELETE FROM favoritos WHERE espaco_id = ?').run(req.params.id);
+    db.prepare('DELETE FROM visualizacoes WHERE espaco_id = ?').run(req.params.id);
     db.prepare('DELETE FROM beneficios WHERE espaco_id = ?').run(req.params.id);
     db.prepare('DELETE FROM eventos_permitidos WHERE espaco_id = ?').run(req.params.id);
     db.prepare('DELETE FROM pontos_referencia WHERE espaco_id = ?').run(req.params.id);

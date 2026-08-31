@@ -303,3 +303,42 @@ function formatarCapacidade(capacidade) {
 function formatarPreco(preco) {
     return preco ? `R$ ${Number(preco).toLocaleString('pt-BR')}` : 'Sob consulta';
 }
+
+// Reserva -> "19:00 às 22:00" (com hora de término), "19:00" (sem hora de
+// término, campo opcional) ou "-" (sem nem hora de início) - usado tanto na
+// tela do proprietário (painel-dono.js) quanto em "Minhas Reservas" (reservas.js)
+function formatarHorarioReserva(reserva) {
+    if (!reserva.horario) return '-';
+    return reserva.horario_termino ? `${reserva.horario} às ${reserva.horario_termino}` : reserva.horario;
+}
+
+/* ==========================================================================
+   REDIMENSIONAMENTO DE IMAGEM (compartilhado entre perfil.js, perfil-dono.js
+   e painel-dono.js) - lê o arquivo escolhido (FileReader), desenha num
+   <canvas> menor (no máximo "tamanhoMaximo" de largura/altura) e devolve o
+   resultado como base64 JPEG, assim uma foto de celular (que pode ter vários
+   MB) fica bem mais leve antes de ser mandada pro servidor.
+   ========================================================================== */
+function redimensionarImagem(arquivo, tamanhoMaximo) {
+    return new Promise((resolve, reject) => {
+        const leitor = new FileReader();
+        leitor.onerror = () => reject(new Error('Não foi possível ler o arquivo.'));
+        leitor.onload = () => {
+            const imagem = new Image();
+            imagem.onerror = () => reject(new Error('Arquivo de imagem inválido.'));
+            imagem.onload = () => {
+                const escala = Math.min(1, tamanhoMaximo / Math.max(imagem.width, imagem.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = imagem.width * escala;
+                canvas.height = imagem.height * escala;
+
+                const contexto = canvas.getContext('2d');
+                contexto.drawImage(imagem, 0, 0, canvas.width, canvas.height);
+
+                resolve(canvas.toDataURL('image/jpeg', 0.85));
+            };
+            imagem.src = leitor.result;
+        };
+        leitor.readAsDataURL(arquivo);
+    });
+}

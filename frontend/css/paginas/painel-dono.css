@@ -1,42 +1,254 @@
 /* ==========================================================================
-   GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS
-   Reaproveita bastante coisa de reservas.css (banner, estatísticas, cards de
-   reserva) e favoritos.css (grid-favoritos, card-favorito) - aqui só ficam
-   os ajustes específicos desta página.
+   GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/dono/painel-dono.html)
+   Antes essa página era um banner de foto de estoque + cards brancos de
+   estatística (estilo emprestado de reservas.css) sem nem cabeçalho/tema -
+   redesenhada aqui pra usar a mesma linguagem "premium" dourada das outras
+   telas do proprietário (.home-logado-premium, de index-logado.css), só que
+   organizada como um painel de gerenciamento de verdade: título com ícone,
+   resumo de números e uma grade de cards de espaço com o nome sobreposto na
+   foto. ".card-desenvolvimento", ".resumo-numeros-dono", ".numero-resumo*",
+   ".secao-titulo-grid" e ".card-reserva" (do modal de reservas) já vêm
+   prontos de outros arquivos - aqui só o que é exclusivo desta página.
    ========================================================================== */
 
-/* Com só 1 estatística (Espaços Cadastrados), centraliza o card em vez de
-   esticar pra ocupar a largura toda da grade */
-.estatisticas-grid-dono {
-    grid-template-columns: minmax(240px, 340px);
-    justify-content: center;
+/* Palavra em destaque no título "Meus Espaços" */
+.titulo-painel-dourado {
+    color: var(--gold);
 }
 
-/* Fileira de botões (Editar / Reservas / Excluir) dentro de cada card de espaço */
+/* --------------------------------------------------------------------------
+   SEÇÃO "ESPAÇOS CADASTRADOS"
+   -------------------------------------------------------------------------- */
+.secao-lista-espacos-dono {
+    max-width: 1100px;
+    margin: 45px auto 100px;
+    padding: 0 20px;
+}
+
+/* Ícone + texto dentro do botão "Cadastrar novo espaço" (herda a cor/fundo
+   de .btn-gold, só ajusta o alinhamento do ícone com o texto) */
+.btn-cadastrar-espaco {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+}
+
+.btn-cadastrar-espaco .material-icons-round {
+    font-size: 18px;
+}
+
+.grid-espacos-dono {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+}
+
+/* --------------------------------------------------------------------------
+   CARD DE ESPAÇO
+   Mesma borda + brilho dourado usados no card "Seu desempenho" e nos cards
+   de "Acesso rápido" (.home-logado-premium), pra esta página não destoar
+   visualmente das outras telas do proprietário.
+   -------------------------------------------------------------------------- */
+.card-espaco-dono {
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-espaco-dono:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 30px hsla(46, 100%, 55%, 0.22), 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* Foto com o nome/local sobrepostos por cima (em vez de texto solto embaixo
+   da imagem, como era antes) - degradê escuro garante que o texto branco
+   sempre fique legível, independente de como a foto for */
+.imagem-espaco-dono {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #222;
+}
+
+.imagem-espaco-dono img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.overlay-imagem-espaco-dono {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 35px 18px 14px;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85));
+}
+
+.overlay-imagem-espaco-dono h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: #ffffff;
+}
+
+.overlay-imagem-espaco-dono p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+}
+
+.overlay-imagem-espaco-dono p i {
+    color: var(--gold);
+}
+
+.conteudo-card-espaco-dono {
+    padding: 18px 20px 20px;
+}
+
+.linha-info-espaco-dono {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.linha-info-espaco-dono i {
+    color: var(--gold);
+    margin-right: 4px;
+}
+
+.preco-espaco-dono {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--gold);
+    white-space: nowrap;
+}
+
+/* Fileira de botões (Editar / Reservas / Excluir) - ".btn-ajuste" (dourado
+   contornado, de perfil.css) e ".btn-cancelar-reserva" (vermelho, de
+   reservas.css) já vêm prontos; "flex: 1" faz os três dividirem a largura
+   igualmente mesmo o botão vermelho tendo "width: 100%" no arquivo dele */
 .acoes-espaco-dono {
     display: flex;
     gap: 8px;
-    margin-top: 15px;
-    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
 }
 
 .acoes-espaco-dono button {
     flex: 1;
-    min-width: 90px;
+    min-width: 0;
     font-size: 0.75rem;
-    padding: 8px 10px;
+    padding: 8px 6px;
     white-space: nowrap;
+    margin-top: 0; /* zera o "margin-top: 20px" que .btn-cancelar-reserva tem por padrão */
 }
 
-/* Modal de "Reservas Recebidas" um pouco mais largo, pra caber os cards de reserva */
+/* --------------------------------------------------------------------------
+   ESTADO VAZIO (proprietário ainda não cadastrou nenhum espaço)
+   -------------------------------------------------------------------------- */
+.estado-vazio-painel {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    border: 2px dashed rgba(212, 175, 55, 0.4);
+    border-radius: 20px;
+    background: var(--bg-secondary);
+}
+
+.estado-vazio-painel .material-icons-round {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+
+.estado-vazio-painel p {
+    color: var(--text-light);
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   CAMPO DE FOTO (formulário de cadastrar/editar espaço)
+   A pessoa pode colar um link OU escolher uma foto de verdade da galeria do
+   aparelho (convertida em base64 já redimensionada, ver
+   escolherFotoPrincipalDaGaleria() em painel-dono.js) - os dois jeitos
+   preenchem o mesmo campo por trás, então o back-end nem sabe a diferença.
+   -------------------------------------------------------------------------- */
+.campo-foto-espaco {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.preview-foto-espaco {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    border: 1px dashed var(--input-border, var(--border));
+    background: var(--input-bg, var(--bg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.preview-foto-espaco-icone {
+    color: var(--text-light);
+    font-size: 26px;
+}
+
+.preview-foto-espaco-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.campo-foto-espaco-controles {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Botão "Escolher da galeria"/"Escolher fotos da galeria" - herda o visual
+   dourado contornado de ".btn-ajuste" (perfil.css), só ajusta pra ficar
+   largura total e com o ícone alinhado ao texto */
+.campo-foto-espaco-controles .btn-ajuste,
+.btn-galeria-fotos-extras {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.btn-galeria-fotos-extras {
+    margin-top: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL DE "RESERVAS RECEBIDAS" - só o tamanho da caixa é específico daqui
+   -------------------------------------------------------------------------- */
 .modal-reservas-espaco-box {
     max-width: 640px;
     max-height: 80vh;
     overflow-y: auto;
 }
 
-/* Dentro do modal de reservas, cada card já tem sua própria borda/fundo -
-   remove a margem grande padrão do container pra não duplicar espaçamento */
 #lista-reservas-espaco .card-reserva {
     margin-bottom: 16px;
     text-align: left;

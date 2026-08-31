@@ -19,6 +19,22 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+// Botão "← Voltar": em vez de sempre mandar pra home, volta pra EXATA página
+// de onde a pessoa veio (busca, favoritos, reservas, a home logada...) -
+// igual ao botão "voltar" do navegador, só que também funciona clicando no
+// link. "document.referrer" é a URL de quem trouxe a pessoa até aqui; só
+// confiamos nela se for do próprio site (senão alguém podia chegar aqui só
+// colando o link e cairia num "voltar" pra fora do Golden Hall). Sem
+// referrer de dentro do site (ex: abriu o link direto numa aba nova), cai
+// na home mesmo, que é o destino mais seguro.
+function voltarOrigem() {
+    if (document.referrer && document.referrer.startsWith(window.location.origin) && window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = '/frontend/index.html';
+    }
+}
+
 // Loga a visita pra estatística "Visualizados" da home do cliente (ver GET
 // /api/estatisticas) - só registra se tiver alguém logado (é uma métrica
 // pessoal) e não trava nada se falhar, já que não é essencial pra página
@@ -51,7 +67,9 @@ async function carregarEspaco() {
         const espaco = await chamarAPI('/api/espacos/' + slug);
 
         // A partir daqui, "espaco" é um objeto vindo do banco de dados:
-        // { id, dono_id, slug, nome, descricao, local, capacidade, preco, imagem, criado_em }
+        // { id, dono_id, slug, nome, descricao, sobre, local, capacidade, preco, imagem, criado_em }
+        // "descricao" é o resumo curto (aparece embaixo do nome, no topo);
+        // "sobre" é o texto mais completo da seção "Sobre o espaço" mais abaixo
         document.body.dataset.espaco = espaco.slug;
         preencherPagina(espaco);
 
@@ -71,7 +89,7 @@ function preencherPagina(espaco) {
 
     document.getElementById('espaco-nome').textContent = espaco.nome;
     document.getElementById('espaco-descricao').textContent = espaco.descricao || '';
-    document.getElementById('espaco-sobre').textContent = espaco.descricao || 'Sem descrição cadastrada.';
+    document.getElementById('espaco-sobre').textContent = espaco.sobre || 'Sem descrição cadastrada.';
 
     const imagem = document.getElementById('espaco-imagem');
     imagem.src = espaco.imagem || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop';

@@ -37,7 +37,7 @@ router.get('/espacos/:slug/datas-ocupadas', (req, res) => {
 // POST /api/reservas - cria uma solicitação de reserva (precisa estar logado)
 // --------------------------------------------------------------------------
 router.post('/reservas', autenticar, (req, res) => {
-    const { espaco_slug, data, horario, tipo_evento, convidados, telefone, observacoes } = req.body;
+    const { espaco_slug, data, horario, horario_termino, tipo_evento, convidados, telefone, observacoes } = req.body;
 
     if (!espaco_slug || !data) {
         return res.status(400).json({ erro: 'Informe o espaço e a data.' });
@@ -61,14 +61,15 @@ router.post('/reservas', autenticar, (req, res) => {
 
     const resultado = db
         .prepare(`
-            INSERT INTO reservas (espaco_id, usuario_id, data, horario, tipo_evento, convidados, telefone, observacoes)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO reservas (espaco_id, usuario_id, data, horario, horario_termino, tipo_evento, convidados, telefone, observacoes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
         .run(
             espaco.id,
             req.usuario.id, // vem do token - a pessoa não pode reservar "em nome de outra"
             data,
             horario || null,
+            horario_termino || null,
             tipo_evento || null,
             convidados || null,
             telefone || null,

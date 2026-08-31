@@ -44,36 +44,13 @@
 
 <body>
 
-    <!-- CABEÇALHO -->
-    <header class="header-detalhes">
-
-        <div class="logo">
-            <img src="/frontend/Imagens/logo.png" alt="Logo">
-
-            <div class="logo-text">
-                <h1>GOLDEN HALL</h1>
-                <p>SALÃO DE FESTAS</p>
-            </div>
-        </div>
-
-        <div class="header-buttons">
-
-            <button class="btn btn-outline" onclick="abrirModalLogin()">
-                Entrar
-            </button>
-
-            <button class="btn btn-gold" onclick="abrirModalTipoConta()">
-                Criar conta
-            </button>
-
-        </div>
-
-    </header>
-
     <main class="detalhe-page">
 
-        <a class="voltar" href="/frontend/index.html">
-            ← Voltar para a página inicial
+        <!-- Volta pra EXATAMENTE a página de onde a pessoa veio (busca,
+             favoritos, reservas...), igual ao botão "voltar" do navegador -
+             ver voltarOrigem() em detalhes.js -->
+        <a class="voltar" href="/frontend/index.html" onclick="voltarOrigem(); return false;">
+            ← Voltar
         </a>
 
         <!-- Mostrada só se a API não encontrar o espaço (slug errado, apagado, etc.) -->

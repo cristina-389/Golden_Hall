@@ -73,7 +73,7 @@ async function carregarMinhasReservas() {
 
                     <div class="card-reserva-corpo">
                         <p><i class="bi bi-calendar4-event"></i> Data: <strong>${formatarData(reserva.data)}</strong></p>
-                        <p><i class="bi bi-clock"></i> Horário: <strong>${reserva.horario || '-'}</strong></p>
+                        <p><i class="bi bi-clock"></i> Horário: <strong>${formatarHorarioReserva(reserva)}</strong></p>
                         <p><i class="bi bi-award"></i> Evento: <strong>${reserva.tipo_evento || '-'}</strong></p>
                         <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'} pessoas</strong></p>
                         <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>

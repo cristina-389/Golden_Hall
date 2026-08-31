@@ -531,6 +531,7 @@ async function confirmarReservaFinal() {
         espaco_slug: document.body.dataset.espaco,
         data: document.getElementById('reserva-data')?.value || '',
         horario: document.getElementById('reserva-horario')?.value || '',
+        horario_termino: document.getElementById('reserva-horario-fim')?.value || '',
         tipo_evento: document.getElementById('reserva-tipo')?.value || '',
         convidados: document.getElementById('reserva-convidados')?.value || '',
         telefone: document.getElementById('reserva-telefone')?.value || '',

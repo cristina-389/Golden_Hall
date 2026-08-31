@@ -265,34 +265,6 @@ function capturarFotoCamera() {
     salvarFotoBase64(fotoBase64);
 }
 
-// Desenha a imagem escolhida num <canvas> menor (no máximo "tamanhoMaximo"
-// de largura/altura) e devolve o resultado como base64 JPEG - assim uma
-// foto de celular (que pode ter vários MB) vira um avatar leve antes de
-// ser mandada pro servidor
-function redimensionarImagem(arquivo, tamanhoMaximo) {
-    return new Promise((resolve, reject) => {
-        const leitor = new FileReader();
-        leitor.onerror = () => reject(new Error('Não foi possível ler o arquivo.'));
-        leitor.onload = () => {
-            const imagem = new Image();
-            imagem.onerror = () => reject(new Error('Arquivo de imagem inválido.'));
-            imagem.onload = () => {
-                const escala = Math.min(1, tamanhoMaximo / Math.max(imagem.width, imagem.height));
-                const canvas = document.createElement('canvas');
-                canvas.width = imagem.width * escala;
-                canvas.height = imagem.height * escala;
-
-                const contexto = canvas.getContext('2d');
-                contexto.drawImage(imagem, 0, 0, canvas.width, canvas.height);
-
-                resolve(canvas.toDataURL('image/jpeg', 0.85));
-            };
-            imagem.src = leitor.result;
-        };
-        leitor.readAsDataURL(arquivo);
-    });
-}
-
 // Modal de "Alterar Senha" - só é oferecido enquanto a pessoa está editando
 // os dados (ver alternarEdicaoPerfil() abaixo, que mostra/esconde o link
 // que chama abrirModalTrocarSenha()).

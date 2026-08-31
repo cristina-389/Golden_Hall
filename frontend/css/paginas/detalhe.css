@@ -296,13 +296,6 @@
 
 /* Cabeçalho mais fino/compacto especificamente nas páginas de detalhes
    (o cabeçalho "padrão" do site é maior - aqui reduzimos tudo um pouco) */
-.header-detalhes { padding: 12px 40px; min-height: 70px; }
-.header-detalhes .logo img { width: 55px; }
-.header-detalhes .logo-text h1 { font-size: 1.4rem; }
-.header-detalhes .logo-text p { font-size: 0.75rem; }
-.header-detalhes nav a { font-size: 0.95rem; }
-.header-detalhes .btn, .header-detalhes .theme-toggle { padding: 8px 16px; font-size: 0.9rem; }
-
 /* MAPA E LOCALIZAÇÃO - seção com o texto do endereço de um lado e o
    iframe do Google Maps do outro */
 .localizacao-section {
