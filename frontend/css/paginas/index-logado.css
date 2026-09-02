@@ -74,7 +74,7 @@ header {
 }
 
 .avatar-saudacao-icone {
-    font-size: 50px;
+    font-size: 35px;
     color: var(--gold);
     opacity: 0.85;
 }
@@ -449,7 +449,7 @@ header {
     transition: transform 0.3s ease;
 }
 
-.home-logado-premium .card-acesso .icone-contorno .material-icons-round {
+.home-logado-premium .card-acesso .icone-contorno .bi {
     color: #1a1305 !important;
     font-size: 26px !important;
 }

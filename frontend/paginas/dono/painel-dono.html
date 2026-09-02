@@ -17,7 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     <link rel="stylesheet" href="/frontend/css/style.css">
     <!-- reservas.css continua importado só pelo ".card-reserva" usado no modal
@@ -32,7 +31,7 @@
     <section class="secao-saudacao">
         <div class="secao-saudacao-topo">
             <div class="icone-contorno">
-                <span class="material-icons-round">storefront</span>
+                <i class="bi bi-shop"></i>
             </div>
             <h2>Meus <span class="titulo-painel-dourado">Espaços</span></h2>
         </div>
@@ -48,17 +47,17 @@
 
         <div class="resumo-numeros-dono">
             <div class="numero-resumo" id="resumo-espacos">
-                <div class="numero-resumo-icone"><span class="material-icons-round">storefront</span></div>
+                <div class="numero-resumo-icone"><i class="bi bi-shop"></i></div>
                 <span class="numero-resumo-valor" id="stat-total-espacos">-</span>
                 <span class="numero-resumo-label">Espaços cadastrados</span>
             </div>
             <div class="numero-resumo" id="resumo-pendentes">
-                <div class="numero-resumo-icone"><span class="material-icons-round">pending_actions</span></div>
+                <div class="numero-resumo-icone"><i class="bi bi-hourglass-split"></i></div>
                 <span class="numero-resumo-valor" id="stat-pendentes">-</span>
                 <span class="numero-resumo-label">Reservas pendentes</span>
             </div>
             <div class="numero-resumo" id="resumo-avaliacao">
-                <div class="numero-resumo-icone"><span class="material-icons-round">star</span></div>
+                <div class="numero-resumo-icone"><i class="bi bi-star-fill"></i></div>
                 <span class="numero-resumo-valor" id="stat-avaliacao">-</span>
                 <span class="numero-resumo-label">Avaliação média</span>
             </div>
@@ -70,7 +69,7 @@
         <div class="secao-titulo-grid">
             <h3>Espaços cadastrados</h3>
             <button class="btn btn-gold btn-cadastrar-espaco" onclick="abrirFormularioEspaco()">
-                <span class="material-icons-round">add</span> Cadastrar novo espaço
+                <i class="bi bi-plus-lg"></i> Cadastrar novo espaço
             </button>
         </div>
 
@@ -80,15 +79,15 @@
 
     <nav class="barra-navegacao-inferior">
         <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
-            <span class="material-icons-round icone">home</span>
+            <i class="bi bi-house-door-fill icone"></i>
             <span class="texto">Início</span>
         </a>
         <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav ativo">
-            <span class="material-icons-round icone">storefront</span>
+            <i class="bi bi-shop icone"></i>
             <span class="texto">Meus Espaços</span>
         </a>
         <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
-            <span class="material-icons-round icone">person</span>
+            <i class="bi bi-person-fill icone"></i>
             <span class="texto">Perfil</span>
         </a>
     </nav>
@@ -139,7 +138,7 @@
                         <label for="espaco-form-imagem">Foto Principal</label>
                         <div class="campo-foto-espaco">
                             <div class="preview-foto-espaco">
-                                <span class="material-icons-round preview-foto-espaco-icone" id="preview-imagem-principal-icone">image</span>
+                                <i class="bi bi-image preview-foto-espaco-icone" id="preview-imagem-principal-icone"></i>
                                 <img class="preview-foto-espaco-img" id="preview-imagem-principal-foto" alt="Pré-visualização da foto principal" style="display: none;">
                             </div>
                             <div class="campo-foto-espaco-controles">

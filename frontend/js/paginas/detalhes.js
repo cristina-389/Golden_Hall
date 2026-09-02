@@ -119,39 +119,58 @@ function preencherPagina(espaco) {
 /* ==========================================================================
    GALERIA DE FOTOS
    GET /api/espacos/:slug já devolve "fotos" (as fotos extras cadastradas
-   pelo proprietário, além da imagem principal). Só aparece se tiver mais
-   de uma foto no total - clicar numa miniatura troca a foto grande do topo.
+   pelo proprietário, além da imagem principal). Só aparece se tiver mais de
+   uma foto no total. O modal mostra UMA foto por vez, com setas pra navegar
+   (ver mudarFotoGaleria()) em vez de uma grade com todas de uma vez.
    ========================================================================== */
+let fotosGaleriaAtual = []; // todas as fotos do espaço sendo visto agora
+let indiceGaleriaAtual = 0; // qual delas está sendo mostrada no modal
+
 function preencherGaleria(espaco) {
-    const secao = document.getElementById('galeria-fotos');
-    const grid = document.getElementById('galeria-fotos-grid');
-    grid.innerHTML = '';
+    const botao = document.getElementById('btn-ver-galeria');
+    fotosGaleriaAtual = [espaco.imagem, ...(espaco.fotos || [])].filter(Boolean);
 
-    const todasAsFotos = [espaco.imagem, ...(espaco.fotos || [])].filter(Boolean);
-
-    if (todasAsFotos.length <= 1) {
-        secao.style.display = 'none';
+    if (fotosGaleriaAtual.length <= 1) {
+        botao.style.display = 'none';
         return;
     }
 
-    secao.style.display = 'block';
-
-    todasAsFotos.forEach((url, indice) => {
-        const miniatura = document.createElement('img');
-        miniatura.src = url;
-        miniatura.alt = `Foto ${indice + 1} de ${espaco.nome}`;
-        if (indice === 0) miniatura.classList.add('miniatura-ativa');
-        miniatura.addEventListener('click', () => trocarFotoPrincipal(url, miniatura));
-        grid.appendChild(miniatura);
-    });
+    botao.style.display = 'flex';
+    document.getElementById('btn-ver-galeria-texto').textContent = `Ver todas as fotos (${fotosGaleriaAtual.length})`;
 }
 
-// Troca a foto grande no topo da página e marca qual miniatura está ativa
-function trocarFotoPrincipal(url, miniaturaClicada) {
-    document.getElementById('espaco-imagem').src = url;
-    document.querySelectorAll('.galeria-fotos-grid img').forEach(img => img.classList.remove('miniatura-ativa'));
-    miniaturaClicada.classList.add('miniatura-ativa');
+// Mostra a foto do índice atual no modal e atualiza o contador ("2 / 3")
+function renderizarFotoGaleria() {
+    document.getElementById('galeria-foto-atual').src = fotosGaleriaAtual[indiceGaleriaAtual];
+    document.getElementById('galeria-contador').textContent = `${indiceGaleriaAtual + 1} / ${fotosGaleriaAtual.length}`;
 }
+
+// Seta esquerda/direita: "delta" é -1 (anterior) ou 1 (próxima). O "%" com
+// "+ length" faz o índice dar a volta nas duas pontas (da última volta pra
+// primeira, e vice-versa), em vez de travar no começo/fim da lista
+function mudarFotoGaleria(delta) {
+    indiceGaleriaAtual = (indiceGaleriaAtual + delta + fotosGaleriaAtual.length) % fotosGaleriaAtual.length;
+    renderizarFotoGaleria();
+}
+
+// Abre/fecha o modal com todas as fotos do espaço (botão no canto da foto principal)
+function abrirGaleriaFotos() {
+    indiceGaleriaAtual = 0;
+    renderizarFotoGaleria();
+    document.getElementById('modal-galeria-fotos').classList.add('ativo');
+}
+
+function fecharGaleriaFotos() {
+    document.getElementById('modal-galeria-fotos').classList.remove('ativo');
+}
+
+// Fecha o modal da galeria ao clicar fora da caixa (mesmo padrão dos outros
+// modais do site - ver window.addEventListener('click', ...) em js/modais.js)
+window.addEventListener('click', function (event) {
+    if (event.target === document.getElementById('modal-galeria-fotos')) {
+        fecharGaleriaFotos();
+    }
+});
 
 /* ==========================================================================
    BENEFÍCIOS E EVENTOS PERMITIDOS
@@ -178,7 +197,10 @@ function preencherListaEmBox(idSecao, idLista, itens) {
 
     itens.forEach(texto => {
         const li = document.createElement('li');
-        li.textContent = texto; // textContent, não innerHTML - mesma prevenção contra XSS de sempre
+        li.innerHTML = '<i class="bi bi-check2-circle"></i>'; // mesmo ícone do título "Benefícios" - ícone fixo, não vem de dado digitado, sem risco de XSS aqui
+        const span = document.createElement('span');
+        span.textContent = texto; // textContent, não innerHTML - mesma prevenção contra XSS de sempre
+        li.appendChild(span);
         lista.appendChild(li);
     });
 
@@ -209,7 +231,7 @@ function preencherPontosReferencia(espaco) {
         return;
     }
 
-    grid.style.display = 'flex';
+    grid.style.display = 'grid';
 
     espaco.pontos_referencia.forEach(texto => {
         const item = document.createElement('div');

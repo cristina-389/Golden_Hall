@@ -46,7 +46,7 @@
 /* Ícone genérico de pessoa, mostrado até a pessoa escolher uma foto de
    verdade (guardada em base64 na coluna "foto" do banco) */
 .avatar-icone-generico {
-    font-size: 110px;
+    font-size: 75px;
     color: var(--gold);
     opacity: 0.85;
 }
@@ -105,7 +105,7 @@
     transition: transform 0.25s ease;
 }
 
-.btn-trocar-foto .material-icons-round {
+.btn-trocar-foto .bi {
     font-size: 20px;
 }
 
@@ -139,7 +139,7 @@
     transition: 0.25s;
 }
 
-.opcao-foto-perfil .material-icons-round {
+.opcao-foto-perfil .bi {
     color: var(--gold);
     font-size: 22px;
 }
@@ -155,7 +155,7 @@
     border-color: rgba(255, 107, 107, 0.35);
 }
 
-.opcao-foto-remover .material-icons-round {
+.opcao-foto-remover .bi {
     color: #ff6b6b;
 }
 
@@ -313,7 +313,7 @@
     padding: 0;
 }
 
-.link-trocar-senha .material-icons-round {
+.link-trocar-senha .bi {
     font-size: 16px;
     color: var(--gold);
 }
@@ -444,7 +444,7 @@ body:not(.dark) .campo-grupo label {
     transform: translateX(3px);
 }
 
-.perfil-espaco-item .material-icons-round {
+.perfil-espaco-item .bi {
     color: var(--gold);
     font-size: 20px;
     flex-shrink: 0;
@@ -505,7 +505,7 @@ body:not(.dark) .campo-grupo label {
 
 /* Ícone da lista "Meus Espaços" vira um círculo preenchido em degradê,
    igual aos cards de "Acesso rápido" da home, em vez do ícone solto */
-.perfil-logado-premium .perfil-espaco-item .material-icons-round {
+.perfil-logado-premium .perfil-espaco-item .bi {
     width: 32px;
     height: 32px;
     border-radius: 50%;

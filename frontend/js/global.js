@@ -59,12 +59,13 @@ function toggleTheme() {
 // alternar.
 function alternarVisibilidadeSenha(idCampo, botao) {
     const campo = document.getElementById(idCampo);
-    const icone = botao.querySelector('.material-icons-round');
+    const icone = botao.querySelector('.bi');
     if (!campo || !icone) return;
 
     const estaEscondida = campo.type === 'password';
     campo.type = estaEscondida ? 'text' : 'password';
-    icone.textContent = estaEscondida ? 'visibility_off' : 'visibility';
+    icone.classList.toggle('bi-eye', !estaEscondida);
+    icone.classList.toggle('bi-eye-slash', estaEscondida);
     botao.title = estaEscondida ? 'Esconder senha' : 'Mostrar senha';
 }
 

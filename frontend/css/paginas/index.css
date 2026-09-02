@@ -238,7 +238,7 @@ nav a.active::after {
     font-weight: 600;
 }
 
-.badge-secao .material-icons-round {
+.badge-secao .bi {
     font-size: 18px;
 }
 

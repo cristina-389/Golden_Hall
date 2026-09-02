@@ -64,10 +64,10 @@ async function carregarMeusEspacos() {
     if (espacos.length === 0) {
         container.innerHTML = `
             <div class="estado-vazio-painel">
-                <span class="material-icons-round">storefront</span>
+                <i class="bi bi-shop"></i>
                 <p>Você ainda não cadastrou nenhum espaço.</p>
                 <button class="btn btn-gold btn-cadastrar-espaco" onclick="abrirFormularioEspaco()">
-                    <span class="material-icons-round">add</span> Cadastrar meu primeiro espaço
+                    <i class="bi bi-plus-lg"></i> Cadastrar meu primeiro espaço
                 </button>
             </div>
         `;

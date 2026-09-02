@@ -34,7 +34,7 @@
     font-size: 0.85rem;
 }
 
-.btn-cadastrar-espaco .material-icons-round {
+.btn-cadastrar-espaco .bi {
     font-size: 18px;
 }
 
@@ -168,7 +168,7 @@
     background: var(--bg-secondary);
 }
 
-.estado-vazio-painel .material-icons-round {
+.estado-vazio-painel .bi {
     font-size: 3rem;
     color: var(--gold);
     margin-bottom: 12px;

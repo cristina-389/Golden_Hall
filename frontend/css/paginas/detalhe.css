@@ -103,6 +103,34 @@
     color: #d4af37;
 }
 
+/* Botão "Ver todas as fotos", no canto ESQUERDO da foto principal (o
+   coração de favoritar fica no direito) - abre o modal com a galeria
+   completa (ver abrirGaleriaFotos() em detalhes.js). Só aparece se o
+   espaço tiver mais de 1 foto cadastrada. */
+.btn-ver-galeria {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: none; /* JS troca pra "flex" quando tem fotos extras */
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-ver-galeria:hover {
+    background: #d4af37;
+    color: #111111;
+}
+
 /* Fileira com os 3 cartõezinhos: Capacidade, Valor e Disponibilidade */
 .info-rapida {
     display: grid;
@@ -139,8 +167,22 @@
     margin-bottom: 18px;
 }
 
-.box ul { padding-left: 22px; }
-.box li { margin-bottom: 10px; }
+/* Sem a bolinha padrão do navegador - cada item ganha um símbolo de
+   verificação dourado no lugar (ver preencherListaEmBox() em detalhes.js) */
+.box ul { padding-left: 0; list-style: none; }
+
+.box li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.box li i {
+    color: #d4af37;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
 
 /* Duas colunas lado a lado: Benefícios e Eventos Permitidos. Se só uma das
    duas tiver conteúdo, o CSS não sabe disso - é o JS (preencherPagina() em
@@ -154,39 +196,52 @@
     margin: 0 auto 40px;
 }
 
-/* GALERIA DE FOTOS: miniaturas clicáveis logo abaixo da foto principal -
-   clicar numa delas troca a imagem grande (ver trocarFotoPrincipal() em
-   detalhes.js) */
-.galeria-fotos {
+/* GALERIA DE FOTOS: modal aberto pelo botão "Ver todas as fotos" no canto
+   da foto principal (ver abrirGaleriaFotos() em detalhes.js) - mostra UMA
+   foto por vez, com setas dos dois lados pra navegar entre elas
+   (mudarFotoGaleria(), em detalhes.js) */
+.modal-galeria-box {
     max-width: 800px;
-    margin: 0 auto 30px;
 }
 
-.galeria-fotos-grid {
+.galeria-fotos-visualizador {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
 }
 
-.galeria-fotos-grid img {
-    width: 110px;
-    height: 80px;
+.galeria-fotos-visualizador img {
+    flex: 1;
+    min-width: 0; /* sem isso, a imagem empurra o flex container e some com as setas */
+    max-height: 480px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 14px;
+}
+
+.btn-seta-galeria {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    font-size: 20px;
     cursor: pointer;
-    border: 2px solid transparent;
     transition: .2s;
-    opacity: .8;
 }
 
-.galeria-fotos-grid img:hover {
-    opacity: 1;
+.btn-seta-galeria:hover {
+    background: #d4af37;
+    color: #111111;
 }
 
-.galeria-fotos-grid img.miniatura-ativa {
-    border-color: #d4af37;
-    opacity: 1;
+.galeria-contador {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: #999999;
 }
 
 /* AVALIAÇÕES */
@@ -337,7 +392,7 @@ body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 /* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
    a ter só 1 coluna, ficando uma embaixo da outra. */
 @media(max-width:900px) {
-    .hero-detalhe, .info-rapida, .localizacao-section, .grid-box { grid-template-columns: 1fr; }
+    .hero-detalhe, .info-rapida, .localizacao-section, .grid-box, .pontos-referencia-grid { grid-template-columns: 1fr; }
     .hero-info h1 { font-size: 40px; }
     .localizacao-section { padding: 25px; }
     .localizacao-mapa iframe { height: 350px; }
@@ -346,8 +401,8 @@ body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 /* PONTOS DE REFERÊNCIA: pequenos "chips" com os destaques da localização,
    logo abaixo do botão "Ver no mapa" (ver preencherPagina() em detalhes.js) */
 .pontos-referencia-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-top: 20px;
 }

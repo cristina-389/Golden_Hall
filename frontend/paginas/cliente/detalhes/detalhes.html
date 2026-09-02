@@ -34,8 +34,6 @@
     <!--Bootstrap icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!--Ícones (modal "como você quer usar o Golden Hall?")-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="/frontend/css/style.css">
@@ -87,17 +85,18 @@
                         <i class="bi bi-heart"></i>
                     </button>
 
+                    <!-- Só aparece se o espaço tiver fotos extras cadastradas
+                         (ver preencherGaleria() em detalhes.js). Abre o modal
+                         com todas as fotos - a galeria não fica mais solta
+                         na página. -->
+                    <button id="btn-ver-galeria" class="btn-ver-galeria" onclick="abrirGaleriaFotos()" style="display:none;">
+                        <i class="bi bi-images"></i> <span id="btn-ver-galeria-texto">Ver todas as fotos</span>
+                    </button>
+
                     <img id="espaco-imagem" src="" alt="">
 
                 </div>
 
-            </section>
-
-            <!-- GALERIA DE FOTOS - só aparece se o espaço tiver fotos extras
-                 cadastradas (ver preencherPagina() em detalhes.js). Clicar
-                 numa miniatura troca a foto grande lá em cima. -->
-            <section class="galeria-fotos" id="galeria-fotos" style="display:none;">
-                <div class="galeria-fotos-grid" id="galeria-fotos-grid"></div>
             </section>
 
             <!-- CARDS -->
@@ -105,17 +104,17 @@
             <section class="info-rapida">
 
                 <div class="mini-card">
-                    <h3>Capacidade</h3>
+                    <h3><i class="bi bi-people-fill"></i> Capacidade</h3>
                     <p id="espaco-capacidade">Sob consulta</p>
                 </div>
 
                 <div class="mini-card">
-                    <h3>Valor</h3>
+                    <h3><i class="bi bi-tag-fill"></i> Valor</h3>
                     <p id="espaco-preco">Sob consulta</p>
                 </div>
 
                 <div class="mini-card">
-                    <h3>Disponibilidade</h3>
+                    <h3><i class="bi bi-calendar3"></i> Disponibilidade</h3>
                     <button type="button" class="btn-consulte-datas" onclick="abrirModalAgenda()">
                         <i class="bi bi-calendar-range"></i> Consulte as datas
                     </button>
@@ -224,6 +223,33 @@
     <div id="container-modal-recuperar-senha"></div>
     <div id="container-modal-agenda"></div>
     <div id="container-modal-reserva"></div>
+
+    <!-- MODAL: TODAS AS FOTOS DO ESPAÇO - aberto pelo botão "Ver todas as
+         fotos" no canto da foto principal (ver abrirGaleriaFotos() em
+         detalhes.js). Mostra UMA foto por vez, com setas pra pessoa
+         navegar entre elas. -->
+    <div id="modal-galeria-fotos" class="modal-overlay">
+        <div class="modal-box modal-galeria-box">
+            <button class="fechar-modal" onclick="fecharGaleriaFotos()">&times;</button>
+
+            <h2>Fotos do espaço</h2>
+            <div class="linha-dourada-form"></div>
+
+            <div class="galeria-fotos-visualizador">
+                <button class="btn-seta-galeria btn-seta-esquerda" onclick="mudarFotoGaleria(-1)" title="Foto anterior">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <img id="galeria-foto-atual" src="" alt="">
+
+                <button class="btn-seta-galeria btn-seta-direita" onclick="mudarFotoGaleria(1)" title="Próxima foto">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+
+            <p class="galeria-contador" id="galeria-contador"></p>
+        </div>
+    </div>
 
     <script src="/frontend/js/global.js"></script>
     <script src="/frontend/js/modais.js"></script>

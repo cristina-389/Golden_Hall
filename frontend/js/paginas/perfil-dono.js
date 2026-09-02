@@ -80,9 +80,8 @@ async function carregarMeusEspacos() {
             item.className = 'perfil-espaco-item';
             item.href = '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
 
-            const icone = document.createElement('span');
-            icone.className = 'material-icons-round';
-            icone.textContent = 'storefront';
+            const icone = document.createElement('i');
+            icone.className = 'bi bi-shop';
 
             const textos = document.createElement('div');
             textos.className = 'perfil-espaco-item-textos';

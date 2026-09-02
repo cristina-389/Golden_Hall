@@ -24,8 +24,8 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!--icones dourados-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <!-- CSS -->
   <link rel="stylesheet" href="/frontend/css/style.css">
@@ -73,7 +73,7 @@
            perfil.html) é buscada em GET /api/perfil - ver carregarFotoPerfil()
            em js/paginas/index-logado.js -->
       <div class="avatar-saudacao">
-        <span class="material-icons-round avatar-saudacao-icone" id="saudacao-avatar-icone">account_circle</span>
+        <i class="bi bi-person-fill avatar-saudacao-icone" id="saudacao-avatar-icone"></i>
         <img class="avatar-saudacao-foto" id="saudacao-avatar-foto" alt="Foto de perfil" style="display: none;">
       </div>
 
@@ -124,19 +124,19 @@
 
     <div class="grid-acesso-rapido">
       <a class="card-acesso" href="/frontend/paginas/cliente/buscar.html">
-        <div class="icone-contorno"><span class="material-icons-round">search</span></div>
+        <div class="icone-contorno"><i class="bi bi-search"></i></div>
         <span>Buscar espaços</span>
       </a>
       <a class="card-acesso" href="/frontend/paginas/cliente/favoritos.html">
-        <div class="icone-contorno"><span class="material-icons-round">favorite</span></div>
+        <div class="icone-contorno"><i class="bi bi-heart-fill"></i></div>
         <span>Meus favoritos</span>
       </a>
       <a class="card-acesso" href="/frontend/paginas/cliente/reservas.html">
-        <div class="icone-contorno"><span class="material-icons-round">calendar_month</span></div>
+        <div class="icone-contorno"><i class="bi bi-calendar3-fill"></i></div>
         <span>Minhas reservas</span>
       </a>
       <a class="card-acesso" href="/frontend/paginas/cliente/perfil.html">
-        <div class="icone-contorno"><span class="material-icons-round">person</span></div>
+        <div class="icone-contorno"><i class="bi bi-person-fill"></i></div>
         <span>Meu perfil</span>
       </a>
     </div>
@@ -154,23 +154,23 @@
 
 <nav class="barra-navegacao-inferior">
     <a href="/frontend/paginas/cliente/index-logado.html" class="item-nav ativo">
-        <span class="material-icons-round icone">home</span>
+        <i class="bi bi-house-door-fill icone"></i>
         <span class="texto">Início</span>
     </a>
     <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
-        <span class="material-icons-round icone">search</span>
+        <i class="bi bi-search icone"></i>
         <span class="texto">Buscar</span>
     </a>
     <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
-        <span class="material-icons-round icone">favorite</span>
+        <i class="bi bi-heart-fill icone"></i>
         <span class="texto">Favoritos</span>
     </a>
     <a href="/frontend/paginas/cliente/reservas.html" class="item-nav">
-        <span class="material-icons-round icone">calendar_month</span>
+        <i class="bi bi-calendar3-fill icone"></i>
         <span class="texto">Reservas</span>
     </a>
     <a href="/frontend/paginas/cliente/perfil.html" class="item-nav">
-        <span class="material-icons-round icone">person</span>
+        <i class="bi bi-person-fill icone"></i>
         <span class="texto">Perfil</span>
     </a>
 </nav>

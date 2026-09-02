@@ -171,7 +171,7 @@ body:not(.dark) {
     transform: translateY(-4px);
 }
 
-.opcao-tipo-conta .material-icons-round {
+.opcao-tipo-conta .bi {
     font-size: 32px;
     color: #d4af37;
     margin-bottom: 10px;
@@ -277,7 +277,7 @@ body:not(.dark) {
     color: #d4af37;
 }
 
-.btn-mostrar-senha .material-icons-round {
+.btn-mostrar-senha .bi {
     font-size: 19px;
 }
 
