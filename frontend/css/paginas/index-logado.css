@@ -97,6 +97,52 @@ header {
     margin: 15px 0 0;
 }
 
+/* ================= NOTIFICAÇÃO DE RESERVAS PENDENTES (só home do dono) =================
+   Some/aparece via JS (display: none/flex - ver atualizarNotificacaoPendentes()
+   em index-logado-dono.js), pulsando bem devagar pra chamar atenção sem ser
+   irritante. Cor laranja de alerta, igual ao número de pendentes já usado no
+   card "Seu desempenho". */
+.notificacao-pendentes {
+    align-items: center;
+    gap: 12px;
+    max-width: 1100px;
+    margin: 20px auto 0;
+    padding: 16px 22px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 157, 77, 0.16), rgba(212, 164, 55, 0.08));
+    border: 1px solid rgba(255, 157, 77, 0.45);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    animation: pulsarNotificacaoPendentes 2.5s ease-in-out infinite;
+}
+
+.notificacao-pendentes .bi-bell-fill {
+    font-size: 1.3rem;
+    color: #ff9d4d;
+    flex-shrink: 0;
+}
+
+.notificacao-pendentes-texto,
+#notificacao-pendentes span {
+    flex: 1;
+}
+
+.seta-notificacao {
+    color: #ff9d4d;
+    transition: transform 0.2s ease;
+}
+
+.notificacao-pendentes:hover .seta-notificacao {
+    transform: translateX(4px);
+}
+
+@keyframes pulsarNotificacaoPendentes {
+    0%, 100% { box-shadow: 0 0 0 rgba(255, 157, 77, 0); }
+    50%      { box-shadow: 0 0 20px rgba(255, 157, 77, 0.25); }
+}
+
 /* ================= CARD "SEU DESENVOLVIMENTO" ================= */
 .card-desenvolvimento {
     max-width: 1100px;

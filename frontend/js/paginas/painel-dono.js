@@ -1,8 +1,8 @@
 /* ==========================================================================
    GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS
    Página exclusiva para contas do tipo "proprietario": lista, cria, edita e
-   apaga os espaços dele (CRUD completo com a API que já construímos), e
-   mostra as reservas recebidas em cada espaço, com botão de aprovar/recusar.
+   apaga os espaços dele (CRUD completo com a API que já construímos). As
+   reservas recebidas em cada espaço agora moram em paginas/dono/reservas-dono.html.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -100,7 +100,6 @@ function criarCardEspacoDono(espaco) {
             </div>
             <div class="acoes-espaco-dono">
                 <button class="btn-ajuste btn-editar-espaco"><i class="bi bi-pencil"></i> Editar</button>
-                <button class="btn-ajuste btn-ver-reservas-espaco"><i class="bi bi-calendar4-event"></i> Reservas</button>
                 <button class="btn-cancelar-reserva btn-excluir-espaco"><i class="bi bi-trash"></i> Excluir</button>
             </div>
         </div>
@@ -113,7 +112,6 @@ function criarCardEspacoDono(espaco) {
     card.querySelector('.texto-local').textContent = espaco.local || 'Local a definir';
 
     card.querySelector('.btn-editar-espaco').addEventListener('click', () => abrirFormularioEspaco(espaco));
-    card.querySelector('.btn-ver-reservas-espaco').addEventListener('click', () => abrirReservasEspaco(espaco));
     card.querySelector('.btn-excluir-espaco').addEventListener('click', () => excluirEspaco(espaco));
 
     return card;
@@ -287,133 +285,11 @@ async function excluirEspaco(espaco) {
     }
 }
 
-/* ==========================================================================
-   RESERVAS RECEBIDAS EM CADA ESPAÇO (aprovar/recusar)
-   ========================================================================== */
-
-async function abrirReservasEspaco(espaco) {
-    const container = document.getElementById('lista-reservas-espaco');
-    document.getElementById('titulo-reservas-espaco').textContent = 'Reservas de "' + espaco.nome + '"';
-    container.innerHTML = '<p>Carregando...</p>';
-    document.getElementById('modal-reservas-espaco').classList.add('ativo');
-
-    let reservas = [];
-    try {
-        reservas = await chamarAPI(`/api/espacos/${espaco.id}/reservas`);
-    } catch (erro) {
-        container.innerHTML = `<p>${erro.message}</p>`;
-        return;
-    }
-
-    if (reservas.length === 0) {
-        container.innerHTML = '<p>Nenhuma reserva recebida ainda para este espaço.</p>';
-        return;
-    }
-
-    container.innerHTML = '';
-    reservas.forEach(reserva => container.appendChild(criarLinhaReserva(reserva)));
-}
-
-function fecharReservasEspaco() {
-    document.getElementById('modal-reservas-espaco').classList.remove('ativo');
-}
-
-// Monta um card com os dados de uma reserva recebida. Se ela ainda estiver
-// "Pendente", mostra os botões de Aprovar/Recusar; reservas já Aprovadas ou
-// Canceladas só ficam visíveis, sem ação (decisão já foi tomada).
-function criarLinhaReserva(reserva) {
-    const [ano, mes, dia] = reserva.data.split('-');
-    const classeStatus = reserva.status === 'Aprovado' ? 'status-aprovado' : 'status-pendente';
-
-    const div = document.createElement('div');
-    div.className = 'card-reserva';
-    div.innerHTML = `
-        <div class="conteudo-linha-reserva">
-            <div class="card-reserva-header">
-                <h3 class="nome-cliente"></h3>
-                <span class="status-tag ${classeStatus}">${reserva.status}</span>
-            </div>
-            <div class="card-reserva-corpo">
-                <p><i class="bi bi-calendar4-event"></i> Data: <strong>${dia}/${mes}/${ano}</strong></p>
-                <p><i class="bi bi-clock"></i> Horário: <strong>${formatarHorarioReserva(reserva)}</strong></p>
-                <p><i class="bi bi-award"></i> Evento: <strong>${reserva.tipo_evento || '-'}</strong></p>
-                <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'}</strong></p>
-                <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
-                <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
-            </div>
-        </div>
-    `;
-
-    div.querySelector('.nome-cliente').textContent = reserva.cliente_nome;
-    div.querySelector('.email-cliente').textContent = reserva.cliente_email;
-
-    if (reserva.status === 'Pendente') {
-        const botoes = document.createElement('div');
-        botoes.className = 'botoes-alerta-grupo';
-        botoes.style.marginTop = '15px';
-
-        const btnAprovar = document.createElement('button');
-        btnAprovar.className = 'btn-confirmar-alerta';
-        btnAprovar.textContent = 'Aprovar';
-        btnAprovar.addEventListener('click', () => alterarStatusReserva(reserva.id, 'Aprovado'));
-
-        const btnRecusar = document.createElement('button');
-        btnRecusar.className = 'btn-cancelar-alerta';
-        btnRecusar.textContent = 'Recusar';
-        btnRecusar.addEventListener('click', () => alterarStatusReserva(reserva.id, 'Cancelado'));
-
-        botoes.appendChild(btnRecusar);
-        botoes.appendChild(btnAprovar);
-        div.querySelector('.conteudo-linha-reserva').appendChild(botoes);
-    } else if (reserva.status === 'Aprovado') {
-        // Reserva já aprovada também pode ser cancelada depois (ex: o
-        // proprietário precisa liberar a data, ou quer excluir o espaço e
-        // essa reserva está impedindo - ver validação em DELETE
-        // /api/espacos/:id). Pede confirmação extra porque, diferente de
-        // recusar uma reserva ainda Pendente, aqui a pessoa já contava com
-        // a data confirmada - e a data fica livre pra outra pessoa
-        // reservar IMEDIATAMENTE (ver GET /api/espacos/:slug/datas-ocupadas),
-        // então cancelar muito perto da data do evento pode fazer o
-        // proprietário perder esse dia, sem tempo de conseguir outra reserva.
-        const btnCancelar = document.createElement('button');
-        btnCancelar.className = 'btn-cancelar-alerta';
-        btnCancelar.style.marginTop = '15px';
-        btnCancelar.style.width = '100%';
-        btnCancelar.textContent = 'Cancelar reserva';
-        btnCancelar.addEventListener('click', () => {
-            const certeza = confirm(
-                'Cancelar esta reserva já aprovada? A pessoa perde a reserva confirmada e a data fica livre ' +
-                'imediatamente pra qualquer outra pessoa reservar. Quanto mais perto da data do evento, menor a ' +
-                'chance de conseguir uma reserva nova pra esse dia.'
-            );
-            if (certeza) alterarStatusReserva(reserva.id, 'Cancelado');
-        });
-        div.querySelector('.conteudo-linha-reserva').appendChild(btnCancelar);
-    }
-
-    return div;
-}
-
-async function alterarStatusReserva(idReserva, novoStatus) {
-    try {
-        await chamarAPI(`/api/reservas/${idReserva}/status`, {
-            method: 'PUT',
-            body: JSON.stringify({ status: novoStatus })
-        });
-        fecharReservasEspaco();
-        carregarResumoEstatisticas(); // atualiza o número de "Reservas pendentes" do resumo
-    } catch (erro) {
-        alert(erro.message);
-    }
-}
-
 // Fecha os modais desta página ao clicar fora da caixa (no overlay escuro
 // por trás dela) - mesmo comportamento dos outros modais do site (ver
 // window.addEventListener('click', ...) em js/modais.js)
 window.addEventListener('click', function (event) {
     const modalFormEspaco = document.getElementById('modal-form-espaco');
-    const modalReservasEspaco = document.getElementById('modal-reservas-espaco');
 
     if (event.target === modalFormEspaco) fecharFormularioEspaco();
-    if (event.target === modalReservasEspaco) fecharReservasEspaco();
 });

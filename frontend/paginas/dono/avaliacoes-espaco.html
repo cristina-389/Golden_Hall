@@ -1,0 +1,68 @@
+<!--
+  GOLDEN HALL - AVALIAÇÕES DE UM ESPAÇO (paginas/dono/avaliacoes-espaco.html)
+  Página exclusiva pra contas "proprietario" (ver js/paginas/avaliacoes-espaco.js).
+  Mostra as avaliações reais de UM espaço do dono, escolhido na página de
+  Reservas (?slug=... na URL) - mesmos dados de GET /api/espacos/:slug já
+  usados na página de detalhes pública, só que reaproveitados aqui numa
+  tela dedicada pro proprietário acompanhar.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Avaliações</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/avaliacoes-dono.css">
+</head>
+<body class="dark home-logado-premium">
+
+    <a class="voltar-avaliacoes" href="/frontend/paginas/dono/reservas-dono.html">← Voltar pras reservas</a>
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="secao-saudacao">
+        <div class="secao-saudacao-topo">
+            <div class="icone-contorno">
+                <i class="bi bi-star-fill"></i>
+            </div>
+            <h2>Avaliações de <span class="titulo-painel-dourado" id="titulo-espaco-avaliacoes">...</span></h2>
+        </div>
+        <div class="linha-elegante"><span>✦</span></div>
+    </section>
+
+    <!-- ================= AVALIAÇÕES ================= -->
+    <section class="avaliacoes-dono-secao">
+        <div class="resumo-avaliacoes" id="resumo-avaliacoes"></div>
+        <div class="lista-avaliacoes" id="lista-avaliacoes"></div>
+    </section>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <i class="bi bi-shop icone"></i>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav ativo">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/avaliacoes-espaco.js"></script>
+</body>
+</html>

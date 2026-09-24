@@ -250,20 +250,9 @@ function preencherPontosReferencia(espaco) {
    lista "avaliacoes" (nota, comentário, nome de quem avaliou). Só existem
    avaliações de clientes que tiveram uma reserva Aprovada nesse espaço e
    avaliaram de verdade (ver botão "Avaliar" em paginas/cliente/reservas.js).
+   estrelasParaTexto()/formatarDataAvaliacao() vêm de global.js, compartilhadas
+   com a página de avaliações do dono (avaliacoes-espaco.js).
    ========================================================================== */
-
-// Number -> "★★★★☆" (arredonda pra estrela cheia mais próxima)
-function estrelasParaTexto(nota) {
-    const cheias = Math.round(nota);
-    return '★'.repeat(cheias) + '☆'.repeat(5 - cheias);
-}
-
-// "2026-08-17 01:24:04" (formato do banco) -> "17/08/2026"
-function formatarDataAvaliacao(timestamp) {
-    const [ano, mes, dia] = timestamp.split(' ')[0].split('-');
-    return `${dia}/${mes}/${ano}`;
-}
-
 function preencherAvaliacoes(espaco) {
     const resumo = document.getElementById('resumo-avaliacoes');
     const lista = document.getElementById('lista-avaliacoes');

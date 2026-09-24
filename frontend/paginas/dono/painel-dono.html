@@ -2,8 +2,9 @@
   GOLDEN HALL - PAINEL DO DONO DE ESPAÇOS (paginas/dono/painel-dono.html)
   Página exclusiva pra contas do tipo "proprietario" (ver js/paginas/painel-dono.js,
   que bloqueia o acesso de quem não for). Lista os espaços do proprietário logado
-  e permite criar, editar, apagar, e ver/aprovar as reservas recebidas em
-  cada um - tudo ligado direto na API, sem nenhum dado fixo no HTML.
+  e permite criar, editar e apagar - tudo ligado direto na API, sem nenhum
+  dado fixo no HTML. As reservas recebidas em cada espaço agora moram em
+  paginas/dono/reservas-dono.html.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -19,9 +20,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="/frontend/css/style.css">
-    <!-- reservas.css continua importado só pelo ".card-reserva" usado no modal
-         de "Reservas Recebidas" - o banner/estatísticas antigos dela não são
-         mais usados aqui (ver painel-dono.css) -->
+    <!-- reservas.css continua importado só pela ".secao-titulo-grid" (usada
+         no cabeçalho "Espaços cadastrados") - o banner/estatísticas antigos
+         dela não são mais usados aqui (ver painel-dono.css) -->
     <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
     <link rel="stylesheet" href="/frontend/css/paginas/painel-dono.css">
 </head>
@@ -85,6 +86,10 @@
         <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav ativo">
             <i class="bi bi-shop icone"></i>
             <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
         </a>
         <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
             <i class="bi bi-person-fill icone"></i>
@@ -178,19 +183,6 @@
                     <button type="submit" class="btn btn-gold btn-bloco">Salvar Espaço</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- ================= MODAL: RESERVAS RECEBIDAS ================= -->
-    <div id="modal-reservas-espaco" class="modal-overlay">
-        <div class="modal-box modal-reservas-espaco-box">
-            <button class="fechar-modal" onclick="fecharReservasEspaco()">&times;</button>
-
-            <h2 id="titulo-reservas-espaco">Reservas Recebidas</h2>
-            <div class="linha-dourada-form"></div>
-
-            <!-- Preenchida via JS (abrirReservasEspaco(), em painel-dono.js) -->
-            <div id="lista-reservas-espaco"></div>
         </div>
     </div>
 

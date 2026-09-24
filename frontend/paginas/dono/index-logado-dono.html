@@ -84,6 +84,17 @@
     </div>
   </section>
 
+  <!-- ================= NOTIFICAÇÃO DE RESERVAS PENDENTES =================
+       Só aparece quando tem pelo menos 1 solicitação esperando resposta
+       (GET /api/estatisticas-dono) - ver atualizarNotificacaoPendentes() em
+       js/paginas/index-logado-dono.js. Clicar leva direto pra página de
+       Reservas pra decidir. -->
+  <a href="/frontend/paginas/dono/reservas-dono.html" class="notificacao-pendentes" id="notificacao-pendentes" style="display: none;">
+    <i class="bi bi-bell-fill"></i>
+    <span id="notificacao-pendentes-texto"></span>
+    <i class="bi bi-chevron-right seta-notificacao"></i>
+  </a>
+
   <!-- ================= SEU DESEMPENHO ================= -->
   <!-- Números de verdade (GET /api/estatisticas-dono) e o gráfico de linhas
        (GET /api/estatisticas-dono/grafico) - nada inventado, ver
@@ -132,6 +143,10 @@
         <div class="icone-contorno"><i class="bi bi-shop"></i></div>
         <span>Meus espaços</span>
       </a>
+      <a class="card-acesso" href="/frontend/paginas/dono/reservas-dono.html">
+        <div class="icone-contorno"><i class="bi bi-envelope-paper-fill"></i></div>
+        <span>Reservas</span>
+      </a>
       <a class="card-acesso" href="/frontend/paginas/dono/perfil-dono.html">
         <div class="icone-contorno"><i class="bi bi-person-fill"></i></div>
         <span>Meu perfil</span>
@@ -157,6 +172,10 @@
     <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
         <i class="bi bi-shop icone"></i>
         <span class="texto">Meus Espaços</span>
+    </a>
+    <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav">
+        <i class="bi bi-envelope-paper-fill icone"></i>
+        <span class="texto">Reservas</span>
     </a>
     <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
         <i class="bi bi-person-fill icone"></i>

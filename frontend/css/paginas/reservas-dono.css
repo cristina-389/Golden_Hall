@@ -1,0 +1,119 @@
+/* ==========================================================================
+   GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
+   ".secao-lista-espacos-dono", ".secao-titulo-grid", ".estado-vazio-painel" e
+   ".modal-reservas-espaco-box" já vêm prontos de painel-dono.css - aqui só o
+   que é exclusivo desta página: os cards compridos (um por espaço) e a tela
+   de sucesso ao aprovar uma reserva.
+   ========================================================================== */
+
+/* Ícone + texto alinhados no botão "Ver avaliações" do topo */
+.btn-ver-avaliacoes {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   CARDS COMPRIDOS - um embaixo do outro, um por espaço cadastrado
+   -------------------------------------------------------------------------- */
+.lista-espacos-reservas {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.card-espaco-reservas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    border-radius: 18px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 25px hsla(46, 100%, 55%, 0.14), 0 15px 35px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.card-espaco-reservas:hover {
+    box-shadow: 0 0 30px hsla(46, 100%, 55%, 0.22), 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+.info-espaco-reservas h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+.info-espaco-reservas p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.info-espaco-reservas p i {
+    color: var(--gold);
+}
+
+.acao-espaco-reservas {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.badge-pendencia-reservas {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #ff9d4d;
+    background: rgba(255, 157, 77, 0.15);
+    border: 1px solid rgba(255, 157, 77, 0.4);
+    white-space: nowrap;
+}
+
+.acao-espaco-reservas .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   TELA DE SUCESSO AO APROVAR UMA RESERVA (substitui o conteúdo do card
+   dentro do modal - ver aprovarReserva() em reservas-dono.js)
+   -------------------------------------------------------------------------- */
+.sucesso-aprovacao-reserva {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.sucesso-aprovacao-reserva h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.sucesso-aprovacao-reserva p {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.sucesso-aprovacao-reserva .card-aviso-email {
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL "VER AVALIAÇÕES DE QUAL ESPAÇO?"
+   -------------------------------------------------------------------------- */
+.lista-escolher-espaco-avaliacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

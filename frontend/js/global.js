@@ -314,6 +314,23 @@ function formatarHorarioReserva(reserva) {
 }
 
 /* ==========================================================================
+   FORMATAÇÃO DE AVALIAÇÕES (compartilhado entre detalhes.js e
+   avaliacoes-espaco.js, que mostra as avaliações de um espaço pro dono)
+   ========================================================================== */
+
+// Number -> "★★★★☆" (arredonda pra estrela cheia mais próxima)
+function estrelasParaTexto(nota) {
+    const cheias = Math.round(nota);
+    return '★'.repeat(cheias) + '☆'.repeat(5 - cheias);
+}
+
+// "2026-08-17 01:24:04" (formato do banco) -> "17/08/2026"
+function formatarDataAvaliacao(timestamp) {
+    const [ano, mes, dia] = timestamp.split(' ')[0].split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
+/* ==========================================================================
    REDIMENSIONAMENTO DE IMAGEM (compartilhado entre perfil.js, perfil-dono.js
    e painel-dono.js) - lê o arquivo escolhido (FileReader), desenha num
    <canvas> menor (no máximo "tamanhoMaximo" de largura/altura) e devolve o

@@ -62,8 +62,25 @@ async function carregarResumoNumeros() {
         // Destaca "Reservas pendentes" com uma cor de alerta quando tem
         // alguma esperando resposta - é o número mais acionável dos 3
         document.getElementById('resumo-pendentes').classList.toggle('tem-pendencia', estatisticas.reservas_pendentes > 0);
+        atualizarNotificacaoPendentes(estatisticas.reservas_pendentes);
     } catch (erro) {
         console.error('Erro ao carregar estatísticas:', erro);
+    }
+}
+
+// Mostra (ou esconde) o aviso de "solicitações esperando resposta" logo no
+// topo da home, embaixo da saudação - reaproveita o mesmo número já buscado
+// em carregarResumoNumeros(), sem precisar de mais um pedido pra API.
+function atualizarNotificacaoPendentes(totalPendentes) {
+    const notificacao = document.getElementById('notificacao-pendentes');
+
+    if (totalPendentes > 0) {
+        document.getElementById('notificacao-pendentes-texto').textContent = totalPendentes === 1
+            ? 'Você tem 1 solicitação de reserva esperando resposta'
+            : `Você tem ${totalPendentes} solicitações de reserva esperando resposta`;
+        notificacao.style.display = 'flex';
+    } else {
+        notificacao.style.display = 'none';
     }
 }
 

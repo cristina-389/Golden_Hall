@@ -196,8 +196,17 @@ router.post('/espacos/:slug/visualizacao', autenticar, (req, res) => {
 // GET /api/meus-espacos - só os espaços do proprietário que está logado
 // --------------------------------------------------------------------------
 router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
+    // A subconsulta soma, pra CADA espaço, quantas reservas dele ainda estão
+    // "Pendente" - usado pelo selo de aviso nos cards (painel e página de
+    // reservas), sem precisar de um pedido extra por espaço.
     const espacos = db
-        .prepare('SELECT * FROM espacos WHERE dono_id = ? ORDER BY criado_em DESC')
+        .prepare(`
+            SELECT espacos.*,
+                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id AND reservas.status = 'Pendente') AS reservas_pendentes
+            FROM espacos
+            WHERE dono_id = ?
+            ORDER BY criado_em DESC
+        `)
         .all(req.usuario.id);
 
     res.json(espacos);

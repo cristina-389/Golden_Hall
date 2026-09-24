@@ -1,0 +1,104 @@
+<!--
+  GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
+  Página exclusiva pra contas "proprietario" (ver js/paginas/reservas-dono.js,
+  que bloqueia o acesso de quem não for). Um card comprido por espaço
+  cadastrado - clicar em "Ver solicitações de reserva" abre a lista de
+  pedidos daquele espaço, com Aprovar/Recusar. O botão "Ver avaliações" leva
+  pra uma página separada com os comentários dos espaços.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Reservas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <!-- reservas.css continua importado só pelo ".card-reserva" usado no modal
+         de solicitações (mesma ideia de painel-dono.html) -->
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/painel-dono.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas-dono.css">
+</head>
+<body class="dark home-logado-premium">
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="secao-saudacao">
+        <div class="secao-saudacao-topo">
+            <div class="icone-contorno">
+                <i class="bi bi-envelope-paper-fill"></i>
+            </div>
+            <h2>Solicitações de <span class="titulo-painel-dourado">Reserva</span></h2>
+        </div>
+        <div class="linha-elegante"><span>✦</span></div>
+    </section>
+
+    <!-- ================= LISTA DE ESPAÇOS ================= -->
+    <section class="secao-lista-espacos-dono">
+        <div class="secao-titulo-grid">
+            <h3>Meus espaços</h3>
+            <button class="btn-ajuste btn-ver-avaliacoes" onclick="abrirEscolhaAvaliacoes()">
+                <i class="bi bi-star-fill"></i> Ver avaliações
+            </button>
+        </div>
+
+        <!-- Preenchida via JS (carregarEspacosComReservas(), em reservas-dono.js) -->
+        <div id="lista-espacos-reservas" class="lista-espacos-reservas"></div>
+    </section>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <i class="bi bi-shop icone"></i>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav ativo">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <!-- ================= MODAL: SOLICITAÇÕES DE RESERVA DE UM ESPAÇO ================= -->
+    <div id="modal-reservas-espaco" class="modal-overlay">
+        <div class="modal-box modal-reservas-espaco-box">
+            <button class="fechar-modal" onclick="fecharReservasEspaco()">&times;</button>
+
+            <h2 id="titulo-reservas-espaco">Reservas Recebidas</h2>
+            <div class="linha-dourada-form"></div>
+
+            <!-- Preenchida via JS (abrirReservasEspaco(), em reservas-dono.js) -->
+            <div id="lista-reservas-espaco"></div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ESCOLHER ESPAÇO PRA VER AVALIAÇÕES =================
+         Só é usado quando o dono tem mais de 1 espaço cadastrado - com só 1,
+         abrirEscolhaAvaliacoes() já manda direto pra página de avaliações. -->
+    <div id="modal-escolher-espaco-avaliacoes" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharEscolhaAvaliacoes()">&times;</button>
+
+            <h2>Ver avaliações de qual espaço?</h2>
+            <div class="linha-dourada-form"></div>
+
+            <div id="lista-escolher-espaco-avaliacoes" class="lista-escolher-espaco-avaliacoes"></div>
+        </div>
+    </div>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/reservas-dono.js"></script>
+</body>
+</html>
