@@ -51,8 +51,27 @@ async function carregarEstatisticas() {
     try {
         const estatisticas = await chamarAPI('/api/estatisticas');
         preencherEstatisticas(estatisticas);
+        atualizarNotificacaoReservaAprovada(estatisticas.proxima_reserva_aprovada);
     } catch (erro) {
         console.error('Erro ao carregar estatísticas:', erro);
+    }
+}
+
+// Mostra (ou esconde) o aviso de "reserva aprovada" logo no topo da home,
+// embaixo da saudação - igual à notificação de reservas pendentes da home
+// do proprietário, só que verde (é uma notícia boa) e avisando que o
+// proprietário vai entrar em contato por WhatsApp ou e-mail.
+function atualizarNotificacaoReservaAprovada(proximaReservaAprovada) {
+    const notificacao = document.getElementById('notificacao-reserva-aprovada');
+
+    if (proximaReservaAprovada) {
+        const [ano, mes, dia] = proximaReservaAprovada.data.split('-');
+        document.getElementById('notificacao-reserva-aprovada-texto').textContent =
+            `Sua reserva no ${proximaReservaAprovada.espaco_nome} (${dia}/${mes}) foi aprovada! ` +
+            `O proprietário vai entrar em contato por WhatsApp ou e-mail.`;
+        notificacao.style.display = 'flex';
+    } else {
+        notificacao.style.display = 'none';
     }
 }
 

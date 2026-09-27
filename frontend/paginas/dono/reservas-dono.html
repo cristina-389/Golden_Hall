@@ -39,13 +39,56 @@
         <div class="linha-elegante"><span>✦</span></div>
     </section>
 
+    <!-- ================= RESUMO DAS RESERVAS ================= -->
+    <!-- Números de verdade (GET /api/estatisticas-dono) - ver
+         carregarResumoReservas() em reservas-dono.js. Mesmo estilo de card
+         usado em "Minhas Reservas" do cliente (.estatisticas-grid, de
+         reservas.css). -->
+    <section class="secao-lista-espacos-dono">
+        <div class="estatisticas-grid">
+            <div class="card-estatistica">
+                <div class="icone-estatistica pendente"><i class="bi bi-hourglass-split"></i></div>
+                <div class="info-estatistica">
+                    <span class="label">Reservas pendentes</span>
+                    <h4 id="stat-pendentes-geral">0</h4>
+                </div>
+            </div>
+            <div class="card-estatistica">
+                <div class="icone-estatistica aprovado"><i class="bi bi-check-circle"></i></div>
+                <div class="info-estatistica">
+                    <span class="label">Reservas realizadas</span>
+                    <h4 id="stat-reservas-realizadas">0</h4>
+                </div>
+            </div>
+            <div class="card-estatistica">
+                <div class="icone-estatistica"><i class="bi bi-star-fill"></i></div>
+                <div class="info-estatistica">
+                    <span class="label">Avaliações recebidas</span>
+                    <h4 id="stat-total-avaliacoes">0</h4>
+                </div>
+            </div>
+            <div class="card-estatistica">
+                <div class="icone-estatistica aprovado"><i class="bi bi-calendar-heart-fill"></i></div>
+                <div class="info-estatistica info-estatistica-texto">
+                    <span class="label">Próxima reserva confirmada</span>
+                    <h4 id="stat-proxima-reserva">-</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ================= LISTA DE ESPAÇOS ================= -->
     <section class="secao-lista-espacos-dono">
         <div class="secao-titulo-grid">
             <h3>Meus espaços</h3>
-            <button class="btn-ajuste btn-ver-avaliacoes" onclick="abrirEscolhaAvaliacoes()">
-                <i class="bi bi-star-fill"></i> Ver avaliações
-            </button>
+            <div class="botoes-topo-reservas">
+                <button class="btn-ajuste btn-ver-avaliacoes" onclick="abrirEscolhaAvaliacoes()">
+                    <i class="bi bi-star-fill"></i> Ver avaliações
+                </button>
+                <button class="btn-ajuste btn-ver-historico" onclick="abrirEscolhaHistorico()">
+                    <i class="bi bi-clock-history"></i> Ver histórico
+                </button>
+            </div>
         </div>
 
         <!-- Preenchida via JS (carregarEspacosComReservas(), em reservas-dono.js) -->
@@ -84,17 +127,44 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: ESCOLHER ESPAÇO PRA VER AVALIAÇÕES =================
-         Só é usado quando o dono tem mais de 1 espaço cadastrado - com só 1,
-         abrirEscolhaAvaliacoes() já manda direto pra página de avaliações. -->
-    <div id="modal-escolher-espaco-avaliacoes" class="modal-overlay">
+    <!-- ================= MODAL: ESCOLHER ESPAÇO (avaliações OU histórico) =================
+         Reaproveitado pelos dois botões acima - só aparece quando o dono tem
+         mais de 1 espaço cadastrado (com só 1, já manda direto pra página
+         certa - ver abrirEscolhaEspaco() em reservas-dono.js) -->
+    <div id="modal-escolher-espaco" class="modal-overlay">
         <div class="modal-box">
-            <button class="fechar-modal" onclick="fecharEscolhaAvaliacoes()">&times;</button>
+            <button class="fechar-modal" onclick="fecharEscolhaEspaco()">&times;</button>
 
-            <h2>Ver avaliações de qual espaço?</h2>
+            <h2 id="titulo-escolher-espaco">Escolha um espaço</h2>
             <div class="linha-dourada-form"></div>
 
-            <div id="lista-escolher-espaco-avaliacoes" class="lista-escolher-espaco-avaliacoes"></div>
+            <div id="lista-escolher-espaco" class="lista-escolher-espaco-avaliacoes"></div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: MOTIVO DA RECUSA/CANCELAMENTO =================
+         Aberto ao clicar em "Recusar" (reserva Pendente) ou "Cancelar
+         reserva" (já Aprovada) - ver abrirModalMotivoRecusa() em
+         reservas-dono.js. O texto escrito aqui fica salvo em
+         "motivo_recusa" e o cliente vê ele em "Minhas Reservas". -->
+    <div id="modal-motivo-recusa" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalMotivoRecusa()">&times;</button>
+
+            <h2>Motivo da recusa</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form" id="aviso-motivo-recusa"></p>
+
+            <form id="form-motivo-recusa" onsubmit="return confirmarRecusaComMotivo(event)">
+                <div class="form-grid">
+                    <div class="input-grupo col-total">
+                        <label for="input-motivo-recusa">Justificativa (o cliente vai ver essa mensagem)</label>
+                        <textarea id="input-motivo-recusa" rows="3" placeholder="Ex: Infelizmente essa data já foi reservada por outra pessoa antes do seu pedido." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-bloco">Confirmar recusa</button>
+                </div>
+            </form>
         </div>
     </div>
 

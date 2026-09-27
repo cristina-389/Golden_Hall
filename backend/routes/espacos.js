@@ -215,9 +215,11 @@ router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
 // --------------------------------------------------------------------------
 // GET /api/estatisticas-dono - números reais de atividade do proprietário
 // que está logado: quantos espaços cadastrou, quantas reservas ainda estão
-// pendentes de resposta (em QUALQUER espaço dele) e a média das avaliações
-// recebidas em todos os espaços juntos. (O gráfico de linhas da home dele
-// usa a rota abaixo, /estatisticas-dono/grafico, não esta aqui.)
+// pendentes de resposta (em QUALQUER espaço dele), quantas já foram
+// realizadas (Aprovadas), a média/total das avaliações recebidas em todos
+// os espaços juntos, e a próxima reserva já aprovada que ainda vai
+// acontecer. (O gráfico de linhas da home dele usa a rota abaixo,
+// /estatisticas-dono/grafico, não esta aqui.)
 // --------------------------------------------------------------------------
 router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
     const { total: totalEspacos } = db
@@ -233,6 +235,18 @@ router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
         `)
         .get(req.usuario.id);
 
+    // Total de reservas já APROVADAS (passadas ou futuras) em qualquer
+    // espaço dele - usado no card "Reservas realizadas" da página de
+    // Reservas.
+    const { total: reservasRealizadas } = db
+        .prepare(`
+            SELECT COUNT(*) AS total
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE espacos.dono_id = ? AND reservas.status = 'Aprovado'
+        `)
+        .get(req.usuario.id);
+
     const resumoAvaliacoes = db
         .prepare(`
             SELECT COUNT(*) AS total, AVG(nota) AS media
@@ -242,11 +256,27 @@ router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
         `)
         .get(req.usuario.id);
 
+    // Reserva Aprovada mais próxima, ainda no futuro (ou hoje) - "null" se
+    // não tiver nenhuma - usada no card "Próxima reserva confirmada" da
+    // página de Reservas, como lembrete do que vem por aí.
+    const proximaReserva = db
+        .prepare(`
+            SELECT reservas.data, reservas.horario, espacos.nome AS espaco_nome
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE espacos.dono_id = ? AND reservas.status = 'Aprovado' AND reservas.data >= date('now')
+            ORDER BY reservas.data ASC
+            LIMIT 1
+        `)
+        .get(req.usuario.id);
+
     res.json({
         total_espacos: totalEspacos,
         reservas_pendentes: reservasPendentes,
+        reservas_realizadas: reservasRealizadas,
         avaliacao_media: resumoAvaliacoes.media, // null se ainda não tiver nenhuma avaliação
-        total_avaliacoes: resumoAvaliacoes.total
+        total_avaliacoes: resumoAvaliacoes.total,
+        proxima_reserva: proximaReserva || null
     });
 });
 

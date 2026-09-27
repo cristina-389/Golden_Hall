@@ -113,20 +113,23 @@ db.exec(`
     telefone TEXT,
     observacoes TEXT,
     status TEXT NOT NULL DEFAULT 'Pendente' CHECK (status IN ('Pendente', 'Aprovado', 'Cancelado')),
+    motivo_recusa TEXT,
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (espaco_id) REFERENCES espacos (id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
   )
 `);
 
-// "horario_termino" foi adicionada depois que a tabela já existia em bancos
-// criados antes dela - mesma ideia das outras colunas (ver comentário lá em
-// cima, na tabela de usuários): tenta adicionar por fora, e ignora o erro
-// se a coluna já existir.
-try {
-    db.exec('ALTER TABLE reservas ADD COLUMN horario_termino TEXT');
-} catch (erro) {
-    // "duplicate column name" é o esperado quando a coluna já existe
+// "horario_termino"/"motivo_recusa" foram adicionadas depois que a tabela já
+// existia em bancos criados antes delas - mesma ideia das outras colunas
+// (ver comentário lá em cima, na tabela de usuários): tenta adicionar por
+// fora, e ignora o erro se a coluna já existir.
+for (const coluna of ['horario_termino TEXT', 'motivo_recusa TEXT']) {
+    try {
+        db.exec(`ALTER TABLE reservas ADD COLUMN ${coluna}`);
+    } catch (erro) {
+        // "duplicate column name" é o esperado quando a coluna já existe
+    }
 }
 
 // --------------------------------------------------------------------------

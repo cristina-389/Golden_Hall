@@ -169,10 +169,12 @@ router.delete('/reservas/:id', autenticar, (req, res) => {
 
 // --------------------------------------------------------------------------
 // PUT /api/reservas/:id/status - o PROPRIETÁRIO do espaço aprova (ou recusa)
-// uma reserva recebida. Body: { status } ("Aprovado" ou "Cancelado")
+// uma reserva recebida. Body: { status, motivo } ("Aprovado" ou "Cancelado" -
+// "motivo" é a justificativa da recusa/cancelamento, opcional, só faz
+// sentido junto de "Cancelado" - o cliente vê esse texto em "Minhas Reservas".
 // --------------------------------------------------------------------------
 router.put('/reservas/:id/status', autenticar, exigirProprietario, (req, res) => {
-    const { status } = req.body;
+    const { status, motivo } = req.body;
 
     if (!['Aprovado', 'Cancelado'].includes(status)) {
         return res.status(400).json({ erro: 'Status inválido.' });
@@ -197,7 +199,11 @@ router.put('/reservas/:id/status', autenticar, exigirProprietario, (req, res) =>
         return res.status(403).json({ erro: 'Você só pode gerenciar reservas dos seus próprios espaços.' });
     }
 
-    db.prepare('UPDATE reservas SET status = ? WHERE id = ?').run(status, req.params.id);
+    // O motivo só faz sentido quando a reserva está sendo recusada/cancelada
+    // - se por algum motivo vier junto de "Aprovado", ignora (fica null)
+    const motivoFinal = status === 'Cancelado' ? (motivo || null) : null;
+
+    db.prepare('UPDATE reservas SET status = ?, motivo_recusa = ? WHERE id = ?').run(status, motivoFinal, req.params.id);
 
     const reservaAtualizada = db.prepare('SELECT * FROM reservas WHERE id = ?').get(req.params.id);
     res.json(reservaAtualizada);

@@ -324,6 +324,12 @@ body.dark .status-pendente {
     color: #f1c40f;
 }
 
+.status-cancelado {
+    background-color: rgba(231, 76, 60, 0.12);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
 /* CORPO DO CARD */
 .card-reserva-corpo {
     font-family: 'Poppins', sans-serif;
@@ -461,4 +467,24 @@ body.dark .reservas-vazias p {
     margin-top: 12px !important;
     border-top: 1px dashed rgba(212, 175, 55, 0.2);
     padding-top: 8px;
+}
+
+/* Motivo que o proprietário escreveu ao recusar/cancelar uma reserva (ver
+   abrirModalMotivoRecusa() em reservas-dono.js) - mostrado só pro cliente,
+   na reserva Cancelada correspondente */
+.aviso-motivo-recusa {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem !important;
+    color: #e74c3c !important;
+    background: rgba(231, 76, 60, 0.08);
+    border: 1px solid rgba(231, 76, 60, 0.25);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 12px !important;
+}
+
+.aviso-motivo-recusa i {
+    margin-top: 2px;
 }

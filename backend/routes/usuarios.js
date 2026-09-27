@@ -250,7 +250,21 @@ router.get('/estatisticas', autenticar, (req, res) => {
     const { total: visualizacoes } = db.prepare('SELECT COUNT(*) AS total FROM visualizacoes WHERE usuario_id = ?').get(req.usuario.id);
     const { total: comentarios } = db.prepare('SELECT COUNT(*) AS total FROM avaliacoes WHERE usuario_id = ?').get(req.usuario.id);
 
-    res.json({ favoritos, reservas, visualizacoes, comentarios });
+    // Reserva Aprovada mais próxima do cliente, ainda no futuro (ou hoje) -
+    // "null" se não tiver nenhuma - usada no aviso "Reserva aprovada!" da
+    // home dele, avisando que o proprietário vai entrar em contato.
+    const proximaReservaAprovada = db
+        .prepare(`
+            SELECT reservas.data, espacos.nome AS espaco_nome
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE reservas.usuario_id = ? AND reservas.status = 'Aprovado' AND reservas.data >= date('now')
+            ORDER BY reservas.data ASC
+            LIMIT 1
+        `)
+        .get(req.usuario.id);
+
+    res.json({ favoritos, reservas, visualizacoes, comentarios, proxima_reserva_aprovada: proximaReservaAprovada || null });
 });
 
 // --------------------------------------------------------------------------

@@ -51,7 +51,9 @@ async function carregarMinhasReservas() {
 
     reservas.forEach((reserva) => {
         const status = reserva.status || 'Pendente';
-        const classeStatus = status.toLowerCase() === 'aprovado' ? 'status-aprovado' : 'status-pendente';
+        const classeStatus = status.toLowerCase() === 'aprovado'
+            ? 'status-aprovado'
+            : (status.toLowerCase() === 'cancelado' ? 'status-cancelado' : 'status-pendente');
 
         // Só reservas já Aprovadas podem ser avaliadas - e só uma vez (ver
         // routes/reservas.js). "avaliado" vem pronto da API (LEFT JOIN
@@ -62,6 +64,14 @@ async function carregarMinhasReservas() {
                 ? `<span class="ja-avaliado"><i class="bi bi-star-fill"></i> Você já avaliou este espaço</span>`
                 : `<button class="btn-avaliar-reserva" onclick="abrirModalAvaliacao(${reserva.id})"><i class="bi bi-star"></i> Avaliar Espaço</button>`;
         }
+
+        // Quando o proprietário recusa/cancela, ele escreve uma justificativa
+        // (ver abrirModalMotivoRecusa() em reservas-dono.js) - escaparHtml()
+        // evita que esse texto (escrito por outra pessoa) vire HTML de
+        // verdade na página de quem está lendo.
+        const avisoRecusa = (status === 'Cancelado' && reserva.motivo_recusa)
+            ? `<p class="aviso-motivo-recusa"><i class="bi bi-info-circle"></i> <span><strong>Motivo:</strong> ${escaparHtml(reserva.motivo_recusa)}</span></p>`
+            : '';
 
         const cardHTML = `
             <div class="card-reserva">
@@ -78,10 +88,13 @@ async function carregarMinhasReservas() {
                         <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'} pessoas</strong></p>
                         <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
 
+                        ${avisoRecusa}
+
+                        ${status !== 'Cancelado' ? `
                         <p class="aviso-prazo-cancelamento">
                         <i class="bi bi-shield-check"></i>
                         <span>Cancelamento gratuito a qualquer momento.</span>
-                        </p>
+                        </p>` : ''}
                     </div>
                 </div>
 

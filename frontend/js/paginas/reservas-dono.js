@@ -1,11 +1,13 @@
 /* ==========================================================================
    GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
-   Página exclusiva pra contas "proprietario": lista os espaços dele (um
-   card comprido por espaço, com aviso de quantas reservas estão pendentes)
-   e, ao clicar em "Ver solicitações", mostra as reservas daquele espaço com
-   os botões de Aprovar/Recusar/Cancelar - mesma lógica que já existia no
-   modal de painel-dono.html, só que agora com página própria e uma
-   animação de sucesso ao aprovar, mostrando o contato do cliente.
+   Página exclusiva pra contas "proprietario": um resumo lá em cima
+   (pendências, avaliações recebidas e a próxima reserva confirmada) e,
+   embaixo, um card comprido por espaço, com aviso de quantas reservas estão
+   pendentes. "Ver solicitações" mostra as reservas daquele espaço com os
+   botões de Aprovar/Recusar/Cancelar, com uma animação de sucesso ao
+   aprovar, mostrando o contato do cliente. "Ver avaliações"/"Ver histórico"
+   levam pras páginas dedicadas de cada espaço (avaliacoes-espaco.html e
+   historico-espaco.html).
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,11 +19,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     carregarEspacosComReservas();
+    carregarResumoReservas();
 });
 
 // Guarda a última lista de espaços buscada, pra reaproveitar no seletor de
-// avaliações sem precisar pedir de novo pra API
+// avaliações/histórico sem precisar pedir de novo pra API
 let espacosCache = [];
+
+/* ==========================================================================
+   RESUMO DAS RESERVAS (pendências, avaliações e a próxima reserva confirmada)
+   ========================================================================== */
+async function carregarResumoReservas() {
+    try {
+        const estatisticas = await chamarAPI('/api/estatisticas-dono');
+
+        document.getElementById('stat-pendentes-geral').textContent = estatisticas.reservas_pendentes;
+        document.getElementById('stat-reservas-realizadas').textContent = estatisticas.reservas_realizadas;
+        document.getElementById('stat-total-avaliacoes').textContent = estatisticas.total_avaliacoes;
+
+        const campoProxima = document.getElementById('stat-proxima-reserva');
+        if (estatisticas.proxima_reserva) {
+            const [ano, mes, dia] = estatisticas.proxima_reserva.data.split('-');
+            campoProxima.textContent = `${dia}/${mes} · ${estatisticas.proxima_reserva.espaco_nome}`;
+        } else {
+            campoProxima.textContent = 'Nenhuma por enquanto';
+        }
+    } catch (erro) {
+        console.error('Erro ao carregar o resumo das reservas:', erro);
+    }
+}
 
 /* ==========================================================================
    LISTA DE ESPAÇOS (um card comprido por espaço)
@@ -109,6 +135,7 @@ async function abrirReservasEspaco(espaco) {
 function fecharReservasEspaco() {
     document.getElementById('modal-reservas-espaco').classList.remove('ativo');
     carregarEspacosComReservas(); // atualiza os avisos de pendência dos cards
+    carregarResumoReservas(); // atualiza os números do resumo lá em cima
 }
 
 // Monta um card com os dados de uma reserva recebida. Se ela ainda estiver
@@ -117,7 +144,9 @@ function fecharReservasEspaco() {
 // Aprovada, que ainda pode ser cancelada depois (ver mais abaixo).
 function criarLinhaReserva(reserva) {
     const [ano, mes, dia] = reserva.data.split('-');
-    const classeStatus = reserva.status === 'Aprovado' ? 'status-aprovado' : 'status-pendente';
+    const classeStatus = reserva.status === 'Aprovado'
+        ? 'status-aprovado'
+        : (reserva.status === 'Cancelado' ? 'status-cancelado' : 'status-pendente');
 
     const div = document.createElement('div');
     div.className = 'card-reserva';
@@ -154,7 +183,11 @@ function criarLinhaReserva(reserva) {
         const btnRecusar = document.createElement('button');
         btnRecusar.className = 'btn-cancelar-alerta';
         btnRecusar.textContent = 'Recusar';
-        btnRecusar.addEventListener('click', () => recusarReserva(reserva.id, div));
+        btnRecusar.addEventListener('click', () => abrirModalMotivoRecusa(
+            reserva.id,
+            div,
+            'Conte rapidamente por que essa solicitação não pôde ser aceita - o cliente vai ver esse motivo em "Minhas Reservas".'
+        ));
 
         botoes.appendChild(btnRecusar);
         botoes.appendChild(btnAprovar);
@@ -173,14 +206,13 @@ function criarLinhaReserva(reserva) {
         btnCancelar.style.marginTop = '15px';
         btnCancelar.style.width = '100%';
         btnCancelar.textContent = 'Cancelar reserva';
-        btnCancelar.addEventListener('click', () => {
-            const certeza = confirm(
-                'Cancelar esta reserva já aprovada? A pessoa perde a reserva confirmada e a data fica livre ' +
-                'imediatamente pra qualquer outra pessoa reservar. Quanto mais perto da data do evento, menor a ' +
-                'chance de conseguir uma reserva nova pra esse dia.'
-            );
-            if (certeza) recusarReserva(reserva.id, div);
-        });
+        btnCancelar.addEventListener('click', () => abrirModalMotivoRecusa(
+            reserva.id,
+            div,
+            'Cancelar esta reserva já aprovada? A pessoa perde a reserva confirmada e a data fica livre imediatamente ' +
+            'pra qualquer outra pessoa reservar. Quanto mais perto da data do evento, menor a chance de conseguir uma ' +
+            'reserva nova pra esse dia. Conte o motivo do cancelamento - o cliente vai ver essa mensagem.'
+        ));
         div.querySelector('.conteudo-linha-reserva').appendChild(btnCancelar);
     }
 
@@ -208,16 +240,17 @@ async function aprovarReserva(reserva, divCard) {
         `;
 
         carregarEspacosComReservas(); // atualiza o aviso de pendência do card do espaço, sem fechar o modal
+        carregarResumoReservas(); // atualiza os números do resumo (pendências e próxima reserva)
     } catch (erro) {
         alert(erro.message);
     }
 }
 
-async function recusarReserva(idReserva, divCard) {
+async function recusarReserva(idReserva, divCard, motivo) {
     try {
         const reservaAtualizada = await chamarAPI(`/api/reservas/${idReserva}/status`, {
             method: 'PUT',
-            body: JSON.stringify({ status: 'Cancelado' })
+            body: JSON.stringify({ status: 'Cancelado', motivo })
         });
 
         // Redesenha só esse card, já sem os botões de ação (Cancelado não
@@ -230,27 +263,70 @@ async function recusarReserva(idReserva, divCard) {
         divCard.replaceWith(cardAtualizado);
 
         carregarEspacosComReservas(); // atualiza o aviso de pendência do card do espaço
+        carregarResumoReservas(); // atualiza os números do resumo (pendências e próxima reserva)
     } catch (erro) {
         alert(erro.message);
     }
 }
 
 /* ==========================================================================
-   AVALIAÇÕES - botão geral que, se tiver mais de um espaço, pergunta qual
-   deles o dono quer ver antes de abrir a página de avaliações.
+   MODAL: MOTIVO DA RECUSA/CANCELAMENTO
+   Aberto tanto ao "Recusar" uma reserva Pendente quanto ao "Cancelar" uma
+   já Aprovada - guarda pra qual reserva/card é, e só chama recusarReserva()
+   de verdade depois que a pessoa escrever a justificativa e confirmar.
    ========================================================================== */
-function abrirEscolhaAvaliacoes() {
+let contextoMotivoRecusa = null; // { idReserva, divCard }
+
+function abrirModalMotivoRecusa(idReserva, divCard, aviso) {
+    contextoMotivoRecusa = { idReserva, divCard };
+    document.getElementById('aviso-motivo-recusa').textContent = aviso;
+    document.getElementById('input-motivo-recusa').value = '';
+    document.getElementById('modal-motivo-recusa').classList.add('ativo');
+}
+
+function fecharModalMotivoRecusa() {
+    document.getElementById('modal-motivo-recusa').classList.remove('ativo');
+    contextoMotivoRecusa = null;
+}
+
+// Ligado ao "onsubmit" do formulário - "return false" sempre, pra nunca
+// deixar o formulário recarregar a página de verdade
+function confirmarRecusaComMotivo(event) {
+    event.preventDefault();
+
+    const motivo = document.getElementById('input-motivo-recusa').value.trim();
+    if (!motivo) {
+        alert('Escreva uma breve justificativa antes de confirmar.');
+        return false;
+    }
+
+    const { idReserva, divCard } = contextoMotivoRecusa;
+    document.getElementById('modal-motivo-recusa').classList.remove('ativo');
+    recusarReserva(idReserva, divCard, motivo);
+
+    return false;
+}
+
+/* ==========================================================================
+   ESCOLHER UM ESPAÇO (reaproveitado pelos botões de Avaliações e Histórico)
+   Se o dono só tem 1 espaço, pula direto pra página certa; com mais de 1,
+   pergunta qual deles antes - "gerarUrl" é quem decide pra qual página cada
+   botão de escolha leva.
+   ========================================================================== */
+function abrirEscolhaEspaco(titulo, gerarUrl) {
     if (espacosCache.length === 0) {
         alert('Você ainda não tem espaços cadastrados.');
         return;
     }
 
     if (espacosCache.length === 1) {
-        window.location.href = `/frontend/paginas/dono/avaliacoes-espaco.html?slug=${espacosCache[0].slug}`;
+        window.location.href = gerarUrl(espacosCache[0]);
         return;
     }
 
-    const lista = document.getElementById('lista-escolher-espaco-avaliacoes');
+    document.getElementById('titulo-escolher-espaco').textContent = titulo;
+
+    const lista = document.getElementById('lista-escolher-espaco');
     lista.innerHTML = '';
     espacosCache.forEach(espaco => {
         const botao = document.createElement('button');
@@ -258,24 +334,40 @@ function abrirEscolhaAvaliacoes() {
         botao.className = 'btn-ajuste btn-bloco btn-escolher-espaco-avaliacao';
         botao.textContent = espaco.nome;
         botao.addEventListener('click', () => {
-            window.location.href = `/frontend/paginas/dono/avaliacoes-espaco.html?slug=${espaco.slug}`;
+            window.location.href = gerarUrl(espaco);
         });
         lista.appendChild(botao);
     });
 
-    document.getElementById('modal-escolher-espaco-avaliacoes').classList.add('ativo');
+    document.getElementById('modal-escolher-espaco').classList.add('ativo');
 }
 
-function fecharEscolhaAvaliacoes() {
-    document.getElementById('modal-escolher-espaco-avaliacoes').classList.remove('ativo');
+function abrirEscolhaAvaliacoes() {
+    abrirEscolhaEspaco(
+        'Ver avaliações de qual espaço?',
+        espaco => `/frontend/paginas/dono/avaliacoes-espaco.html?slug=${espaco.slug}`
+    );
+}
+
+function abrirEscolhaHistorico() {
+    abrirEscolhaEspaco(
+        'Ver histórico de qual espaço?',
+        espaco => `/frontend/paginas/dono/historico-espaco.html?id=${espaco.id}`
+    );
+}
+
+function fecharEscolhaEspaco() {
+    document.getElementById('modal-escolher-espaco').classList.remove('ativo');
 }
 
 // Fecha os modais desta página ao clicar fora da caixa (mesmo padrão dos
 // outros modais do site)
 window.addEventListener('click', function (event) {
     const modalReservasEspaco = document.getElementById('modal-reservas-espaco');
-    const modalEscolherEspaco = document.getElementById('modal-escolher-espaco-avaliacoes');
+    const modalEscolherEspaco = document.getElementById('modal-escolher-espaco');
+    const modalMotivoRecusa = document.getElementById('modal-motivo-recusa');
 
     if (event.target === modalReservasEspaco) fecharReservasEspaco();
-    if (event.target === modalEscolherEspaco) fecharEscolhaAvaliacoes();
+    if (event.target === modalEscolherEspaco) fecharEscolhaEspaco();
+    if (event.target === modalMotivoRecusa) fecharModalMotivoRecusa();
 });

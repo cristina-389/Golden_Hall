@@ -290,6 +290,17 @@ function ajustarNavegacaoParaDono() {
     });
 }
 
+// Escapa caracteres especiais de HTML (<, >, &, etc.) antes de colocar um
+// texto escrito por alguém dentro de um template de innerHTML - mesma
+// proteção contra XSS que "textContent" dá, só que pra quando o card
+// inteiro precisa ser montado como string (ver reservas.js, motivo de
+// recusa escrito pelo proprietário)
+function escaparHtml(texto) {
+    const div = document.createElement('div');
+    div.textContent = texto;
+    return div.innerHTML;
+}
+
 /* ==========================================================================
    FORMATAÇÃO DE DADOS DE ESPAÇO (compartilhado entre buscar.js, detalhes.js
    e favoritos.js, pra não repetir a mesma lógica de texto em três lugares)

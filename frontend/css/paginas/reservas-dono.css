@@ -1,16 +1,35 @@
 /* ==========================================================================
    GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
    ".secao-lista-espacos-dono", ".secao-titulo-grid", ".estado-vazio-painel" e
-   ".modal-reservas-espaco-box" já vêm prontos de painel-dono.css - aqui só o
-   que é exclusivo desta página: os cards compridos (um por espaço) e a tela
-   de sucesso ao aprovar uma reserva.
+   ".modal-reservas-espaco-box" já vêm prontos de painel-dono.css; o resumo
+   lá em cima reaproveita ".estatisticas-grid"/".card-estatistica" de
+   reservas.css (mesmo visual dos cards de "Minhas Reservas" do cliente) -
+   aqui só o que é exclusivo desta página: os cards compridos (um por
+   espaço) e a tela de sucesso ao aprovar uma reserva.
    ========================================================================== */
 
-/* Ícone + texto alinhados no botão "Ver avaliações" do topo */
-.btn-ver-avaliacoes {
+/* Botões "Ver avaliações" / "Ver histórico" lado a lado no topo da lista de
+   espaços - quebram linha em telas estreitas em vez de espremer */
+.botoes-topo-reservas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-ver-avaliacoes,
+.btn-ver-historico {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
+}
+
+/* O card "Próxima reserva confirmada" mostra texto (data + nome do espaço)
+   em vez de um número grande - fonte menor pra caber sem quebrar o layout
+   dos outros dois cards ao lado */
+.info-estatistica-texto h4 {
+    font-size: 1rem !important;
+    white-space: normal;
 }
 
 /* --------------------------------------------------------------------------

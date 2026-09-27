@@ -1,0 +1,71 @@
+<!--
+  GOLDEN HALL - HISTÓRICO DE RESERVAS DE UM ESPAÇO (paginas/dono/historico-espaco.html)
+  Página exclusiva pra contas "proprietario" (ver js/paginas/historico-espaco.js).
+  Mostra TODAS as reservas já recebidas por UM espaço do dono (escolhido na
+  página de Reservas - "?id=..." na URL), sem filtro de status - é só um
+  retrospecto, sem botão de ação nenhum (aprovar/recusar continuam morando
+  só na página de Reservas). Reaproveita GET /api/espacos/:id/reservas, a
+  mesma rota já usada no modal de solicitações.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Histórico de Reservas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <!-- reservas.css continua importado só pelo ".card-reserva" -->
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/avaliacoes-dono.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/historico-dono.css">
+</head>
+<body class="dark home-logado-premium">
+
+    <a class="voltar-avaliacoes" href="/frontend/paginas/dono/reservas-dono.html">← Voltar pras reservas</a>
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="secao-saudacao">
+        <div class="secao-saudacao-topo">
+            <div class="icone-contorno">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <h2>Histórico de <span class="titulo-painel-dourado" id="titulo-espaco-historico">...</span></h2>
+        </div>
+        <div class="linha-elegante"><span>✦</span></div>
+    </section>
+
+    <!-- ================= HISTÓRICO ================= -->
+    <section class="avaliacoes-dono-secao">
+        <div id="lista-historico-reservas"></div>
+    </section>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <i class="bi bi-shop icone"></i>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav ativo">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/historico-espaco.js"></script>
+</body>
+</html>

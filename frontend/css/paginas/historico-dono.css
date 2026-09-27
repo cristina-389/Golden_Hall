@@ -1,0 +1,15 @@
+/* ==========================================================================
+   GOLDEN HALL - HISTÓRICO DE RESERVAS DE UM ESPAÇO (paginas/dono/historico-espaco.html)
+   ".avaliacoes-dono-secao"/".voltar-avaliacoes" já vêm prontos de
+   avaliacoes-dono.css (mesmo layout de página "voltar + título + lista"),
+   ".card-reserva" vem de reservas.css - aqui só o espaçamento entre os
+   cards da lista.
+   ========================================================================== */
+#lista-historico-reservas .card-reserva {
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+#lista-historico-reservas .card-reserva:last-child {
+    margin-bottom: 0;
+}

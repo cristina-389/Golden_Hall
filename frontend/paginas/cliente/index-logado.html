@@ -85,6 +85,16 @@
     </div>
   </section>
 
+  <!-- ================= NOTIFICAÇÃO DE RESERVA APROVADA =================
+       Só aparece quando tem uma reserva Aprovada ainda no futuro (GET
+       /api/estatisticas) - ver atualizarNotificacaoReservaAprovada() em
+       js/paginas/index-logado.js. Clicar leva pra "Minhas Reservas". -->
+  <a href="/frontend/paginas/cliente/reservas.html" class="notificacao-banner notificacao-banner--sucesso" id="notificacao-reserva-aprovada" style="display: none;">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="notificacao-reserva-aprovada-texto"></span>
+    <i class="bi bi-chevron-right seta-notificacao"></i>
+  </a>
+
   <!-- ================= SEU DESENVOLVIMENTO ================= -->
   <!-- Números de verdade (GET /api/estatisticas), não inventados - ver
        carregarEstatisticas() em js/paginas/index-logado.js -->
