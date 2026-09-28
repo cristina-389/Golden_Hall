@@ -250,45 +250,60 @@ function preencherPontosReferencia(espaco) {
    lista "avaliacoes" (nota, comentário, nome de quem avaliou). Só existem
    avaliações de clientes que tiveram uma reserva Aprovada nesse espaço e
    avaliaram de verdade (ver botão "Avaliar" em paginas/cliente/reservas.js).
-   estrelasParaTexto()/formatarDataAvaliacao() vêm de global.js, compartilhadas
-   com a página de avaliações do dono (avaliacoes-espaco.js).
+   Mostra UMA avaliação por vez, com setas pra navegar - mesma ideia da
+   galeria de fotos (ver mudarFotoGaleria() mais acima). estrelasParaTexto()
+   vem de global.js, compartilhada com a página de avaliações do dono
+   (avaliacoes-espaco.js).
    ========================================================================== */
+let avaliacoesAtuais = []; // todas as avaliações do espaço sendo visto agora
+let indiceAvaliacaoAtual = 0; // qual delas está sendo mostrada no carrossel
+
 function preencherAvaliacoes(espaco) {
-    const resumo = document.getElementById('resumo-avaliacoes');
-    const lista = document.getElementById('lista-avaliacoes');
-    lista.innerHTML = '';
+    const resumoVazio = document.getElementById('resumo-avaliacoes');
+    const carrossel = document.getElementById('avaliacao-carrossel');
+    const contador = document.getElementById('avaliacao-contador');
 
     if (!espaco.total_avaliacoes) {
-        resumo.innerHTML = '<p>Este espaço ainda não tem avaliações.</p>';
+        resumoVazio.style.display = 'block';
+        carrossel.style.display = 'none';
+        contador.style.display = 'none';
         return;
     }
+
+    resumoVazio.style.display = 'none';
 
     const media = Number(espaco.media_avaliacoes);
     const textoTotal = espaco.total_avaliacoes === 1
         ? '1 avaliação'
         : `${espaco.total_avaliacoes} avaliações`;
+    contador.textContent = `${media.toFixed(1)} de 5 · ${textoTotal}`;
+    contador.style.display = 'block';
 
-    resumo.innerHTML = `
-        <span class="estrelas">${estrelasParaTexto(media)}</span>
-        <span>${media.toFixed(1)} de 5 · ${textoTotal}</span>
-    `;
+    avaliacoesAtuais = espaco.avaliacoes;
+    indiceAvaliacaoAtual = 0;
+    carrossel.style.display = 'flex';
 
-    espaco.avaliacoes.forEach(avaliacao => {
-        const card = document.createElement('div');
-        card.className = 'card-avaliacao';
-        card.innerHTML = `
-            <div class="card-avaliacao-topo">
-                <span class="autor"></span>
-                <span class="estrelas">${estrelasParaTexto(avaliacao.nota)}</span>
-            </div>
-            <p class="data"></p>
-            <p class="comentario"></p>
-        `;
-        card.querySelector('.autor').textContent = avaliacao.cliente_nome;
-        card.querySelector('.data').textContent = formatarDataAvaliacao(avaliacao.criado_em);
-        card.querySelector('.comentario').textContent = avaliacao.comentario || '';
-        lista.appendChild(card);
-    });
+    // Com só 1 avaliação não tem pra onde navegar - esconde as setas
+    const temMaisDeUma = avaliacoesAtuais.length > 1;
+    carrossel.querySelector('.seta-avaliacao-anterior').style.visibility = temMaisDeUma ? 'visible' : 'hidden';
+    carrossel.querySelector('.seta-avaliacao-proxima').style.visibility = temMaisDeUma ? 'visible' : 'hidden';
+
+    renderizarAvaliacaoAtual();
+}
+
+function renderizarAvaliacaoAtual() {
+    const avaliacao = avaliacoesAtuais[indiceAvaliacaoAtual];
+    document.getElementById('avaliacao-atual-estrelas').textContent = estrelasParaTexto(avaliacao.nota);
+    document.getElementById('avaliacao-atual-texto').textContent = avaliacao.comentario || 'Sem comentário escrito.';
+    document.getElementById('avaliacao-atual-autor').textContent = `— ${avaliacao.cliente_nome}`;
+}
+
+// Seta esquerda/direita: "delta" é -1 (anterior) ou 1 (próxima). O "%" com
+// "+ length" faz o índice dar a volta nas duas pontas, mesma ideia de
+// mudarFotoGaleria()
+function mudarAvaliacao(delta) {
+    indiceAvaliacaoAtual = (indiceAvaliacaoAtual + delta + avaliacoesAtuais.length) % avaliacoesAtuais.length;
+    renderizarAvaliacaoAtual();
 }
 
 /* ==========================================================================

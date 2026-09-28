@@ -196,13 +196,16 @@ router.post('/espacos/:slug/visualizacao', autenticar, (req, res) => {
 // GET /api/meus-espacos - só os espaços do proprietário que está logado
 // --------------------------------------------------------------------------
 router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
-    // A subconsulta soma, pra CADA espaço, quantas reservas dele ainda estão
-    // "Pendente" - usado pelo selo de aviso nos cards (painel e página de
-    // reservas), sem precisar de um pedido extra por espaço.
+    // As subconsultas somam, pra CADA espaço, quantas reservas dele ainda
+    // estão "Pendente" (selo de aviso nos cards) e quantas reservas já
+    // recebeu no total, em qualquer status (usado pra página de Reservas só
+    // listar espaços que já receberam pelo menos uma solicitação) - sem
+    // precisar de um pedido extra por espaço.
     const espacos = db
         .prepare(`
             SELECT espacos.*,
-                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id AND reservas.status = 'Pendente') AS reservas_pendentes
+                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id AND reservas.status = 'Pendente') AS reservas_pendentes,
+                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id) AS total_reservas
             FROM espacos
             WHERE dono_id = ?
             ORDER BY criado_em DESC
@@ -256,19 +259,19 @@ router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
         `)
         .get(req.usuario.id);
 
-    // Reserva Aprovada mais próxima, ainda no futuro (ou hoje) - "null" se
-    // não tiver nenhuma - usada no card "Próxima reserva confirmada" da
-    // página de Reservas, como lembrete do que vem por aí.
-    const proximaReserva = db
+    // TODAS as reservas Aprovadas ainda no futuro (ou hoje), da mais próxima
+    // pra mais distante - usada no card "Próxima reserva confirmada" da
+    // página de Reservas: com só 1, mostra a data direto; com mais de 1,
+    // mostra a quantidade e a lista completa fica num modal, como lembrete.
+    const proximasReservas = db
         .prepare(`
             SELECT reservas.data, reservas.horario, espacos.nome AS espaco_nome
             FROM reservas
             JOIN espacos ON espacos.id = reservas.espaco_id
             WHERE espacos.dono_id = ? AND reservas.status = 'Aprovado' AND reservas.data >= date('now')
             ORDER BY reservas.data ASC
-            LIMIT 1
         `)
-        .get(req.usuario.id);
+        .all(req.usuario.id);
 
     res.json({
         total_espacos: totalEspacos,
@@ -276,7 +279,7 @@ router.get('/estatisticas-dono', autenticar, exigirProprietario, (req, res) => {
         reservas_realizadas: reservasRealizadas,
         avaliacao_media: resumoAvaliacoes.media, // null se ainda não tiver nenhuma avaliação
         total_avaliacoes: resumoAvaliacoes.total,
-        proxima_reserva: proximaReserva || null
+        proximas_reservas: proximasReservas
     });
 });
 

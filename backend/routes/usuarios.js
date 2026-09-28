@@ -264,7 +264,29 @@ router.get('/estatisticas', autenticar, (req, res) => {
         `)
         .get(req.usuario.id);
 
-    res.json({ favoritos, reservas, visualizacoes, comentarios, proxima_reserva_aprovada: proximaReservaAprovada || null });
+    // Reservas Aprovadas cujo evento já aconteceu (data passada) e que ainda
+    // não foram avaliadas - usada no sino de notificações da home, convidando
+    // a avaliar (mesma ideia do lembrete por e-mail, ver
+    // utils/lembretesAvaliacao.js, só que calculada ao vivo aqui).
+    const reservasParaAvaliar = db
+        .prepare(`
+            SELECT reservas.id AS reserva_id, reservas.data, espacos.nome AS espaco_nome
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            LEFT JOIN avaliacoes ON avaliacoes.reserva_id = reservas.id
+            WHERE reservas.usuario_id = ? AND reservas.status = 'Aprovado' AND reservas.data < date('now') AND avaliacoes.id IS NULL
+            ORDER BY reservas.data DESC
+        `)
+        .all(req.usuario.id);
+
+    res.json({
+        favoritos,
+        reservas,
+        visualizacoes,
+        comentarios,
+        proxima_reserva_aprovada: proximaReservaAprovada || null,
+        reservas_para_avaliar: reservasParaAvaliar
+    });
 });
 
 // --------------------------------------------------------------------------

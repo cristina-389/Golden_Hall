@@ -240,20 +240,3 @@
     margin-top: 8px;
 }
 
-/* --------------------------------------------------------------------------
-   MODAL DE "RESERVAS RECEBIDAS" - só o tamanho da caixa é específico daqui
-   -------------------------------------------------------------------------- */
-.modal-reservas-espaco-box {
-    max-width: 640px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-#lista-reservas-espaco .card-reserva {
-    margin-bottom: 16px;
-    text-align: left;
-}
-
-#lista-reservas-espaco .card-reserva:last-child {
-    margin-bottom: 0;
-}

@@ -494,6 +494,37 @@ body:not(.dark) {
     text-decoration: line-through;
 }
 
+/* Dia que já passou - continua clicável (avisa que não dá mais pra
+   reservar, ver abrirModalDiaPassado() em modais.js), mas visualmente
+   "apagado" pra já dar a entender que não é uma opção */
+.dia-celula.passado {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #555555;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* MODAL: DIA JÁ PASSOU */
+.modal-aviso-dia-passado {
+    text-align: center;
+}
+
+.aviso-dia-passado-icone {
+    font-size: 2.6rem;
+    color: #d4af37;
+    margin-bottom: 14px;
+    display: block;
+}
+
+.modal-aviso-dia-passado h2 {
+    margin-bottom: 10px;
+}
+
+.modal-aviso-dia-passado .subtitulo-form {
+    margin-bottom: 22px;
+}
+
 /* Esconde o ícone nativo do navegador para date inputs */
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;

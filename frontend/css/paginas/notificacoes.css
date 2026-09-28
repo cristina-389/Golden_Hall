@@ -1,0 +1,25 @@
+/* ==========================================================================
+   GOLDEN HALL - NOTIFICAÇÕES (cliente E proprietário)
+   Usado por paginas/cliente/notificacoes.html e
+   paginas/dono/notificacoes-dono.html - cada item da lista reaproveita
+   ".notificacao-banner"/"--alerta"/"--sucesso" (index-logado.css), só que
+   empilhados em vez de um banner único na home.
+   ========================================================================== */
+.secao-notificacoes {
+    max-width: 700px;
+    margin: 35px auto 100px;
+    padding: 0 20px;
+}
+
+.lista-notificacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Dentro da lista o item não precisa da margem automática de centralização
+   que ".notificacao-banner" usa quando é um banner único na home */
+.lista-notificacoes .notificacao-banner {
+    margin: 0;
+    max-width: none;
+}

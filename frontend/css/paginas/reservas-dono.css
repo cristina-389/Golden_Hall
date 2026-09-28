@@ -1,11 +1,11 @@
 /* ==========================================================================
    GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
-   ".secao-lista-espacos-dono", ".secao-titulo-grid", ".estado-vazio-painel" e
-   ".modal-reservas-espaco-box" já vêm prontos de painel-dono.css; o resumo
-   lá em cima reaproveita ".estatisticas-grid"/".card-estatistica" de
-   reservas.css (mesmo visual dos cards de "Minhas Reservas" do cliente) -
-   aqui só o que é exclusivo desta página: os cards compridos (um por
-   espaço) e a tela de sucesso ao aprovar uma reserva.
+   ".secao-lista-espacos-dono", ".secao-titulo-grid" e ".estado-vazio-painel"
+   já vêm prontos de painel-dono.css; o resumo lá em cima reaproveita
+   ".estatisticas-grid"/".card-estatistica" de reservas.css (mesmo visual dos
+   cards de "Minhas Reservas" do cliente) - aqui só o que é exclusivo desta
+   página: os cards compridos (um por espaço), o card clicável de "próxima
+   reserva" e o modal com a lista de reservas futuras.
    ========================================================================== */
 
 /* Botões "Ver avaliações" / "Ver histórico" lado a lado no topo da lista de
@@ -30,6 +30,61 @@
 .info-estatistica-texto h4 {
     font-size: 1rem !important;
     white-space: normal;
+}
+
+/* Quando tem mais de uma reserva futura, o card vira clicável (abre o
+   modal com a lista completa) - ver atualizarCardProximaReserva() em
+   reservas-dono.js */
+.card-estatistica-clicavel {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.card-estatistica-clicavel:hover {
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   MODAL "PRÓXIMAS RESERVAS CONFIRMADAS" - lista simples, uma linha por
+   reserva futura já aprovada
+   -------------------------------------------------------------------------- */
+.lista-proximas-reservas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.item-proxima-reserva {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+}
+
+.item-proxima-reserva i {
+    font-size: 1.3rem;
+    color: var(--gold);
+}
+
+.item-proxima-reserva div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.item-proxima-reserva strong {
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.item-proxima-reserva span {
+    font-size: 0.8rem;
+    color: var(--text-light);
 }
 
 /* --------------------------------------------------------------------------
@@ -57,6 +112,30 @@
 
 .card-espaco-reservas:hover {
     box-shadow: 0 0 30px hsla(46, 100%, 55%, 0.22), 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* Foto principal do espaço, só pra ajudar a identificar qual é de relance -
+   fica ao lado do nome, o resto do card continua igual */
+.foto-espaco-reservas {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.foto-espaco-reservas img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info-espaco-reservas {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 160px;
 }
 
 .info-espaco-reservas h3 {
@@ -104,8 +183,22 @@
 }
 
 /* --------------------------------------------------------------------------
-   TELA DE SUCESSO AO APROVAR UMA RESERVA (substitui o conteúdo do card
-   dentro do modal - ver aprovarReserva() em reservas-dono.js)
+   PÁGINA DE SOLICITAÇÕES DE UM ESPAÇO (solicitacoes-espaco.html) - espaço
+   entre os cards, mesma ideia de "#lista-historico-reservas" em
+   historico-dono.css
+   -------------------------------------------------------------------------- */
+#lista-solicitacoes-espaco .card-reserva {
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+#lista-solicitacoes-espaco .card-reserva:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   TELA DE SUCESSO AO APROVAR UMA RESERVA (substitui o conteúdo do card -
+   ver aprovarReserva() em solicitacoes-espaco.js)
    -------------------------------------------------------------------------- */
 .sucesso-aprovacao-reserva {
     text-align: center;

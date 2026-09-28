@@ -31,13 +31,18 @@
 
         <div class="input-grupo col-metade">
           <label for="reserva-tipo">Tipo de Evento</label>
-          <select id="reserva-tipo" required>
+          <!-- Preenchido via JS com os eventos permitidos DESTE espaço
+               específico (ver preencherTiposEvento() em modais.js) -->
+          <select id="reserva-tipo" required onchange="alternarCampoOutroEvento()">
             <option value="">Selecione...</option>
-            <option value="Casamento">Casamento</option>
-            <option value="Aniversário">Aniversário</option>
-            <option value="Corporativo">Corporativo</option>
-            <option value="Outro">Outro</option>
           </select>
+        </div>
+
+        <!-- Só aparece se a pessoa escolher "Outro" acima (ver
+             alternarCampoOutroEvento() em modais.js) -->
+        <div class="input-grupo col-metade" id="grupo-outro-evento" style="display: none;">
+          <label for="reserva-tipo-outro">Qual evento?</label>
+          <input type="text" id="reserva-tipo-outro" placeholder="Digite o tipo de evento">
         </div>
 
         <div class="input-grupo col-metade">

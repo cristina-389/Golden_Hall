@@ -114,17 +114,18 @@ db.exec(`
     observacoes TEXT,
     status TEXT NOT NULL DEFAULT 'Pendente' CHECK (status IN ('Pendente', 'Aprovado', 'Cancelado')),
     motivo_recusa TEXT,
+    lembrete_avaliacao_enviado INTEGER NOT NULL DEFAULT 0,
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (espaco_id) REFERENCES espacos (id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
   )
 `);
 
-// "horario_termino"/"motivo_recusa" foram adicionadas depois que a tabela já
-// existia em bancos criados antes delas - mesma ideia das outras colunas
-// (ver comentário lá em cima, na tabela de usuários): tenta adicionar por
-// fora, e ignora o erro se a coluna já existir.
-for (const coluna of ['horario_termino TEXT', 'motivo_recusa TEXT']) {
+// "horario_termino"/"motivo_recusa"/"lembrete_avaliacao_enviado" foram
+// adicionadas depois que a tabela já existia em bancos criados antes delas -
+// mesma ideia das outras colunas (ver comentário lá em cima, na tabela de
+// usuários): tenta adicionar por fora, e ignora o erro se a coluna já existir.
+for (const coluna of ['horario_termino TEXT', 'motivo_recusa TEXT', 'lembrete_avaliacao_enviado INTEGER NOT NULL DEFAULT 0']) {
     try {
         db.exec(`ALTER TABLE reservas ADD COLUMN ${coluna}`);
     } catch (erro) {

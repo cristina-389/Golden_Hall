@@ -428,6 +428,20 @@ body.dark .card-reserva-corpo strong {
     opacity: .85;
 }
 
+/* Reserva Aprovada, mas o evento ainda não aconteceu - mesmo visual do
+   "já avaliado", só que sem o dourado (não é uma conquista, é só um aviso) */
+.aviso-avaliacao-futura {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    opacity: .85;
+}
+
 /* ESTADO VAZIO */
 .reservas-vazias {
     grid-column: 1 / -1;

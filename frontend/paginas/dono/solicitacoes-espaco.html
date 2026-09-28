@@ -1,0 +1,97 @@
+<!--
+  GOLDEN HALL - SOLICITAÇÕES DE RESERVA DE UM ESPAÇO (paginas/dono/solicitacoes-espaco.html)
+  Página exclusiva pra contas "proprietario" (ver js/paginas/solicitacoes-espaco.js).
+  Mostra as reservas recebidas por UM espaço do dono, escolhido na página de
+  Reservas ("?id=..." na URL) - mesma rota GET /api/espacos/:id/reservas de
+  antes, só que agora numa página própria em vez de modal. Aprovar/Recusar
+  continuam funcionando do mesmo jeito, incluindo o motivo obrigatório ao
+  recusar/cancelar.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Solicitações de Reserva</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <!-- reservas.css continua importado só pelo ".card-reserva" -->
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/avaliacoes-dono.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas-dono.css">
+</head>
+<body class="dark home-logado-premium">
+
+    <a class="voltar-avaliacoes" href="/frontend/paginas/dono/reservas-dono.html">← Voltar pras reservas</a>
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="secao-saudacao">
+        <div class="secao-saudacao-topo">
+            <div class="icone-contorno">
+                <i class="bi bi-envelope-paper-fill"></i>
+            </div>
+            <h2>Solicitações de <span class="titulo-painel-dourado" id="titulo-espaco-solicitacoes">...</span></h2>
+        </div>
+        <div class="linha-elegante"><span>✦</span></div>
+    </section>
+
+    <!-- ================= SOLICITAÇÕES ================= -->
+    <section class="avaliacoes-dono-secao">
+        <div id="lista-solicitacoes-espaco"></div>
+    </section>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <i class="bi bi-shop icone"></i>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav ativo">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <!-- ================= MODAL: MOTIVO DA RECUSA/CANCELAMENTO =================
+         Aberto ao clicar em "Recusar" (reserva Pendente) ou "Cancelar
+         reserva" (já Aprovada) - ver abrirModalMotivoRecusa() em
+         solicitacoes-espaco.js. O texto escrito aqui fica salvo em
+         "motivo_recusa" e o cliente vê ele em "Minhas Reservas". -->
+    <div id="modal-motivo-recusa" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalMotivoRecusa()">&times;</button>
+
+            <h2>Motivo da recusa</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form" id="aviso-motivo-recusa"></p>
+
+            <form id="form-motivo-recusa" onsubmit="return confirmarRecusaComMotivo(event)">
+                <div class="form-grid">
+                    <div class="input-grupo col-total">
+                        <label for="input-motivo-recusa">Justificativa (o cliente vai ver essa mensagem)</label>
+                        <textarea id="input-motivo-recusa" rows="3" placeholder="Ex: Infelizmente essa data já foi reservada por outra pessoa antes do seu pedido." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-bloco">Confirmar recusa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/solicitacoes-espaco.js"></script>
+</body>
+</html>

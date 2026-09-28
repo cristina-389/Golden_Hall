@@ -1,0 +1,77 @@
+<!--
+  GOLDEN HALL - NOTIFICAÇÕES DO CLIENTE (paginas/cliente/notificacoes.html)
+  Página exclusiva pra contas "cliente" (ver js/paginas/notificacoes.js).
+  Aberta ao clicar no sino do cabeçalho da home - mesma ideia do antigo
+  banner verde que ficava na home, só que agora numa lista dedicada, pra dar
+  espaço a mais tipos de aviso no futuro sem lotar a tela inicial.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Notificações</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <!-- reaproveita ".notificacao-banner" (index-logado.css) pra cada item da
+         lista, ".estado-vazio-painel" (painel-dono.css) pro estado vazio e
+         ".voltar-avaliacoes" (avaliacoes-dono.css) pro link de voltar -->
+    <link rel="stylesheet" href="/frontend/css/paginas/index-logado.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/painel-dono.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/avaliacoes-dono.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/notificacoes.css">
+</head>
+<body class="dark home-logado-premium">
+
+    <a class="voltar-avaliacoes" href="/frontend/paginas/cliente/index-logado.html">← Voltar pro início</a>
+
+    <!-- ================= TÍTULO ================= -->
+    <section class="secao-saudacao">
+        <div class="secao-saudacao-topo">
+            <div class="icone-contorno">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+            <h2>Minhas <span class="titulo-painel-dourado">Notificações</span></h2>
+        </div>
+        <div class="linha-elegante"><span>✦</span></div>
+    </section>
+
+    <!-- ================= NOTIFICAÇÕES ================= -->
+    <section class="secao-notificacoes">
+        <!-- Preenchida via JS (carregarNotificacoes(), em notificacoes.js) -->
+        <div id="lista-notificacoes" class="lista-notificacoes"></div>
+    </section>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/cliente/index-logado.html" class="item-nav ativo">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
+            <i class="bi bi-search icone"></i>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
+            <i class="bi bi-heart-fill icone"></i>
+            <span class="texto">Favoritos</span>
+        </a>
+        <a href="/frontend/paginas/cliente/reservas.html" class="item-nav">
+            <i class="bi bi-calendar3-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/cliente/perfil.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/notificacoes.js"></script>
+</body>
+</html>

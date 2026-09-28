@@ -68,20 +68,13 @@ async function carregarResumoNumeros() {
     }
 }
 
-// Mostra (ou esconde) o aviso de "solicitações esperando resposta" logo no
-// topo da home, embaixo da saudação - reaproveita o mesmo número já buscado
-// em carregarResumoNumeros(), sem precisar de mais um pedido pra API.
+// Mostra (ou esconde) a bolinha no sino do cabeçalho quando tem pelo menos
+// 1 solicitação esperando resposta - reaproveita o mesmo número já buscado
+// em carregarResumoNumeros(). O aviso completo mora em
+// notificacoes-dono.html, ver carregarNotificacoes() em
+// js/paginas/notificacoes-dono.js.
 function atualizarNotificacaoPendentes(totalPendentes) {
-    const notificacao = document.getElementById('notificacao-pendentes');
-
-    if (totalPendentes > 0) {
-        document.getElementById('notificacao-pendentes-texto').textContent = totalPendentes === 1
-            ? 'Você tem 1 solicitação de reserva esperando resposta'
-            : `Você tem ${totalPendentes} solicitações de reserva esperando resposta`;
-        notificacao.style.display = 'flex';
-    } else {
-        notificacao.style.display = 'none';
-    }
+    document.getElementById('bolinha-sino').style.display = totalPendentes > 0 ? 'block' : 'none';
 }
 
 // Esconde o cabeçalho ao rolar pra baixo e mostra de novo ao rolar pra cima

@@ -52,6 +52,15 @@
 
     <div class="header-buttons">
 
+      <!-- Bolinha aparece via JS quando tem pelo menos 1 solicitação
+           esperando resposta (GET /api/estatisticas-dono) - ver
+           atualizarNotificacaoPendentes() em js/paginas/index-logado-dono.js.
+           Clicar leva pra notificacoes-dono.html, com a lista completa. -->
+      <a href="/frontend/paginas/dono/notificacoes-dono.html" class="btn-sino" aria-label="Notificações">
+        <i class="bi bi-bell-fill"></i>
+        <span class="bolinha-sino" id="bolinha-sino" style="display: none;"></span>
+      </a>
+
       <button class="theme-toggle" onclick="toggleTheme()">
         🌙
       </button>
@@ -83,17 +92,6 @@
       <span>✦</span>
     </div>
   </section>
-
-  <!-- ================= NOTIFICAÇÃO DE RESERVAS PENDENTES =================
-       Só aparece quando tem pelo menos 1 solicitação esperando resposta
-       (GET /api/estatisticas-dono) - ver atualizarNotificacaoPendentes() em
-       js/paginas/index-logado-dono.js. Clicar leva direto pra página de
-       Reservas pra decidir. -->
-  <a href="/frontend/paginas/dono/reservas-dono.html" class="notificacao-banner notificacao-banner--alerta" id="notificacao-pendentes" style="display: none;">
-    <i class="bi bi-bell-fill"></i>
-    <span id="notificacao-pendentes-texto"></span>
-    <i class="bi bi-chevron-right seta-notificacao"></i>
-  </a>
 
   <!-- ================= SEU DESEMPENHO ================= -->
   <!-- Números de verdade (GET /api/estatisticas-dono) e o gráfico de linhas

@@ -193,11 +193,35 @@
                     <span class="line"></span>
                 </div>
 
-                <h2 class="titulo-central">Avaliações</h2>
+                <h2 class="titulo-central">Avaliações dos Clientes</h2>
 
-                <div class="resumo-avaliacoes" id="resumo-avaliacoes"></div>
+                <!-- Só aparece se o espaço ainda não tiver nenhuma avaliação -->
+                <div class="resumo-avaliacoes" id="resumo-avaliacoes" style="display: none;">
+                    <p>Este espaço ainda não tem avaliações.</p>
+                </div>
 
-                <div class="lista-avaliacoes" id="lista-avaliacoes"></div>
+                <!-- Mostra UMA avaliação por vez, com setas pra navegar entre
+                     elas - mesma ideia da galeria de fotos lá em cima (ver
+                     mudarAvaliacao() em detalhes.js) -->
+                <div class="avaliacao-carrossel" id="avaliacao-carrossel">
+                    <button class="btn-seta-avaliacao seta-avaliacao-anterior" onclick="mudarAvaliacao(-1)" title="Avaliação anterior">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+                    <div class="avaliacao-conteudo">
+                        <div class="estrelas" id="avaliacao-atual-estrelas"></div>
+                        <p id="avaliacao-atual-texto"></p>
+                        <h4 id="avaliacao-atual-autor"></h4>
+                    </div>
+
+                    <button class="btn-seta-avaliacao seta-avaliacao-proxima" onclick="mudarAvaliacao(1)" title="Próxima avaliação">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Legenda pequena embaixo do card, com a média/total real -
+                     mesma ideia do contador "2 / 3" da galeria de fotos -->
+                <p class="avaliacao-contador" id="avaliacao-contador"></p>
 
             </section>
 

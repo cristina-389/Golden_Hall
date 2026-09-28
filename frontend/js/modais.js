@@ -371,13 +371,18 @@ async function gerarCalendario() {
     const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // 0=domingo ... 6=sábado
     const totalDiasMes = new Date(ano, mes + 1, 0).getDate(); // truque: dia 0 do mês seguinte = último dia deste mês
 
+    // Data de hoje no mesmo formato "AAAA-MM-DD", pra comparar como texto
+    // com cada dia do mês (string comparável direto, sem precisar de Date)
+    const hoje = new Date();
+    const hojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+
     // Preenche células vazias antes do dia 1, só pra alinhar com o dia da semana correto na grade
     for (let i = 0; i < primeiroDiaSemana; i++) {
         const divVazia = document.createElement('div');
         gridDias.appendChild(divVazia);
     }
 
-    // Cria uma célula pra cada dia do mês, marcando como ocupado ou disponível
+    // Cria uma célula pra cada dia do mês, marcando como passado, ocupado ou disponível
     for (let dia = 1; dia <= totalDiasMes; dia++) {
         const divDia = document.createElement('div');
         divDia.classList.add('dia-celula');
@@ -388,7 +393,13 @@ async function gerarCalendario() {
         const diaFormatado = String(dia).padStart(2, '0');
         const dataString = `${ano}-${mesFormatado}-${diaFormatado}`;
 
-        if (datasOcupadas.includes(dataString)) {
+        if (dataString < hojeString) {
+            // Dia já passou - continua clicável, mas avisa que não dá mais
+            // pra reservar essa data, em vez de abrir o formulário de reserva
+            divDia.classList.add('passado');
+            divDia.title = 'Esse dia já passou';
+            divDia.onclick = abrirModalDiaPassado;
+        } else if (datasOcupadas.includes(dataString)) {
             divDia.classList.add('ocupado');
             divDia.title = 'Data Indisponível';
         } else {
@@ -405,6 +416,19 @@ async function gerarCalendario() {
 function selecionarDataEReservar(dataString) {
     fecharModalAgenda();
     abrirModalReserva(dataString);
+}
+
+// Ao clicar num dia que já passou: em vez do formulário de reserva, avisa
+// que não é mais possível reservar aquele dia (o aviso mora no mesmo
+// fragmento da agenda - ver agenda-modal.html)
+function abrirModalDiaPassado() {
+    const modal = document.getElementById('modal-dia-passado');
+    if (modal) modal.classList.add('ativo');
+}
+
+function fecharModalDiaPassado() {
+    const modal = document.getElementById('modal-dia-passado');
+    if (modal) modal.classList.remove('ativo');
 }
 
 
@@ -441,14 +465,16 @@ function abrirModalReserva(dataPreSelecionada = null) {
     const container = document.getElementById('container-modal-reserva');
     if (!container) return;
 
-    // Função auxiliar que preenche o campo de data (se houver uma pré-selecionada).
-    // Fica separada porque precisa ser chamada tanto depois do fetch() na primeira
-    // vez quanto direto nas próximas vezes (quando o HTML já está carregado).
+    // Função auxiliar que preenche o campo de data (se houver uma pré-selecionada)
+    // e a lista de tipos de evento. Fica separada porque precisa ser chamada
+    // tanto depois do fetch() na primeira vez quanto direto nas próximas
+    // vezes (quando o HTML já está carregado).
     const aplicarDataERegra = () => {
         if (dataPreSelecionada) {
             const inputData = document.getElementById('reserva-data');
             if (inputData) inputData.value = dataPreSelecionada;
         }
+        preencherTiposEvento();
     };
 
     if (container.innerHTML === "") {
@@ -473,6 +499,67 @@ function abrirModalReserva(dataPreSelecionada = null) {
 function fecharModalReserva() {
     const modal = document.getElementById('modal-reserva');
     if (modal) modal.classList.remove('ativo');
+}
+
+// Fallback usado só quando o espaço não tem nenhum "evento permitido"
+// cadastrado pelo proprietário (painel-dono.html) - assim o campo nunca
+// fica vazio impedindo a reserva
+const TIPOS_EVENTO_PADRAO = ['Casamento', 'Aniversário', 'Corporativo', 'Outro'];
+
+// Preenche o "Tipo de Evento" com os eventos permitidos DESTE espaço (GET
+// /api/espacos/:slug já devolve "eventos_permitidos", cadastrados pelo
+// proprietário em painel-dono.html) em vez de uma lista fixa igual pra
+// todo mundo. Se o proprietário tiver cadastrado uma opção "Outro", ela
+// aparece igual às demais - ver alternarCampoOutroEvento() logo abaixo.
+async function preencherTiposEvento() {
+    const select = document.getElementById('reserva-tipo');
+    if (!select) return;
+
+    const espacoAtual = document.body.dataset.espaco;
+    if (!espacoAtual) return;
+
+    let tiposEvento = TIPOS_EVENTO_PADRAO;
+    try {
+        const espaco = await chamarAPI(`/api/espacos/${espacoAtual}`);
+        if (espaco.eventos_permitidos && espaco.eventos_permitidos.length > 0) {
+            tiposEvento = espaco.eventos_permitidos;
+        }
+    } catch (erro) {
+        console.error('Erro ao buscar os tipos de evento permitidos:', erro);
+    }
+
+    select.innerHTML = '<option value="">Selecione...</option>';
+    tiposEvento.forEach(tipo => {
+        const opcao = document.createElement('option');
+        opcao.value = tipo;
+        opcao.textContent = tipo;
+        select.appendChild(opcao);
+    });
+
+    alternarCampoOutroEvento(); // garante que o campo de texto livre começa escondido
+}
+
+// Ao escolher "Outro" no select, abre um campo de texto livre pra pessoa
+// digitar qual é o evento - o valor enviado na reserva vem desse campo, não
+// do texto "Outro" (ver confirmarReservaFinal() mais abaixo)
+function alternarCampoOutroEvento() {
+    const select = document.getElementById('reserva-tipo');
+    const grupoOutro = document.getElementById('grupo-outro-evento');
+    const inputOutro = document.getElementById('reserva-tipo-outro');
+    if (!select || !grupoOutro || !inputOutro) return;
+
+    const ehOutro = select.value.trim().toLowerCase() === 'outro';
+    grupoOutro.style.display = ehOutro ? 'block' : 'none';
+    inputOutro.required = ehOutro;
+
+    if (ehOutro) {
+        // Só focar (e abrir o teclado, no celular) depois que o campo já
+        // estiver visível - "setTimeout" dá tempo do navegador aplicar o
+        // "display: block" antes de tentar focar nele
+        setTimeout(() => inputOutro.focus(), 0);
+    } else {
+        inputOutro.value = '';
+    }
 }
 
 
@@ -527,12 +614,19 @@ async function confirmarReservaFinal() {
 
     if (modalAlerta) modalAlerta.classList.remove('ativo');
 
+    // Com "Outro" selecionado, o tipo de evento de verdade vem do campo de
+    // texto livre, não do texto "Outro" em si (ver alternarCampoOutroEvento())
+    const tipoSelecionado = document.getElementById('reserva-tipo')?.value || '';
+    const tipoEvento = tipoSelecionado.trim().toLowerCase() === 'outro'
+        ? (document.getElementById('reserva-tipo-outro')?.value || '')
+        : tipoSelecionado;
+
     const dadosReserva = {
         espaco_slug: document.body.dataset.espaco,
         data: document.getElementById('reserva-data')?.value || '',
         horario: document.getElementById('reserva-horario')?.value || '',
         horario_termino: document.getElementById('reserva-horario-fim')?.value || '',
-        tipo_evento: document.getElementById('reserva-tipo')?.value || '',
+        tipo_evento: tipoEvento,
         convidados: document.getElementById('reserva-convidados')?.value || '',
         telefone: document.getElementById('reserva-telefone')?.value || '',
         observacoes: document.getElementById('reserva-obs')?.value || ''
@@ -597,6 +691,7 @@ window.addEventListener('click', function(event) {
     const modalReserva = document.getElementById('modal-reserva');
     const modalAlerta = document.getElementById('modal-alerta-cancelamento');
     const modalSucesso = document.getElementById('modal-sucesso-reserva');
+    const modalDiaPassado = document.getElementById('modal-dia-passado');
 
     if (event.target === modalTipoConta) fecharModalTipoConta();
     if (event.target === modalCadastro) fecharModal();
@@ -606,4 +701,5 @@ window.addEventListener('click', function(event) {
     if (event.target === modalReserva) fecharModalReserva();
     if (event.target === modalAlerta) cancelarEVoltarReserva();
     if (event.target === modalSucesso) irParaMinhasReservas();
+    if (event.target === modalDiaPassado) fecharModalDiaPassado();
 });

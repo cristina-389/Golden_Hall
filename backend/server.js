@@ -86,6 +86,20 @@ app.use('/api', require('./routes/reservas'));
 app.use('/api', require('./routes/favoritos'));
 
 // --------------------------------------------------------------------------
+// LEMBRETE DE AVALIAÇÃO POR E-MAIL
+// Verifica reservas com o evento já realizado (mas ainda sem avaliação) e
+// manda o e-mail convidando a avaliar - ver utils/lembretesAvaliacao.js.
+// Roda uma vez já ao ligar o servidor, e depois a cada 1 hora.
+// --------------------------------------------------------------------------
+const { verificarLembretesAvaliacao } = require('./utils/lembretesAvaliacao');
+const UMA_HORA_EM_MS = 60 * 60 * 1000;
+
+verificarLembretesAvaliacao().catch(erro => console.error('Erro ao verificar lembretes de avaliação:', erro));
+setInterval(() => {
+    verificarLembretesAvaliacao().catch(erro => console.error('Erro ao verificar lembretes de avaliação:', erro));
+}, UMA_HORA_EM_MS);
+
+// --------------------------------------------------------------------------
 // LIGA O SERVIDOR
 // --------------------------------------------------------------------------
 app.listen(PORTA, () => {

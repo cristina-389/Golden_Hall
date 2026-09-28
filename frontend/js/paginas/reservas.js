@@ -49,20 +49,30 @@ async function carregarMinhasReservas() {
 
     container.innerHTML = '';
 
+    // Data de hoje no mesmo formato "AAAA-MM-DD" salvo nas reservas, pra
+    // comparar como texto - só dá pra avaliar DEPOIS que o evento aconteceu
+    // (mesma regra aplicada no back-end, em POST /api/reservas/:id/avaliacao)
+    const hoje = new Date();
+    const hojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+
     reservas.forEach((reserva) => {
         const status = reserva.status || 'Pendente';
         const classeStatus = status.toLowerCase() === 'aprovado'
             ? 'status-aprovado'
             : (status.toLowerCase() === 'cancelado' ? 'status-cancelado' : 'status-pendente');
 
-        // Só reservas já Aprovadas podem ser avaliadas - e só uma vez (ver
-        // routes/reservas.js). "avaliado" vem pronto da API (LEFT JOIN
-        // avaliacoes em GET /api/minhas-reservas).
+        // Só reservas já Aprovadas, com o evento já realizado, podem ser
+        // avaliadas - e só uma vez (ver routes/reservas.js). "avaliado" vem
+        // pronto da API (LEFT JOIN avaliacoes em GET /api/minhas-reservas).
         let botaoAvaliacao = '';
         if (status === 'Aprovado') {
-            botaoAvaliacao = reserva.avaliado
-                ? `<span class="ja-avaliado"><i class="bi bi-star-fill"></i> Você já avaliou este espaço</span>`
-                : `<button class="btn-avaliar-reserva" onclick="abrirModalAvaliacao(${reserva.id})"><i class="bi bi-star"></i> Avaliar Espaço</button>`;
+            if (reserva.avaliado) {
+                botaoAvaliacao = `<span class="ja-avaliado"><i class="bi bi-star-fill"></i> Você já avaliou este espaço</span>`;
+            } else if (reserva.data <= hojeString) {
+                botaoAvaliacao = `<button class="btn-avaliar-reserva" onclick="abrirModalAvaliacao(${reserva.id})"><i class="bi bi-star"></i> Avaliar Espaço</button>`;
+            } else {
+                botaoAvaliacao = `<span class="aviso-avaliacao-futura"><i class="bi bi-hourglass-split"></i> Você poderá avaliar depois que o evento acontecer</span>`;
+            }
         }
 
         // Quando o proprietário recusa/cancela, ele escreve uma justificativa
@@ -100,9 +110,10 @@ async function carregarMinhasReservas() {
 
                 ${botaoAvaliacao}
 
+                ${status !== 'Cancelado' ? `
                 <button class="btn-cancelar-reserva" onclick="cancelarReserva(${reserva.id})">
                     <i class="bi bi-trash"></i> Cancelar Reserva
-                </button>
+                </button>` : ''}
             </div>
         `;
 

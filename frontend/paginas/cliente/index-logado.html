@@ -53,6 +53,15 @@
 
     <div class="header-buttons">
 
+      <!-- Bolinha aparece via JS quando tem alguma notificação esperando
+           (GET /api/estatisticas) - ver atualizarNotificacaoReservaAprovada()
+           em js/paginas/index-logado.js. Clicar leva pra
+           notificacoes.html, com a lista completa. -->
+      <a href="/frontend/paginas/cliente/notificacoes.html" class="btn-sino" aria-label="Notificações">
+        <i class="bi bi-bell-fill"></i>
+        <span class="bolinha-sino" id="bolinha-sino" style="display: none;"></span>
+      </a>
+
       <button class="theme-toggle" onclick="toggleTheme()">
         🌙
       </button>
@@ -62,7 +71,7 @@
     </div>
 
   </header>
-  
+
 
   <!-- ================= SAUDAÇÃO ================= -->
 
@@ -84,16 +93,6 @@
       <span>✦</span>
     </div>
   </section>
-
-  <!-- ================= NOTIFICAÇÃO DE RESERVA APROVADA =================
-       Só aparece quando tem uma reserva Aprovada ainda no futuro (GET
-       /api/estatisticas) - ver atualizarNotificacaoReservaAprovada() em
-       js/paginas/index-logado.js. Clicar leva pra "Minhas Reservas". -->
-  <a href="/frontend/paginas/cliente/reservas.html" class="notificacao-banner notificacao-banner--sucesso" id="notificacao-reserva-aprovada" style="display: none;">
-    <i class="bi bi-check-circle-fill"></i>
-    <span id="notificacao-reserva-aprovada-texto"></span>
-    <i class="bi bi-chevron-right seta-notificacao"></i>
-  </a>
 
   <!-- ================= SEU DESENVOLVIMENTO ================= -->
   <!-- Números de verdade (GET /api/estatisticas), não inventados - ver

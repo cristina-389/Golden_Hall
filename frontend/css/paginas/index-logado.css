@@ -97,14 +97,72 @@ header {
     margin: 15px 0 0;
 }
 
-/* ================= NOTIFICAÇÃO DE AVISO (home do cliente E do dono) =================
-   Some/aparece via JS (display: none/flex - ver atualizarNotificacaoPendentes()
-   em index-logado-dono.js e atualizarNotificacaoReservaAprovada() em
-   index-logado.js), pulsando bem devagar pra chamar atenção sem ser
-   irritante. Duas cores possíveis: laranja de alerta (dono, reserva
-   pendente esperando resposta) ou verde de sucesso (cliente, reserva
-   aprovada) - ver os modificadores ".notificacao-banner--alerta"/"--sucesso"
-   logo abaixo. */
+/* ================= SINO DE NOTIFICAÇÕES (cabeçalho, home do cliente E do dono) =================
+   Fica no cabeçalho, antes do botão de tema - leva pra
+   notificacoes.html/notificacoes-dono.html. A bolinha aparece via JS
+   (display: none/block - ver atualizarNotificacaoPendentes() em
+   index-logado-dono.js e atualizarNotificacaoReservaAprovada() em
+   index-logado.js) quando tem algum aviso esperando, só pra chamar atenção
+   e convidar a pessoa a clicar. */
+.btn-sino {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    background: none;
+    color: var(--gold);
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-sino:hover {
+    background: rgba(255, 204, 0, 0.1);
+}
+
+/* Balança o sino ao passar o mouse (ou tocar, no celular) - só o ícone
+   balança, o círculo ao redor fica parado. "transform-origin: top" faz o
+   balanço parecer que o sino está pendurado, girando a partir do topo. */
+.btn-sino i {
+    display: inline-block;
+    transform-origin: top center;
+}
+
+.btn-sino:hover i,
+.btn-sino:active i {
+    animation: balancarSino 0.5s ease-in-out;
+}
+
+@keyframes balancarSino {
+    0%, 100% { transform: rotate(0); }
+    20%      { transform: rotate(15deg); }
+    40%      { transform: rotate(-12deg); }
+    60%      { transform: rotate(8deg); }
+    80%      { transform: rotate(-4deg); }
+}
+
+.bolinha-sino {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff4d4d;
+    border: 2px solid var(--bg);
+}
+
+/* ================= NOTIFICAÇÃO DE AVISO (itens da lista, cliente E dono) =================
+   ".notificacao-banner" e os modificadores "--alerta"/"--sucesso" agora
+   vivem em notificacoes.html/notificacoes-dono.html (um item de lista por
+   aviso, via notificacoes.js/notificacoes-dono.js) em vez de um banner
+   único na home - ver notificacoes.css pro espaçamento entre os itens.
+   Duas cores possíveis: laranja de alerta (dono, reserva pendente
+   esperando resposta) ou verde de sucesso (cliente, reserva aprovada). */
 .notificacao-banner {
     align-items: center;
     gap: 12px;

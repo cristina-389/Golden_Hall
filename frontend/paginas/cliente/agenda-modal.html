@@ -34,3 +34,18 @@
       <div id="grid-dias-mes" class="grid-dias-mes"></div>
     </div>
   </div>
+
+  <!-- MODAL: DIA JÁ PASSOU - aberto ao clicar num dia anterior a hoje no
+       calendário (ver abrirModalDiaPassado() em modais.js), em vez do
+       formulário de reserva -->
+  <div id="modal-dia-passado" class="modal-overlay">
+    <div class="modal-box modal-aviso-dia-passado">
+      <button class="fechar-modal" onclick="fecharModalDiaPassado()">&times;</button>
+
+      <i class="bi bi-calendar-x aviso-dia-passado-icone"></i>
+      <h2>Não é possível reservar essa data</h2>
+      <p class="subtitulo-form">Esse dia já passou. Escolha uma data futura no calendário para fazer sua reserva.</p>
+
+      <button type="button" class="btn btn-gold btn-bloco" onclick="fecharModalDiaPassado()">Entendi</button>
+    </div>
+  </div>

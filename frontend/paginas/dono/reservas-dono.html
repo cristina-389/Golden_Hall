@@ -1,10 +1,13 @@
 <!--
   GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
   Página exclusiva pra contas "proprietario" (ver js/paginas/reservas-dono.js,
-  que bloqueia o acesso de quem não for). Um card comprido por espaço
-  cadastrado - clicar em "Ver solicitações de reserva" abre a lista de
-  pedidos daquele espaço, com Aprovar/Recusar. O botão "Ver avaliações" leva
-  pra uma página separada com os comentários dos espaços.
+  que bloqueia o acesso de quem não for). Um card comprido por espaço que já
+  recebeu pelo menos uma reserva (espaços sem nenhuma reserva não aparecem
+  aqui), com a foto principal pra identificar melhor qual é - clicar em
+  "Ver solicitações de reserva" leva pra uma página própria
+  (solicitacoes-espaco.html) com os pedidos daquele espaço e os botões de
+  Aprovar/Recusar. O botão "Ver avaliações" leva pra uma página separada com
+  os comentários dos espaços.
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -20,8 +23,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="/frontend/css/style.css">
-    <!-- reservas.css continua importado só pelo ".card-reserva" usado no modal
-         de solicitações (mesma ideia de painel-dono.html) -->
+    <!-- reservas.css continua importado pelo ".estatisticas-grid"/".card-estatistica"
+         do resumo lá em cima (mesmo visual de "Minhas Reservas" do cliente) -->
     <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
     <link rel="stylesheet" href="/frontend/css/paginas/painel-dono.css">
     <link rel="stylesheet" href="/frontend/css/paginas/reservas-dono.css">
@@ -67,7 +70,7 @@
                     <h4 id="stat-total-avaliacoes">0</h4>
                 </div>
             </div>
-            <div class="card-estatistica">
+            <div class="card-estatistica" id="card-proxima-reserva">
                 <div class="icone-estatistica aprovado"><i class="bi bi-calendar-heart-fill"></i></div>
                 <div class="info-estatistica info-estatistica-texto">
                     <span class="label">Próxima reserva confirmada</span>
@@ -114,16 +117,19 @@
         </a>
     </nav>
 
-    <!-- ================= MODAL: SOLICITAÇÕES DE RESERVA DE UM ESPAÇO ================= -->
-    <div id="modal-reservas-espaco" class="modal-overlay">
-        <div class="modal-box modal-reservas-espaco-box">
-            <button class="fechar-modal" onclick="fecharReservasEspaco()">&times;</button>
+    <!-- ================= MODAL: PRÓXIMAS RESERVAS CONFIRMADAS =================
+         Só é aberto quando tem MAIS de uma reserva Aprovada no futuro (com
+         só 1, o card já mostra a data direto, sem precisar de modal) - ver
+         atualizarCardProximaReserva() em reservas-dono.js. -->
+    <div id="modal-proximas-reservas" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharProximasReservas()">&times;</button>
 
-            <h2 id="titulo-reservas-espaco">Reservas Recebidas</h2>
+            <h2>Próximas reservas confirmadas</h2>
             <div class="linha-dourada-form"></div>
 
-            <!-- Preenchida via JS (abrirReservasEspaco(), em reservas-dono.js) -->
-            <div id="lista-reservas-espaco"></div>
+            <!-- Preenchida via JS (abrirProximasReservas(), em reservas-dono.js) -->
+            <div id="lista-proximas-reservas" class="lista-proximas-reservas"></div>
         </div>
     </div>
 
@@ -139,32 +145,6 @@
             <div class="linha-dourada-form"></div>
 
             <div id="lista-escolher-espaco" class="lista-escolher-espaco-avaliacoes"></div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL: MOTIVO DA RECUSA/CANCELAMENTO =================
-         Aberto ao clicar em "Recusar" (reserva Pendente) ou "Cancelar
-         reserva" (já Aprovada) - ver abrirModalMotivoRecusa() em
-         reservas-dono.js. O texto escrito aqui fica salvo em
-         "motivo_recusa" e o cliente vê ele em "Minhas Reservas". -->
-    <div id="modal-motivo-recusa" class="modal-overlay">
-        <div class="modal-box">
-            <button class="fechar-modal" onclick="fecharModalMotivoRecusa()">&times;</button>
-
-            <h2>Motivo da recusa</h2>
-            <div class="linha-dourada-form"></div>
-            <p class="subtitulo-form" id="aviso-motivo-recusa"></p>
-
-            <form id="form-motivo-recusa" onsubmit="return confirmarRecusaComMotivo(event)">
-                <div class="form-grid">
-                    <div class="input-grupo col-total">
-                        <label for="input-motivo-recusa">Justificativa (o cliente vai ver essa mensagem)</label>
-                        <textarea id="input-motivo-recusa" rows="3" placeholder="Ex: Infelizmente essa data já foi reservada por outra pessoa antes do seu pedido." required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-gold btn-bloco">Confirmar recusa</button>
-                </div>
-            </form>
         </div>
     </div>
 

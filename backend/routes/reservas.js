@@ -136,6 +136,15 @@ router.post('/reservas/:id/avaliacao', autenticar, (req, res) => {
         return res.status(400).json({ erro: 'Só é possível avaliar reservas já aprovadas pelo proprietário.' });
     }
 
+    // Só dá pra avaliar depois que o evento realmente aconteceu - assim a
+    // avaliação é sempre de uma experiência de verdade, não de algo que
+    // ainda nem rolou (ver o lembrete que avisa quando chega essa hora, em
+    // utils/lembretesAvaliacao.js e GET /api/estatisticas)
+    const { data: hoje } = db.prepare("SELECT date('now') AS data").get();
+    if (reserva.data > hoje) {
+        return res.status(400).json({ erro: 'Você só pode avaliar depois que o evento acontecer.' });
+    }
+
     const jaAvaliada = db.prepare('SELECT id FROM avaliacoes WHERE reserva_id = ?').get(req.params.id);
     if (jaAvaliada) {
         return res.status(409).json({ erro: 'Você já avaliou esta reserva.' });
@@ -163,6 +172,19 @@ router.delete('/reservas/:id', autenticar, (req, res) => {
         return res.status(403).json({ erro: 'Você só pode cancelar reservas suas.' });
     }
 
+    // Se o proprietário já recusou (ou cancelou) essa reserva, não faz
+    // sentido o cliente "cancelar" de novo - a reserva já não é mais válida
+    if (reserva.status === 'Cancelado') {
+        return res.status(400).json({ erro: 'Esta reserva já foi cancelada.' });
+    }
+
+    // Uma reserva Aprovada pode já ter sido avaliada (ver POST
+    // /api/reservas/:id/avaliacao) - "avaliacoes.reserva_id" é uma FOREIGN
+    // KEY pra "reservas", então apagar a reserva sem apagar a avaliação
+    // ligada a ela primeiro quebraria essa restrição. Cancelar continua
+    // sendo gratuito "a qualquer momento" (a promessa do front-end), então
+    // a avaliação some junto.
+    db.prepare('DELETE FROM avaliacoes WHERE reserva_id = ?').run(req.params.id);
     db.prepare('DELETE FROM reservas WHERE id = ?').run(req.params.id);
     res.status(204).send();
 });

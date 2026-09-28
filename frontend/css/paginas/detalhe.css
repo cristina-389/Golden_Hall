@@ -256,46 +256,73 @@
     font-size: 1.1rem;
 }
 
-.resumo-avaliacoes .estrelas {
+/* Caixa com a seta "❮", a avaliação atual no meio, e a seta "❯" - mostra
+   uma avaliação de cada vez (ver mudarAvaliacao() em detalhes.js) */
+.avaliacao-carrossel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, .3);
+    /* Altura mínima pra caber uns 3 linhas de comentário - sem isso, o card
+       (e as setas junto com ele, já que ficam centralizadas na vertical)
+       mudavam de altura e de lugar dependendo do tamanho do comentário de
+       cada avaliação, ficando estranho ao navegar entre elas */
+    min-height: 220px;
+}
+
+.avaliacao-conteudo {
+    max-width: 700px;
+    text-align: center;
+}
+
+.avaliacao-conteudo .estrelas {
     color: #d4af37;
     font-size: 26px;
     letter-spacing: 2px;
     display: block;
-    margin-bottom: 6px;
-}
-
-.card-avaliacao {
-    padding: 20px 22px;
-    border-radius: 16px;
-    border: 1px solid rgba(212, 175, 55, .3);
     margin-bottom: 15px;
 }
 
-.card-avaliacao-topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
+.avaliacao-conteudo p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
 }
 
-.card-avaliacao-topo .estrelas {
+.avaliacao-conteudo h4 {
     color: #d4af37;
-    letter-spacing: 1px;
-}
-
-.card-avaliacao .autor {
     font-weight: 600;
 }
 
-.card-avaliacao .data {
-    font-size: .82rem;
-    opacity: .6;
+/* Setas simples, sem fundo/círculo - só o ícone dourado que cresce um
+   pouco ao passar o mouse (igual ao design original da seção) */
+.btn-seta-avaliacao {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: #d4af37;
+    font-size: 28px;
+    cursor: pointer;
+    transition: .3s;
 }
 
-.card-avaliacao .comentario {
-    line-height: 1.6;
-    opacity: .9;
+.btn-seta-avaliacao:hover {
+    transform: scale(1.2);
+}
+
+body:not(.dark) .avaliacao-carrossel { background: #fdfdfd; }
+body.dark .avaliacao-carrossel { background: #161616; }
+
+/* Legenda pequena embaixo do card, com a média/total real - mesmo estilo
+   do contador "2 / 3" da galeria de fotos (.galeria-contador) */
+.avaliacao-contador {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: #999999;
 }
 
 /* Fileira dos botões "Reservar este espaço" / "Fale Conosco" no final da página */

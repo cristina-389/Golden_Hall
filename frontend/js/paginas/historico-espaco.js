@@ -92,11 +92,13 @@ function criarLinhaHistorico(reserva) {
             <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'}</strong></p>
             <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
             <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
+            <p class="observacoes-reserva"><i class="bi bi-chat-left-text"></i> Observações: <strong class="observacoes-cliente"></strong></p>
         </div>
     `;
 
     div.querySelector('.nome-cliente').textContent = reserva.cliente_nome;
     div.querySelector('.email-cliente').textContent = reserva.cliente_email;
+    div.querySelector('.observacoes-cliente').textContent = reserva.observacoes || 'Nenhuma';
 
     return div;
 }
