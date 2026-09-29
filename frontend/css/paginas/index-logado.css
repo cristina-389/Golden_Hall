@@ -157,12 +157,15 @@ header {
 }
 
 /* ================= NOTIFICAÇÃO DE AVISO (itens da lista, cliente E dono) =================
-   ".notificacao-banner" e os modificadores "--alerta"/"--sucesso" agora
-   vivem em notificacoes.html/notificacoes-dono.html (um item de lista por
-   aviso, via notificacoes.js/notificacoes-dono.js) em vez de um banner
-   único na home - ver notificacoes.css pro espaçamento entre os itens.
-   Duas cores possíveis: laranja de alerta (dono, reserva pendente
-   esperando resposta) ou verde de sucesso (cliente, reserva aprovada). */
+   ".notificacao-banner" vive em notificacoes.html/notificacoes-dono.html -
+   uma linha por notificação de verdade, salva no banco (ver GET
+   /api/notificacoes) - ver notificacoes.css pro espaçamento entre os itens.
+   3 cores possíveis conforme o tipo (ver estiloPorTipo() em notificacoes.js/
+   notificacoes-dono.js): laranja de alerta (nova solicitação, pro dono),
+   verde de sucesso (reserva aprovada / hora de avaliar) ou vermelho de erro
+   (reserva cancelada). Fica com opacidade reduzida e sem o pulso assim que
+   já foi vista (falta o modificador "--nao-lida") - é isso que "destaca"
+   as notificações novas das antigas. */
 .notificacao-banner {
     align-items: center;
     gap: 12px;
@@ -174,6 +177,17 @@ header {
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 600;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.notificacao-banner:hover {
+    opacity: 0.85;
+}
+
+.notificacao-banner--nao-lida,
+.notificacao-banner--nao-lida:hover {
+    opacity: 1;
 }
 
 .notificacao-banner i:first-child {
@@ -196,7 +210,6 @@ header {
 .notificacao-banner--alerta {
     background: linear-gradient(135deg, rgba(255, 157, 77, 0.16), rgba(212, 164, 55, 0.08));
     border: 1px solid rgba(255, 157, 77, 0.45);
-    animation: pulsarNotificacaoAlerta 2.5s ease-in-out infinite;
 }
 
 .notificacao-banner--alerta i:first-child,
@@ -207,12 +220,35 @@ header {
 .notificacao-banner--sucesso {
     background: linear-gradient(135deg, rgba(46, 204, 113, 0.16), rgba(212, 164, 55, 0.08));
     border: 1px solid rgba(46, 204, 113, 0.45);
-    animation: pulsarNotificacaoSucesso 2.5s ease-in-out infinite;
 }
 
 .notificacao-banner--sucesso i:first-child,
 .notificacao-banner--sucesso .seta-notificacao {
     color: #2ecc71;
+}
+
+.notificacao-banner--erro {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.16), rgba(212, 164, 55, 0.08));
+    border: 1px solid rgba(231, 76, 60, 0.45);
+}
+
+.notificacao-banner--erro i:first-child,
+.notificacao-banner--erro .seta-notificacao {
+    color: #e74c3c;
+}
+
+/* O pulso só acontece nas ainda não lidas - é o "destaque" pedido, além da
+   opacidade cheia acima */
+.notificacao-banner--alerta.notificacao-banner--nao-lida {
+    animation: pulsarNotificacaoAlerta 2.5s ease-in-out infinite;
+}
+
+.notificacao-banner--sucesso.notificacao-banner--nao-lida {
+    animation: pulsarNotificacaoSucesso 2.5s ease-in-out infinite;
+}
+
+.notificacao-banner--erro.notificacao-banner--nao-lida {
+    animation: pulsarNotificacaoErro 2.5s ease-in-out infinite;
 }
 
 @keyframes pulsarNotificacaoAlerta {
@@ -223,6 +259,11 @@ header {
 @keyframes pulsarNotificacaoSucesso {
     0%, 100% { box-shadow: 0 0 0 rgba(46, 204, 113, 0); }
     50%      { box-shadow: 0 0 20px rgba(46, 204, 113, 0.25); }
+}
+
+@keyframes pulsarNotificacaoErro {
+    0%, 100% { box-shadow: 0 0 0 rgba(231, 76, 60, 0); }
+    50%      { box-shadow: 0 0 20px rgba(231, 76, 60, 0.25); }
 }
 
 /* ================= CARD "SEU DESENVOLVIMENTO" ================= */

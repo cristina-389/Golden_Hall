@@ -62,7 +62,10 @@
 
             <div class="secao-titulo-grid">
                 <h3>Meus Agendamentos</h3>
-                <a href="/frontend/paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
+                <div class="botoes-topo-reservas">
+                    <a href="/frontend/paginas/cliente/historico.html" class="btn-novo-espaco btn-secundario"><i class="bi bi-clock-history"></i> Ver histórico</a>
+                    <a href="/frontend/paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-plus-lg"></i> Reservar novo espaço</a>
+                </div>
             </div>
 
             <!-- Preenchida via JS (carregarMinhasReservas() em reservas.js) com
@@ -74,38 +77,27 @@
         </section>
     </main>
 
-    <!-- ================= MODAL: AVALIAR ESPAÇO =================
-         Só é usado em reservas com status "Aprovado" e que ainda não
-         foram avaliadas (ver criarCardReserva() em reservas.js) -->
-    <div id="modal-avaliacao" class="modal-overlay">
+    <!-- ================= MODAL: MOTIVO DO CANCELAMENTO =================
+         Aberto ao clicar em "Cancelar Reserva" numa reserva já Aprovada
+         (ver abrirModalMotivoCancelamento() em reservas.js) - o texto
+         escrito aqui fica salvo em "motivo_recusa" e o proprietário vê ele
+         na página de Reservas dele. -->
+    <div id="modal-motivo-cancelamento" class="modal-overlay">
         <div class="modal-box">
-            <button class="fechar-modal" onclick="fecharModalAvaliacao()">&times;</button>
+            <button class="fechar-modal" onclick="fecharModalMotivoCancelamento()">&times;</button>
 
-            <h2>Avaliar Espaço</h2>
+            <h2>Motivo do cancelamento</h2>
             <div class="linha-dourada-form"></div>
-            <p class="subtitulo-form">Conte como foi sua experiência - sua avaliação ajuda outras pessoas a escolher.</p>
+            <p class="subtitulo-form">Essa reserva já estava aprovada - conte rapidamente por que está cancelando, o proprietário vai ver essa mensagem.</p>
 
-            <form id="form-avaliacao">
+            <form id="form-motivo-cancelamento" onsubmit="return confirmarCancelamentoComMotivo(event)">
                 <div class="form-grid">
-
                     <div class="input-grupo col-total">
-                        <label for="avaliacao-nota">Sua nota</label>
-                        <select id="avaliacao-nota" required>
-                            <option value="">Selecione...</option>
-                            <option value="5">★★★★★ (5) Excelente</option>
-                            <option value="4">★★★★☆ (4) Muito bom</option>
-                            <option value="3">★★★☆☆ (3) Bom</option>
-                            <option value="2">★★☆☆☆ (2) Regular</option>
-                            <option value="1">★☆☆☆☆ (1) Ruim</option>
-                        </select>
+                        <label for="input-motivo-cancelamento">Justificativa</label>
+                        <textarea id="input-motivo-cancelamento" rows="3" placeholder="Ex: Não vou mais precisar do espaço, mudei a data do evento." required></textarea>
                     </div>
 
-                    <div class="input-grupo col-total">
-                        <label for="avaliacao-comentario">Comentário (opcional)</label>
-                        <textarea id="avaliacao-comentario" rows="3" placeholder="O que você achou do espaço?"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-gold btn-bloco">Enviar Avaliação</button>
+                    <button type="submit" class="btn btn-gold btn-bloco">Confirmar cancelamento</button>
                 </div>
             </form>
         </div>

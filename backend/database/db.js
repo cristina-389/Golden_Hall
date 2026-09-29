@@ -115,17 +115,24 @@ db.exec(`
     status TEXT NOT NULL DEFAULT 'Pendente' CHECK (status IN ('Pendente', 'Aprovado', 'Cancelado')),
     motivo_recusa TEXT,
     lembrete_avaliacao_enviado INTEGER NOT NULL DEFAULT 0,
+    visto_pelo_cliente INTEGER NOT NULL DEFAULT 0,
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (espaco_id) REFERENCES espacos (id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
   )
 `);
 
-// "horario_termino"/"motivo_recusa"/"lembrete_avaliacao_enviado" foram
-// adicionadas depois que a tabela já existia em bancos criados antes delas -
-// mesma ideia das outras colunas (ver comentário lá em cima, na tabela de
-// usuários): tenta adicionar por fora, e ignora o erro se a coluna já existir.
-for (const coluna of ['horario_termino TEXT', 'motivo_recusa TEXT', 'lembrete_avaliacao_enviado INTEGER NOT NULL DEFAULT 0']) {
+// "horario_termino"/"motivo_recusa"/"lembrete_avaliacao_enviado"/
+// "visto_pelo_cliente" foram adicionadas depois que a tabela já existia em
+// bancos criados antes delas - mesma ideia das outras colunas (ver
+// comentário lá em cima, na tabela de usuários): tenta adicionar por fora,
+// e ignora o erro se a coluna já existir.
+for (const coluna of [
+    'horario_termino TEXT',
+    'motivo_recusa TEXT',
+    'lembrete_avaliacao_enviado INTEGER NOT NULL DEFAULT 0',
+    'visto_pelo_cliente INTEGER NOT NULL DEFAULT 0'
+]) {
     try {
         db.exec(`ALTER TABLE reservas ADD COLUMN ${coluna}`);
     } catch (erro) {
@@ -251,6 +258,29 @@ db.exec(`
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
     FOREIGN KEY (espaco_id) REFERENCES espacos (id)
+  )
+`);
+
+// --------------------------------------------------------------------------
+// TABELA DE NOTIFICAÇÕES
+// Uma linha por "novidade" de verdade que aconteceu com a conta de alguém -
+// reserva aprovada, reserva cancelada, nova solicitação recebida (pro
+// proprietário), convite pra avaliar depois do evento... (ver
+// utils/notificacoes.js, chamado de dentro de routes/reservas.js e
+// utils/lembretesAvaliacao.js). "lida" começa em 0 (não lida) - fica
+// destacada na tela até a pessoa abrir a página de notificações uma vez
+// (ver GET /api/notificacoes, que marca como lida DEPOIS de responder).
+// --------------------------------------------------------------------------
+db.exec(`
+  CREATE TABLE IF NOT EXISTS notificacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    tipo TEXT NOT NULL,
+    mensagem TEXT NOT NULL,
+    link TEXT,
+    lida INTEGER NOT NULL DEFAULT 0,
+    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
   )
 `);
 

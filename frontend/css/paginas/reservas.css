@@ -199,6 +199,13 @@ body.dark .info-estatistica h4 {
     gap: 15px;
 }
 
+/* Usada quando não tem os cartõezinhos de estatística antes (historico.html)
+   pra abrir um respiro logo depois do banner, já que ".container-principal-reservas"
+   sobe 30px por cima dele */
+.secao-titulo-grid--topo {
+    margin-top: 40px;
+}
+
 .secao-titulo-grid h3 {
     font-family: 'Cinzel', serif;
     font-size: 1.4rem;
@@ -228,6 +235,25 @@ body.dark .secao-titulo-grid h3 {
 .btn-novo-espaco:hover {
     background: #b59228;
     transform: translateY(-2px);
+}
+
+/* "Ver histórico" ao lado de "Reservar novo espaço" - mesmo botão, só que
+   com contorno em vez de fundo dourado sólido (ação secundária) */
+.botoes-topo-reservas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-novo-espaco.btn-secundario {
+    background: transparent;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+}
+
+.btn-novo-espaco.btn-secundario:hover {
+    background: rgba(212, 175, 55, 0.12);
+    color: #d4af37;
 }
 
 /* --------------------------------------------------

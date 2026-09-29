@@ -86,6 +86,11 @@ app.use('/api', require('./routes/reservas'));
 app.use('/api', require('./routes/favoritos'));
 
 // --------------------------------------------------------------------------
+// ROTAS DE NOTIFICAÇÕES (contagem de não lidas e lista completa)
+// --------------------------------------------------------------------------
+app.use('/api', require('./routes/notificacoes'));
+
+// --------------------------------------------------------------------------
 // LEMBRETE DE AVALIAÇÃO POR E-MAIL
 // Verifica reservas com o evento já realizado (mas ainda sem avaliação) e
 // manda o e-mail convidando a avaliar - ver utils/lembretesAvaliacao.js.

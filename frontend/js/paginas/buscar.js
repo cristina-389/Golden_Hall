@@ -39,6 +39,108 @@ function limparFiltros() {
     document.querySelector('.resultados-busca').style.display = "none";
 }
 
+/* ==========================================================================
+   INTERPRETAÇÃO DA BUSCA PRINCIPAL EM TEXTO LIVRE
+   Nem sempre a pessoa sabe o nome do espaço - às vezes ela só descreve o
+   que precisa, tipo "espaço em Americana pra casamento de 4000 pras 400
+   pessoas". Em vez de tratar a frase inteira como um texto único (que
+   dificilmente bate com o nome/descrição de algum espaço), a busca tenta
+   primeiro achar pelo NOME (se a pessoa já sabe qual é) e, se não achar,
+   separa a frase em cidade, capacidade, preço máximo e o que sobrar (tipo
+   de evento ou pedaços do nome) - cada pedaço identificado é comparado com
+   o dado real do espaço.
+   ========================================================================== */
+
+// Tira acentos e deixa tudo minúsculo, pra "Americana"/"américa" ou "São
+// Paulo"/"sao paulo" combinarem na busca não importa como foi digitado
+function normalizarTexto(texto) {
+    return (texto || '')
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
+// Palavras que não ajudam a identificar nada específico - ignoradas ao
+// procurar o que sobrou da frase depois de tirar cidade/capacidade/preço
+const PALAVRAS_IGNORADAS_BUSCA = new Set([
+    'espaco', 'espacos', 'pra', 'pras', 'para', 'pro', 'pros', 'com', 'de',
+    'do', 'da', 'dos', 'das', 'em', 'num', 'numa', 'um', 'uma', 'e', 'ou',
+    'no', 'na', 'ate', 'reais', 'r$'
+]);
+
+// Separa a frase digitada em: capacidade mínima ("400 pessoas"), preço
+// máximo ("de 4000", "R$ 4000", "4000 reais") e cidade ("em Americana") -
+// o que sobrar depois de tirar esses 3 pedaços é o "termo livre" (geralmente
+// o tipo de evento, tipo "casamento")
+function interpretarBuscaLivre(textoOriginal) {
+    let restante = ' ' + normalizarTexto(textoOriginal) + ' ';
+
+    let capacidade = null;
+    const matchCapacidade = restante.match(/(\d+)\s*pessoas?/);
+    if (matchCapacidade) {
+        capacidade = parseInt(matchCapacidade[1], 10);
+        restante = restante.replace(matchCapacidade[0], ' ');
+    }
+
+    let preco = null;
+    const matchPrecoComSinal = restante.match(/r\$\s*(\d+)|(\d+)\s*reais/);
+    if (matchPrecoComSinal) {
+        preco = parseInt(matchPrecoComSinal[1] || matchPrecoComSinal[2], 10);
+        restante = restante.replace(matchPrecoComSinal[0], ' ');
+    } else {
+        // Nenhum "R$"/"reais" junto do número - mesmo assim, um número solto
+        // que sobrou (depois de já tirar a capacidade) normalmente é o
+        // orçamento que a pessoa tem em mente
+        const matchNumeroSolto = restante.match(/\d+/);
+        if (matchNumeroSolto) {
+            preco = parseInt(matchNumeroSolto[0], 10);
+            restante = restante.replace(matchNumeroSolto[0], ' ');
+        }
+    }
+
+    let cidade = null;
+    const matchCidade = restante.match(/\bem\s+([a-z\s]+?)(?:\s+\b(?:pra|para|pro|com|de|do|da)\b|$)/);
+    if (matchCidade) {
+        cidade = matchCidade[1].trim();
+        restante = restante.replace(matchCidade[0], ' ');
+    }
+
+    const termosLivres = restante
+        .split(/\s+/)
+        .map(termo => termo.trim())
+        .filter(termo => termo && !PALAVRAS_IGNORADAS_BUSCA.has(termo));
+
+    return { capacidade, preco, cidade, termosLivres };
+}
+
+// Decide se UM espaço bate com o que a pessoa digitou na busca principal.
+// Primeiro tenta o jeito mais simples: será que é o NOME do espaço? Se for,
+// resolve na hora. Senão, interpreta a frase e exige que cada pedaço
+// identificado (cidade/capacidade/preço/termo livre) bata com os dados
+// reais do espaço - "eventos_permitidos" entra na comparação do termo
+// livre, pra "casamento" bater com o que o proprietário realmente cadastrou.
+function espacoBateNaBuscaPrincipal(espaco, textoOriginal) {
+    const textoNormalizado = normalizarTexto(textoOriginal);
+    if (!textoNormalizado) return true;
+
+    if (normalizarTexto(espaco.nome).includes(textoNormalizado)) return true;
+
+    const { capacidade, preco, cidade, termosLivres } = interpretarBuscaLivre(textoOriginal);
+
+    if (capacidade && (espaco.capacidade || 0) < capacidade) return false;
+    if (preco && (espaco.preco || 0) > preco) return false;
+    if (cidade && !normalizarTexto(espaco.local).includes(cidade)) return false;
+
+    if (termosLivres.length > 0) {
+        const textoDoEspaco = normalizarTexto(
+            `${espaco.nome} ${espaco.descricao || ''} ${espaco.local || ''} ${(espaco.eventos_permitidos || []).join(' ')}`
+        );
+        return termosLivres.every(termo => textoDoEspaco.includes(termo));
+    }
+
+    return true;
+}
+
 // Filtra "todosEspacos" com base no que foi digitado e desenha os cards que sobrarem
 function filtrarEspacos() {
     const buscaPrincipal = document.getElementById('input-busca').value.trim();
@@ -57,19 +159,17 @@ function filtrarEspacos() {
 
     const numCapacidade = parseInt(txtCapacidade) || 0;
     const numPrecoMax = parseFloat(txtPreco) || Infinity;
-    const buscaPrincipalMinusculo = buscaPrincipal.toLowerCase();
-    const txtCidadeMinusculo = txtCidade.toLowerCase();
-    const txtEventoMinusculo = txtEvento.toLowerCase();
+    const txtCidadeNormalizado = normalizarTexto(txtCidade);
+    const txtEventoNormalizado = normalizarTexto(txtEvento);
 
     const resultado = todosEspacos.filter(espaco => {
-        const tags = `${espaco.nome} ${espaco.descricao || ''} ${espaco.local || ''}`.toLowerCase();
-        const cidade = (espaco.local || '').toLowerCase();
         const capacidade = espaco.capacidade || 0;
         const preco = espaco.preco || 0;
+        const eventosDoEspaco = normalizarTexto((espaco.eventos_permitidos || []).join(' '));
 
-        const bateBusca = buscaPrincipalMinusculo === "" || tags.includes(buscaPrincipalMinusculo);
-        const bateCidade = txtCidadeMinusculo === "" || cidade.includes(txtCidadeMinusculo);
-        const bateEvento = txtEventoMinusculo === "" || tags.includes(txtEventoMinusculo);
+        const bateBusca = espacoBateNaBuscaPrincipal(espaco, buscaPrincipal);
+        const bateCidade = txtCidadeNormalizado === "" || normalizarTexto(espaco.local).includes(txtCidadeNormalizado);
+        const bateEvento = txtEventoNormalizado === "" || eventosDoEspaco.includes(txtEventoNormalizado);
         const bateCapacidade = numCapacidade === 0 || capacidade >= numCapacidade;
         const batePreco = preco <= numPrecoMax;
 

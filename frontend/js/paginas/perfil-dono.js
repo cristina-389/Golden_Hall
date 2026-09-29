@@ -356,6 +356,7 @@ async function alterarSenha(event) {
     return false;
 }
 
+
 // Botão "Editar Dados" / "Salvar Dados" - a mesma função cuida dos dois
 // estados, olhando a variável "emEdicao". O link "Alterar senha" só faz
 // sentido junto do resto dos campos liberados pra edição, então aparece e

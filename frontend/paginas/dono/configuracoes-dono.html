@@ -1,0 +1,104 @@
+<!--
+  GOLDEN HALL - CONFIGURAÇÕES AVANÇADAS DO PROPRIETÁRIO (paginas/dono/configuracoes-dono.html)
+  Página separada de perfil-dono.html de propósito - só tem a opção de
+  excluir a conta (ação destrutiva, ver DELETE /api/perfil em
+  js/paginas/configuracoes.js, reaproveitado igual do lado do cliente - não
+  tem nada específico de tipo de conta aqui), então fica escondida atrás de
+  um link discreto no rodapé do Perfil, em vez de aparecer direto na tela
+  principal.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Configurações da Conta</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/perfil.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/configuracoes.css">
+</head>
+<body class="logado-layout dark perfil-logado-premium">
+
+    <main>
+        <section class="secao-configuracoes">
+            <a href="/frontend/paginas/dono/perfil-dono.html" class="voltar-avaliacoes">← Voltar pro perfil</a>
+
+            <h2 class="titulo-configuracoes">Configurações da Conta</h2>
+            <div class="linha-elegante"><span>✦</span></div>
+
+            <div class="card-zona-perigo">
+                <h3><i class="bi bi-exclamation-triangle-fill"></i> Zona de Perigo</h3>
+                <p>Excluir sua conta apaga para sempre todos os seus espaços cadastrados, reservas recebidas e avaliações. Essa ação não pode ser desfeita.</p>
+
+                <button class="btn-excluir-conta" onclick="abrirModalExcluirConta()">
+                    <i class="bi bi-trash3"></i> Excluir minha conta
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de "excluir minha conta" - pede a senha atual como confirmação
+         (decisão sem volta, ver DELETE /api/perfil) - ver
+         abrirModalExcluirConta() em js/paginas/configuracoes.js. Se ainda
+         tiver algum espaço com reserva pendente/aprovada, o back-end
+         recusa a exclusão. -->
+    <div id="modal-excluir-conta" class="modal-overlay">
+        <div class="modal-box modal-alerta-box">
+            <div class="icone-alerta-dourado icone-alerta-perigo">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+
+            <h3>EXCLUIR SUA CONTA?</h3>
+            <div class="linha-dourada-form"></div>
+
+            <p class="pergunta-ciente">Essa ação não pode ser desfeita. Todos os seus espaços cadastrados, reservas e avaliações recebidas serão apagados para sempre.</p>
+
+            <form id="form-excluir-conta" onsubmit="return confirmarExclusaoConta(event)">
+                <div class="input-grupo col-total">
+                    <label for="excluir-conta-senha">Digite sua senha pra confirmar</label>
+                    <div class="campo-senha">
+                        <input type="password" id="excluir-conta-senha" autocomplete="current-password" required>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarVisibilidadeSenha('excluir-conta-senha', this)" title="Mostrar senha">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="botoes-alerta-grupo">
+                    <button type="button" class="btn-cancelar-alerta" onclick="fecharModalExcluirConta()">CANCELAR</button>
+                    <button type="submit" class="btn-confirmar-alerta-perigo">EXCLUIR DEFINITIVAMENTE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/dono/index-logado-dono.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/dono/painel-dono.html" class="item-nav">
+            <i class="bi bi-shop icone"></i>
+            <span class="texto">Meus Espaços</span>
+        </a>
+        <a href="/frontend/paginas/dono/reservas-dono.html" class="item-nav">
+            <i class="bi bi-envelope-paper-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/dono/perfil-dono.html" class="item-nav ativo">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/configuracoes.js"></script>
+</body>
+</html>

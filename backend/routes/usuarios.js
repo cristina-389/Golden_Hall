@@ -239,6 +239,83 @@ router.put('/perfil/foto', autenticar, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
+// DELETE /api/perfil - exclui de vez a conta de quem está logado. Exige a
+// senha atual como confirmação (mesma ideia de PUT /api/perfil/senha) - é
+// uma decisão que não tem volta. Se for uma conta de PROPRIETÁRIO, apaga
+// também todos os espaços dela (e tudo que depende deles); se qualquer um
+// desses espaços ainda tiver reserva Pendente/Aprovada, ou se a própria
+// conta (cliente ou proprietário) tiver reserva Pendente/Aprovada em
+// aberto, a exclusão é recusada - senão a outra parte perderia a reserva
+// sem nenhum aviso.
+// --------------------------------------------------------------------------
+router.delete('/perfil', autenticar, (req, res) => {
+    const { senha } = req.body;
+
+    const usuario = db.prepare('SELECT * FROM usuarios WHERE id = ?').get(req.usuario.id);
+    if (!usuario) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    if (!senha || !bcrypt.compareSync(senha, usuario.senha)) {
+        return res.status(401).json({ erro: 'Senha incorreta.' });
+    }
+
+    if (usuario.tipo === 'proprietario') {
+        const { total: reservasAtivas } = db
+            .prepare(`
+                SELECT COUNT(*) AS total
+                FROM reservas
+                JOIN espacos ON espacos.id = reservas.espaco_id
+                WHERE espacos.dono_id = ? AND reservas.status IN ('Pendente', 'Aprovado')
+            `)
+            .get(usuario.id);
+
+        if (reservasAtivas > 0) {
+            return res.status(409).json({
+                erro: 'Você tem espaços com reservas pendentes ou aprovadas. Resolva-as antes de excluir sua conta.'
+            });
+        }
+
+        // Mesma ordem de exclusão (respeitando as FOREIGN KEYs) de DELETE
+        // /api/espacos/:id, só que repetida pra CADA espaço da conta
+        const espacosIds = db.prepare('SELECT id FROM espacos WHERE dono_id = ?').all(usuario.id).map(e => e.id);
+        for (const espacoId of espacosIds) {
+            db.prepare('DELETE FROM avaliacoes WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM reservas WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM favoritos WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM visualizacoes WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM beneficios WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM eventos_permitidos WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM pontos_referencia WHERE espaco_id = ?').run(espacoId);
+            db.prepare('DELETE FROM fotos_espaco WHERE espaco_id = ?').run(espacoId);
+        }
+        db.prepare('DELETE FROM espacos WHERE dono_id = ?').run(usuario.id);
+    } else {
+        const { total: reservasAtivas } = db
+            .prepare(`SELECT COUNT(*) AS total FROM reservas WHERE usuario_id = ? AND status IN ('Pendente', 'Aprovado')`)
+            .get(usuario.id);
+
+        if (reservasAtivas > 0) {
+            return res.status(409).json({
+                erro: 'Você tem reservas pendentes ou aprovadas. Cancele-as antes de excluir sua conta.'
+            });
+        }
+    }
+
+    // Dados ligados à conta em si (independente de ser cliente ou
+    // proprietário) - "avaliacoes" antes de "reservas" porque uma avaliação
+    // também depende de uma reserva específica (reserva_id)
+    db.prepare('DELETE FROM avaliacoes WHERE usuario_id = ?').run(usuario.id);
+    db.prepare('DELETE FROM reservas WHERE usuario_id = ?').run(usuario.id);
+    db.prepare('DELETE FROM favoritos WHERE usuario_id = ?').run(usuario.id);
+    db.prepare('DELETE FROM visualizacoes WHERE usuario_id = ?').run(usuario.id);
+    db.prepare('DELETE FROM notificacoes WHERE usuario_id = ?').run(usuario.id);
+    db.prepare('DELETE FROM usuarios WHERE id = ?').run(usuario.id);
+
+    res.status(204).send();
+});
+
+// --------------------------------------------------------------------------
 // GET /api/estatisticas - números reais de atividade de quem está logado,
 // usados no card "Seu desenvolvimento no Golden Hall" da home do cliente
 // (index-logado.html): quantos espaços favoritou, quantas reservas fez,
@@ -250,43 +327,7 @@ router.get('/estatisticas', autenticar, (req, res) => {
     const { total: visualizacoes } = db.prepare('SELECT COUNT(*) AS total FROM visualizacoes WHERE usuario_id = ?').get(req.usuario.id);
     const { total: comentarios } = db.prepare('SELECT COUNT(*) AS total FROM avaliacoes WHERE usuario_id = ?').get(req.usuario.id);
 
-    // Reserva Aprovada mais próxima do cliente, ainda no futuro (ou hoje) -
-    // "null" se não tiver nenhuma - usada no aviso "Reserva aprovada!" da
-    // home dele, avisando que o proprietário vai entrar em contato.
-    const proximaReservaAprovada = db
-        .prepare(`
-            SELECT reservas.data, espacos.nome AS espaco_nome
-            FROM reservas
-            JOIN espacos ON espacos.id = reservas.espaco_id
-            WHERE reservas.usuario_id = ? AND reservas.status = 'Aprovado' AND reservas.data >= date('now')
-            ORDER BY reservas.data ASC
-            LIMIT 1
-        `)
-        .get(req.usuario.id);
-
-    // Reservas Aprovadas cujo evento já aconteceu (data passada) e que ainda
-    // não foram avaliadas - usada no sino de notificações da home, convidando
-    // a avaliar (mesma ideia do lembrete por e-mail, ver
-    // utils/lembretesAvaliacao.js, só que calculada ao vivo aqui).
-    const reservasParaAvaliar = db
-        .prepare(`
-            SELECT reservas.id AS reserva_id, reservas.data, espacos.nome AS espaco_nome
-            FROM reservas
-            JOIN espacos ON espacos.id = reservas.espaco_id
-            LEFT JOIN avaliacoes ON avaliacoes.reserva_id = reservas.id
-            WHERE reservas.usuario_id = ? AND reservas.status = 'Aprovado' AND reservas.data < date('now') AND avaliacoes.id IS NULL
-            ORDER BY reservas.data DESC
-        `)
-        .all(req.usuario.id);
-
-    res.json({
-        favoritos,
-        reservas,
-        visualizacoes,
-        comentarios,
-        proxima_reserva_aprovada: proximaReservaAprovada || null,
-        reservas_para_avaliar: reservasParaAvaliar
-    });
+    res.json({ favoritos, reservas, visualizacoes, comentarios });
 });
 
 // --------------------------------------------------------------------------

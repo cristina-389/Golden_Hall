@@ -344,10 +344,12 @@
     box-shadow: 0 4px 15px rgba(212, 164, 55, 0.3);
 }
 
-/* CONTAINER DO BOTÃO - CONFIGURADO PARA A DIREITA */
+/* CONTAINER DOS BOTÕES - EMPILHADOS, ENCOSTADOS NO CANTO DIREITO */
 .perfil-actions {
     display: flex;
-    justify-content: flex-end; /* Joga o botão no canto direito */
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
     max-width: 1100px;
     margin: 50px auto 60px;
     padding-right: 10px;
@@ -377,6 +379,77 @@
     color: #000000;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(212, 164, 55, 0.3);
+}
+
+/* Link bem discreto no rodapé do Perfil - leva pra configuracoes.html, onde
+   mora a "zona de perigo" (excluir conta). De propósito pequeno e sem
+   destaque, pra não competir com o resto da tela principal do perfil.
+   Margem debaixo generosa (a barra de navegação inferior é "position:
+   fixed", 65px de altura - sem esse respiro, ela cobria o link) */
+.link-configuracoes-container {
+    text-align: right;
+    max-width: 1100px;
+    margin: 14px auto 90px;
+    padding-right: 10px;
+}
+
+.link-configuracoes-conta {
+    font-size: 12px;
+    color: var(--text-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.7;
+}
+
+.link-configuracoes-conta:hover {
+    opacity: 1;
+}
+
+/* Botão de verdade "Excluir minha conta", dentro do card "Zona de Perigo"
+   (ver configuracoes.html/configuracoes.css) - aqui sim pode ser bem
+   visível, já que a pessoa só chega até aqui de propósito */
+.btn-excluir-conta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid #e74c3c;
+    background: transparent;
+    color: #e74c3c;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.btn-excluir-conta:hover {
+    background: #e74c3c;
+    color: #fff;
+}
+
+/* Modal de confirmação de exclusão - mesma "moldura" do modal de alerta de
+   cancelamento (modal-login.css), só que com o ícone/botão de confirmar em
+   vermelho em vez de dourado, pra deixar claro que é destrutivo */
+.icone-alerta-perigo {
+    color: #e74c3c !important;
+}
+
+.btn-confirmar-alerta-perigo {
+    flex: 1.8;
+    background: #e74c3c;
+    border: none;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-confirmar-alerta-perigo:hover {
+    background: #c0392b;
 }
 
 /* ==================== CALIBRAÇÃO DE TEMAS (PERFIL) ====================

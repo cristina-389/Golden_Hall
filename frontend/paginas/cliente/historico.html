@@ -1,0 +1,121 @@
+<!--
+  GOLDEN HALL - HISTÓRICO DE RESERVAS DO CLIENTE (paginas/cliente/historico.html)
+  Reservas que já saíram de "Minhas Reservas" (reservas.html): eventos
+  Aprovados que já aconteceram (é aqui que mora o botão "Avaliar Espaço",
+  já que só dá pra avaliar depois do evento) e reservas Canceladas que a
+  pessoa já ficou ciente - ver ehReservaAtiva()/carregarMinhasReservas() em
+  reservas.js pra entender quando uma reserva "sai" de lá e cai aqui.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hall | Histórico de Reservas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/paginas/reservas.css">
+</head>
+<body class="logado-layout dark">
+
+    <main class="page-content">
+
+        <section class="banner-reservas">
+            <div class="overlay-banner"></div>
+            <div class="conteudo-banner">
+                <span class="badge-gold"><i class="bi bi-clock-history"></i> Retrospecto</span>
+                <h2>Histórico de <span class="gold-text">Reservas</span></h2>
+                <p>Eventos já realizados e reservas canceladas</p>
+            </div>
+        </section>
+
+        <section class="container-principal-reservas">
+
+            <!-- Sem os cartõezinhos de estatística (só existem em reservas.html)
+                 pra abrir espaço logo depois do banner - sem essa classe, o
+                 título nasce colado na borda dourada do banner (por causa do
+                 "margin-top" negativo do .container-principal-reservas) -->
+            <div class="secao-titulo-grid secao-titulo-grid--topo">
+                <h3>Reservas Anteriores</h3>
+                <a href="/frontend/paginas/cliente/reservas.html" class="btn-novo-espaco"><i class="bi bi-arrow-left"></i> Voltar pras reservas</a>
+            </div>
+
+            <!-- Preenchida via JS (carregarHistorico() em historico.js) com um
+                 .card-reserva pra cada reserva já realizada/cancelada, ou com a
+                 mensagem de "nada no histórico ainda" quando estiver vazia -->
+            <div id="lista-historico" class="grid-reservas"></div>
+
+        </section>
+    </main>
+
+    <!-- ================= MODAL: AVALIAR ESPAÇO =================
+         Só é usado em reservas com status "Aprovado" (evento já realizado)
+         e que ainda não foram avaliadas (ver criarCardHistorico() em
+         historico.js) -->
+    <div id="modal-avaliacao" class="modal-overlay">
+        <div class="modal-box">
+            <button class="fechar-modal" onclick="fecharModalAvaliacao()">&times;</button>
+
+            <h2>Avaliar Espaço</h2>
+            <div class="linha-dourada-form"></div>
+            <p class="subtitulo-form">Conte como foi sua experiência - sua avaliação ajuda outras pessoas a escolher.</p>
+
+            <form id="form-avaliacao">
+                <div class="form-grid">
+
+                    <div class="input-grupo col-total">
+                        <label for="avaliacao-nota">Sua nota</label>
+                        <select id="avaliacao-nota" required>
+                            <option value="">Selecione...</option>
+                            <option value="5">★★★★★ (5) Excelente</option>
+                            <option value="4">★★★★☆ (4) Muito bom</option>
+                            <option value="3">★★★☆☆ (3) Bom</option>
+                            <option value="2">★★☆☆☆ (2) Regular</option>
+                            <option value="1">★☆☆☆☆ (1) Ruim</option>
+                        </select>
+                    </div>
+
+                    <div class="input-grupo col-total">
+                        <label for="avaliacao-comentario">Comentário (opcional)</label>
+                        <textarea id="avaliacao-comentario" rows="3" placeholder="O que você achou do espaço?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-bloco">Enviar Avaliação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <nav class="barra-navegacao-inferior">
+        <a href="/frontend/paginas/cliente/index-logado.html" class="item-nav">
+            <i class="bi bi-house-door-fill icone"></i>
+            <span class="texto">Início</span>
+        </a>
+        <a href="/frontend/paginas/cliente/buscar.html" class="item-nav">
+            <i class="bi bi-search icone"></i>
+            <span class="texto">Buscar</span>
+        </a>
+        <a href="/frontend/paginas/cliente/favoritos.html" class="item-nav">
+            <i class="bi bi-heart-fill icone"></i>
+            <span class="texto">Favoritos</span>
+        </a>
+        <a href="/frontend/paginas/cliente/reservas.html" class="item-nav ativo">
+            <i class="bi bi-calendar3-fill icone"></i>
+            <span class="texto">Reservas</span>
+        </a>
+        <a href="/frontend/paginas/cliente/perfil.html" class="item-nav">
+            <i class="bi bi-person-fill icone"></i>
+            <span class="texto">Perfil</span>
+        </a>
+    </nav>
+
+    <script src="/frontend/js/global.js"></script>
+    <script src="/frontend/js/paginas/historico.js"></script>
+</body>
+</html>

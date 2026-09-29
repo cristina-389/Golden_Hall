@@ -2,9 +2,13 @@
    GOLDEN HALL - SOLICITAÇÕES DE RESERVA DE UM ESPAÇO, PRO DONO
    (paginas/dono/solicitacoes-espaco.html)
    Lê o "?id=..." da URL (a página de Reservas manda pra cá com o id certo)
-   e mostra as reservas recebidas por aquele espaço, com Aprovar/Recusar
-   pras Pendentes e Cancelar pras já Aprovadas - mesma lógica que antes
-   vivia no modal de reservas-dono.js, só que numa página própria.
+   e mostra só as reservas ATIVAS daquele espaço - Pendente (com
+   Aprovar/Recusar) ou Aprovada com o evento ainda por acontecer (com
+   Cancelar). Reserva Cancelada, ou Aprovada já realizada, não aparece mais
+   aqui - misturava reservas que já foram decididas com as que ainda
+   precisavam de atenção, dificultando ver qual solicitação era a de
+   verdade. O retrospecto completo (com tudo, de qualquer status) mora na
+   página de histórico do espaço (historico-espaco.html).
    ========================================================================== */
 
 let idEspacoAtual = null;
@@ -57,29 +61,40 @@ async function carregarSolicitacoes() {
         return;
     }
 
-    if (reservas.length === 0) {
+    // Data de hoje no mesmo formato "AAAA-MM-DD" salvo nas reservas, pra
+    // comparar como texto - só entram aqui as Pendentes e as Aprovadas
+    // ainda por acontecer (mesmo critério de "reserva ativa" usado em
+    // reservas.js/historico.js, do lado do cliente)
+    const hoje = new Date();
+    const hojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+    const reservasAtivas = reservas.filter(reserva => ehReservaAtiva(reserva, hojeString));
+
+    if (reservasAtivas.length === 0) {
         container.innerHTML = `
             <div class="estado-vazio-painel">
                 <i class="bi bi-envelope-paper-fill"></i>
-                <p>Nenhuma reserva recebida ainda para este espaço.</p>
+                <p>Nenhuma solicitação esperando atenção agora neste espaço.</p>
             </div>
         `;
         return;
     }
 
     container.innerHTML = '';
-    reservas.forEach(reserva => container.appendChild(criarLinhaReserva(reserva)));
+    reservasAtivas.forEach(reserva => container.appendChild(criarLinhaReserva(reserva)));
 }
 
-// Monta um card com os dados de uma reserva recebida. Se ela ainda estiver
-// "Pendente", mostra os botões de Aprovar/Recusar; reservas já Aprovadas ou
-// Canceladas só ficam visíveis, sem ação (decisão já foi tomada) - exceto
-// Aprovada, que ainda pode ser cancelada depois (ver mais abaixo).
+function ehReservaAtiva(reserva, hojeString) {
+    if (reserva.status === 'Pendente') return true;
+    if (reserva.status === 'Aprovado') return reserva.data > hojeString;
+    return false;
+}
+
+// Monta um card com os dados de uma reserva ativa. Se ela ainda estiver
+// "Pendente", mostra os botões de Aprovar/Recusar; se já estiver Aprovada
+// (com o evento ainda por acontecer), mostra o botão de Cancelar.
 function criarLinhaReserva(reserva) {
     const [ano, mes, dia] = reserva.data.split('-');
-    const classeStatus = reserva.status === 'Aprovado'
-        ? 'status-aprovado'
-        : (reserva.status === 'Cancelado' ? 'status-cancelado' : 'status-pendente');
+    const classeStatus = reserva.status === 'Aprovado' ? 'status-aprovado' : 'status-pendente';
 
     const div = document.createElement('div');
     div.className = 'card-reserva';
@@ -180,19 +195,25 @@ async function aprovarReserva(reserva, divCard) {
 
 async function recusarReserva(idReserva, divCard, motivo) {
     try {
-        const reservaAtualizada = await chamarAPI(`/api/reservas/${idReserva}/status`, {
+        await chamarAPI(`/api/reservas/${idReserva}/status`, {
             method: 'PUT',
             body: JSON.stringify({ status: 'Cancelado', motivo })
         });
 
-        // Redesenha só esse card, já sem os botões de ação (Cancelado não
-        // tem mais nada a fazer) - o resto da lista continua como estava
-        const cardAtualizado = criarLinhaReserva({
-            ...reservaAtualizada,
-            cliente_nome: divCard.querySelector('.nome-cliente').textContent,
-            cliente_email: divCard.querySelector('.email-cliente').textContent
-        });
-        divCard.replaceWith(cardAtualizado);
+        // Reserva Cancelada não é mais "ativa" - some da lista (o cliente é
+        // avisado por notificação, e o retrospecto completo fica no
+        // histórico do espaço, não aqui)
+        const container = document.getElementById('lista-solicitacoes-espaco');
+        divCard.remove();
+
+        if (!container.querySelector('.card-reserva')) {
+            container.innerHTML = `
+                <div class="estado-vazio-painel">
+                    <i class="bi bi-envelope-paper-fill"></i>
+                    <p>Nenhuma solicitação esperando atenção agora neste espaço.</p>
+                </div>
+            `;
+        }
     } catch (erro) {
         alert(erro.message);
     }

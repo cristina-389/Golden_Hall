@@ -150,10 +150,17 @@ function buscarAvaliacoes(espacoId) {
 
 // --------------------------------------------------------------------------
 // GET /api/espacos - lista PÚBLICA de todos os espaços (usada na busca)
+// Já inclui "eventos_permitidos" de cada um - a busca usa isso pra entender
+// frases como "espaço para casamento", batendo com o que o proprietário
+// realmente cadastrou, não só com o nome/descrição do espaço.
 // --------------------------------------------------------------------------
 router.get('/espacos', (req, res) => {
     const espacos = db.prepare('SELECT * FROM espacos ORDER BY criado_em DESC').all();
-    res.json(espacos);
+    const espacosComEventos = espacos.map(espaco => ({
+        ...espaco,
+        eventos_permitidos: buscarListaSimples('eventos_permitidos', espaco.id)
+    }));
+    res.json(espacosComEventos);
 });
 
 // --------------------------------------------------------------------------
@@ -197,15 +204,17 @@ router.post('/espacos/:slug/visualizacao', autenticar, (req, res) => {
 // --------------------------------------------------------------------------
 router.get('/meus-espacos', autenticar, exigirProprietario, (req, res) => {
     // As subconsultas somam, pra CADA espaço, quantas reservas dele ainda
-    // estão "Pendente" (selo de aviso nos cards) e quantas reservas já
-    // recebeu no total, em qualquer status (usado pra página de Reservas só
-    // listar espaços que já receberam pelo menos uma solicitação) - sem
-    // precisar de um pedido extra por espaço.
+    // estão "Pendente" (selo de aviso nos cards) e quantas reservas ATIVAS
+    // ele tem no total - Pendente, ou Aprovada com o evento ainda por
+    // acontecer (usado pra página de Reservas só listar espaços que
+    // realmente têm alguma solicitação esperando atenção agora; uma
+    // reserva Cancelada ou já realizada não conta mais - essas ficam só no
+    // histórico do espaço) - sem precisar de um pedido extra por espaço.
     const espacos = db
         .prepare(`
             SELECT espacos.*,
                 (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id AND reservas.status = 'Pendente') AS reservas_pendentes,
-                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id) AS total_reservas
+                (SELECT COUNT(*) FROM reservas WHERE reservas.espaco_id = espacos.id AND (reservas.status = 'Pendente' OR (reservas.status = 'Aprovado' AND reservas.data > date('now')))) AS reservas_ativas
             FROM espacos
             WHERE dono_id = ?
             ORDER BY criado_em DESC

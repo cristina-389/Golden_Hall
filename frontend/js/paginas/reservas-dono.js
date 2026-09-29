@@ -2,12 +2,13 @@
    GOLDEN HALL - SOLICITAÇÕES DE RESERVA DO DONO (paginas/dono/reservas-dono.html)
    Página exclusiva pra contas "proprietario": um resumo lá em cima
    (pendências, avaliações recebidas e a próxima reserva confirmada) e,
-   embaixo, um card comprido por espaço que já recebeu pelo menos uma
-   reserva, com foto e aviso de quantas estão pendentes. "Ver solicitações"
-   leva pra uma página própria (solicitacoes-espaco.html) com os botões de
-   Aprovar/Recusar/Cancelar. "Ver avaliações"/"Ver histórico" levam pras
-   páginas dedicadas de cada espaço (avaliacoes-espaco.html e
-   historico-espaco.html).
+   embaixo, um card comprido por espaço que tem alguma reserva ATIVA agora
+   (Pendente, ou Aprovada ainda por acontecer), com foto e aviso de quantas
+   estão pendentes. "Ver solicitações" leva pra uma página própria
+   (solicitacoes-espaco.html) só com essas reservas ativas - já
+   decididas/canceladas ficam só no histórico. "Ver avaliações"/"Ver
+   histórico" levam pras páginas dedicadas de cada espaço
+   (avaliacoes-espaco.html e historico-espaco.html).
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -110,17 +111,18 @@ async function carregarEspacosComReservas() {
         return;
     }
 
-    // Só entram nessa lista os espaços que já receberam pelo menos uma
-    // solicitação de reserva (em qualquer status) - espaço sem reserva
-    // nenhuma não tem o que mostrar em "Ver solicitações", então nem
-    // aparece aqui
-    const espacosComReserva = espacosCache.filter(espaco => espaco.total_reservas > 0);
+    // Só entram nessa lista os espaços que têm alguma reserva ATIVA agora
+    // (Pendente, ou Aprovada com o evento ainda por acontecer) - uma
+    // reserva Cancelada ou já realizada não conta mais aqui (fica só no
+    // histórico do espaço), senão a lista ficava cheia de espaços sem
+    // nada de verdade esperando decisão.
+    const espacosComReserva = espacosCache.filter(espaco => espaco.reservas_ativas > 0);
 
     if (espacosComReserva.length === 0) {
         container.innerHTML = `
             <div class="estado-vazio-painel">
                 <i class="bi bi-envelope-paper-fill"></i>
-                <p>Nenhum dos seus espaços recebeu uma solicitação de reserva ainda.</p>
+                <p>Nenhum dos seus espaços tem solicitação esperando atenção agora.</p>
             </div>
         `;
         return;

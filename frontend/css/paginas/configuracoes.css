@@ -1,0 +1,57 @@
+/* ==========================================================================
+   GOLDEN HALL - CONFIGURAÇÕES AVANÇADAS DA CONTA (cliente E proprietário)
+   Usado por paginas/cliente/configuracoes.html e
+   paginas/dono/configuracoes-dono.html - ".voltar-avaliacoes" já vem pronto
+   de avaliacoes-dono.css seria o ideal, mas essa página não importa esse
+   arquivo, então o estilo do link "Voltar" está reaproveitado aqui embaixo.
+   ========================================================================== */
+.secao-configuracoes {
+    max-width: 700px;
+    margin: 35px auto 100px;
+    padding: 0 20px;
+}
+
+.voltar-avaliacoes {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.titulo-configuracoes {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--text);
+}
+
+.secao-configuracoes .linha-elegante {
+    justify-content: flex-start;
+    margin: 15px 0 35px;
+}
+
+/* Card que isola visualmente a ação destrutiva do resto da página - borda e
+   título em vermelho, pra deixar claro que é uma área diferente */
+.card-zona-perigo {
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    border-radius: 16px;
+    padding: 24px;
+    background: rgba(231, 76, 60, 0.04);
+}
+
+.card-zona-perigo h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #e74c3c;
+    margin-bottom: 12px;
+}
+
+.card-zona-perigo p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}

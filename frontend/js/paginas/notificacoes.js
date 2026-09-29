@@ -1,9 +1,12 @@
 /* ==========================================================================
    GOLDEN HALL - NOTIFICAÇÕES DO CLIENTE (paginas/cliente/notificacoes.html)
-   Lista os avisos ativos do cliente: "reserva aprovada" e "evento já
-   aconteceu, que tal avaliar?" (os dois vêm de GET /api/estatisticas) -
-   mesma informação que antes aparecia direto num banner na home. Aberta ao
-   clicar no sino do cabeçalho.
+   Lista TODAS as notificações reais já recebidas (GET /api/notificacoes) -
+   reserva aprovada, reserva cancelada, convite pra avaliar depois do
+   evento... (ver utils/notificacoes.js no back-end, chamado de dentro de
+   routes/reservas.js e utils/lembretesAvaliacao.js). Ficam salvas mesmo
+   depois de vistas - só o destaque (pulsando, com opacidade cheia) some
+   depois da primeira vez que essa página é aberta (GET /api/notificacoes
+   marca como lida DEPOIS de responder).
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,36 +27,26 @@ async function carregarNotificacoes() {
     const container = document.getElementById('lista-notificacoes');
 
     try {
-        const estatisticas = await chamarAPI('/api/estatisticas');
-        const notificacoes = [];
-
-        if (estatisticas.proxima_reserva_aprovada) {
-            const [ano, mes, dia] = estatisticas.proxima_reserva_aprovada.data.split('-');
-            notificacoes.push({
-                classe: 'notificacao-banner--sucesso',
-                icone: 'bi-check-circle-fill',
-                texto: `Sua reserva no ${estatisticas.proxima_reserva_aprovada.espaco_nome} (${dia}/${mes}) foi aprovada! ` +
-                    `O proprietário vai entrar em contato por WhatsApp ou e-mail.`,
-                link: '/frontend/paginas/cliente/reservas.html'
-            });
-        }
-
-        // Um aviso por evento já realizado e ainda sem avaliação - mesmo
-        // convite que o e-mail já manda (ver utils/lembretesAvaliacao.js no
-        // back-end), só que aqui dentro do site
-        (estatisticas.reservas_para_avaliar || []).forEach(reserva => {
-            const [ano, mes, dia] = reserva.data.split('-');
-            notificacoes.push({
-                classe: 'notificacao-banner--sucesso',
-                icone: 'bi-star-fill',
-                texto: `Seu evento no ${reserva.espaco_nome} (${dia}/${mes}) já aconteceu! Que tal avaliar sua experiência?`,
-                link: '/frontend/paginas/cliente/reservas.html'
-            });
-        });
-
+        const notificacoes = await chamarAPI('/api/notificacoes');
         renderizarNotificacoes(notificacoes);
     } catch (erro) {
         container.innerHTML = `<p>${erro.message}</p>`;
+    }
+}
+
+// Decide o ícone/cor de cada notificação com base no "tipo" salvo (ver
+// utils/notificacoes.js) - qualquer tipo novo que a gente esquecer de
+// mapear aqui cai no "alerta" genérico, em vez de quebrar a página
+function estiloPorTipo(tipo) {
+    switch (tipo) {
+        case 'reserva_aprovada':
+            return { classe: 'notificacao-banner--sucesso', icone: 'bi-check-circle-fill' };
+        case 'reserva_cancelada':
+            return { classe: 'notificacao-banner--erro', icone: 'bi-x-circle-fill' };
+        case 'avaliar_espaco':
+            return { classe: 'notificacao-banner--sucesso', icone: 'bi-star-fill' };
+        default:
+            return { classe: 'notificacao-banner--alerta', icone: 'bi-bell-fill' };
     }
 }
 
@@ -72,15 +65,17 @@ function renderizarNotificacoes(notificacoes) {
 
     container.innerHTML = '';
     notificacoes.forEach(notificacao => {
+        const { classe, icone } = estiloPorTipo(notificacao.tipo);
+
         const item = document.createElement('a');
-        item.href = notificacao.link;
-        item.className = `notificacao-banner ${notificacao.classe}`;
+        item.href = notificacao.link || '#';
+        item.className = `notificacao-banner ${classe} ${notificacao.lida ? '' : 'notificacao-banner--nao-lida'}`;
         item.innerHTML = `
-            <i class="bi ${notificacao.icone}"></i>
+            <i class="bi ${icone}"></i>
             <span></span>
             <i class="bi bi-chevron-right seta-notificacao"></i>
         `;
-        item.querySelector('span').textContent = notificacao.texto;
+        item.querySelector('span').textContent = notificacao.mensagem;
         container.appendChild(item);
     });
 }

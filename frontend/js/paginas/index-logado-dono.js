@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     carregarFotoPerfil();
     carregarResumoNumeros();
     carregarGraficoEspacos();
+    carregarContagemNotificacoes();
     ativarHeaderSomeAoRolar();
 });
 
@@ -62,19 +63,22 @@ async function carregarResumoNumeros() {
         // Destaca "Reservas pendentes" com uma cor de alerta quando tem
         // alguma esperando resposta - é o número mais acionável dos 3
         document.getElementById('resumo-pendentes').classList.toggle('tem-pendencia', estatisticas.reservas_pendentes > 0);
-        atualizarNotificacaoPendentes(estatisticas.reservas_pendentes);
     } catch (erro) {
         console.error('Erro ao carregar estatísticas:', erro);
     }
 }
 
-// Mostra (ou esconde) a bolinha no sino do cabeçalho quando tem pelo menos
-// 1 solicitação esperando resposta - reaproveita o mesmo número já buscado
-// em carregarResumoNumeros(). O aviso completo mora em
-// notificacoes-dono.html, ver carregarNotificacoes() em
-// js/paginas/notificacoes-dono.js.
-function atualizarNotificacaoPendentes(totalPendentes) {
-    document.getElementById('bolinha-sino').style.display = totalPendentes > 0 ? 'block' : 'none';
+// Mostra (ou esconde) a bolinha no sino do cabeçalho - GET
+// /api/notificacoes/contagem só espia quantas notificações ainda não foram
+// lidas, sem marcar nada como lida (isso só acontece de verdade quando a
+// pessoa abre a lista completa, em notificacoes-dono.html/notificacoes-dono.js).
+async function carregarContagemNotificacoes() {
+    try {
+        const { nao_lidas } = await chamarAPI('/api/notificacoes/contagem');
+        document.getElementById('bolinha-sino').style.display = nao_lidas > 0 ? 'block' : 'none';
+    } catch (erro) {
+        console.error('Erro ao carregar a contagem de notificações:', erro);
+    }
 }
 
 // Esconde o cabeçalho ao rolar pra baixo e mostra de novo ao rolar pra cima

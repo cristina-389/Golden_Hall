@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     carregarFotoPerfil();
     carregarEstatisticas();
+    carregarContagemNotificacoes();
     ativarHeaderSomeAoRolar();
 });
 
@@ -51,19 +52,22 @@ async function carregarEstatisticas() {
     try {
         const estatisticas = await chamarAPI('/api/estatisticas');
         preencherEstatisticas(estatisticas);
-        atualizarNotificacaoReservaAprovada(estatisticas.proxima_reserva_aprovada, estatisticas.reservas_para_avaliar);
     } catch (erro) {
         console.error('Erro ao carregar estatísticas:', erro);
     }
 }
 
-// Mostra (ou esconde) a bolinha no sino do cabeçalho quando tem uma reserva
-// Aprovada ainda no futuro OU um evento já realizado esperando avaliação -
-// o aviso completo de cada um mora em notificacoes.html, ver
-// carregarNotificacoes() em js/paginas/notificacoes.js.
-function atualizarNotificacaoReservaAprovada(proximaReservaAprovada, reservasParaAvaliar) {
-    const temNotificacao = Boolean(proximaReservaAprovada) || (reservasParaAvaliar && reservasParaAvaliar.length > 0);
-    document.getElementById('bolinha-sino').style.display = temNotificacao ? 'block' : 'none';
+// Mostra (ou esconde) a bolinha no sino do cabeçalho - GET
+// /api/notificacoes/contagem só espia quantas notificações ainda não foram
+// lidas, sem marcar nada como lida (isso só acontece de verdade quando a
+// pessoa abre a lista completa, em notificacoes.html/notificacoes.js).
+async function carregarContagemNotificacoes() {
+    try {
+        const { nao_lidas } = await chamarAPI('/api/notificacoes/contagem');
+        document.getElementById('bolinha-sino').style.display = nao_lidas > 0 ? 'block' : 'none';
+    } catch (erro) {
+        console.error('Erro ao carregar a contagem de notificações:', erro);
+    }
 }
 
 // Esconde o cabeçalho ao rolar pra baixo (abre mais espaço de tela pra ler

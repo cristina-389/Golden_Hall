@@ -9,6 +9,7 @@
 const express = require('express');
 const db = require('../database/db');
 const { autenticar, exigirProprietario } = require('../middlewares/autenticacao');
+const { criarNotificacao, formatarDataBR } = require('../utils/notificacoes');
 
 const router = express.Router();
 
@@ -43,7 +44,7 @@ router.post('/reservas', autenticar, (req, res) => {
         return res.status(400).json({ erro: 'Informe o espaço e a data.' });
     }
 
-    const espaco = db.prepare('SELECT id FROM espacos WHERE slug = ?').get(espaco_slug);
+    const espaco = db.prepare('SELECT id, dono_id, nome FROM espacos WHERE slug = ?').get(espaco_slug);
     if (!espaco) {
         return res.status(404).json({ erro: 'Espaço não encontrado.' });
     }
@@ -78,13 +79,25 @@ router.post('/reservas', autenticar, (req, res) => {
 
     const novaReserva = db.prepare('SELECT * FROM reservas WHERE id = ?').get(resultado.lastInsertRowid);
     res.status(201).json(novaReserva);
+
+    // Avisa o PROPRIETÁRIO desse espaço que chegou uma solicitação nova -
+    // ele vê isso no sino/página de notificações dele
+    criarNotificacao(
+        espaco.dono_id,
+        'nova_solicitacao',
+        `Nova solicitação de reserva: ${espaco.nome} (${formatarDataBR(data)})`,
+        '/frontend/paginas/dono/reservas-dono.html'
+    );
 });
 
 // --------------------------------------------------------------------------
 // GET /api/minhas-reservas - lista as reservas de quem está logado
 // O "LEFT JOIN avaliacoes" traz junto se cada reserva já foi avaliada ou não
 // (campo "avaliado": 1 ou 0) - é o que decide se a tela mostra o botão
-// "Avaliar" ou "Você já avaliou" pra cada reserva aprovada.
+// "Avaliar" ou "Você já avaliou" pra cada reserva aprovada. Usada tanto por
+// "Minhas Reservas" (reservas.js) quanto pelo "Histórico" (historico.js) -
+// cada página filtra essa mesma lista de um jeito diferente (ver
+// separarReservaAtiva() em reservas.js).
 // --------------------------------------------------------------------------
 router.get('/minhas-reservas', autenticar, (req, res) => {
     // JOIN: busca nas duas tabelas ao mesmo tempo, ligando pelo espaco_id -
@@ -106,6 +119,17 @@ router.get('/minhas-reservas', autenticar, (req, res) => {
         .all(req.usuario.id);
 
     res.json(reservas);
+
+    // Depois de responder (com o valor "de antes"), marca como "visto" toda
+    // reserva Cancelada que essa pessoa ainda não tinha visto - assim, na
+    // primeira vez que ela abre "Minhas Reservas" depois de um
+    // cancelamento (seja por ela mesma ou pelo proprietário), o aviso ainda
+    // aparece lá; da próxima vez que abrir, essa reserva já foi pro
+    // histórico (ver separarReservaAtiva() em reservas.js).
+    db.prepare(`
+        UPDATE reservas SET visto_pelo_cliente = 1
+        WHERE usuario_id = ? AND status = 'Cancelado' AND visto_pelo_cliente = 0
+    `).run(req.usuario.id);
 });
 
 // --------------------------------------------------------------------------
@@ -159,10 +183,27 @@ router.post('/reservas/:id/avaliacao', autenticar, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
-// DELETE /api/reservas/:id - cancela (remove) uma reserva, só a própria
+// DELETE /api/reservas/:id - cancela uma reserva, só a própria. Apesar do
+// nome do método HTTP, não apaga a linha de verdade - só marca como
+// "Cancelado" (mesma ideia de quando o PROPRIETÁRIO recusa/cancela, ver PUT
+// /api/reservas/:id/status), pra essa reserva continuar existindo e um dia
+// aparecer no histórico. Como foi a própria pessoa que cancelou, ela já
+// está ciente na hora - "visto_pelo_cliente" já nasce marcado, sem precisar
+// esperar ela abrir "Minhas Reservas" de novo (ver GET /api/minhas-reservas).
 // --------------------------------------------------------------------------
 router.delete('/reservas/:id', autenticar, (req, res) => {
-    const reserva = db.prepare('SELECT * FROM reservas WHERE id = ?').get(req.params.id);
+    const { motivo } = req.body;
+
+    // JOIN com espacos pra saber quem é o proprietário e o nome do espaço -
+    // usados pra avisar o proprietário quando a reserva já estava Aprovada
+    const reserva = db
+        .prepare(`
+            SELECT reservas.*, espacos.dono_id, espacos.nome AS espaco_nome
+            FROM reservas
+            JOIN espacos ON espacos.id = reservas.espaco_id
+            WHERE reservas.id = ?
+        `)
+        .get(req.params.id);
 
     if (!reserva) {
         return res.status(404).json({ erro: 'Reserva não encontrada.' });
@@ -178,15 +219,34 @@ router.delete('/reservas/:id', autenticar, (req, res) => {
         return res.status(400).json({ erro: 'Esta reserva já foi cancelada.' });
     }
 
+    // Cancelar uma reserva ainda Pendente não exige motivo (o proprietário
+    // nem tinha aprovado nada ainda) - mas uma já Aprovada, sim: ele já
+    // tinha essa data reservada de verdade, então precisa saber por quê.
+    if (reserva.status === 'Aprovado' && !motivo) {
+        return res.status(400).json({ erro: 'Conte o motivo do cancelamento - o proprietário vai ver essa mensagem.' });
+    }
+
+    const motivoFinal = reserva.status === 'Aprovado' ? motivo : null;
+
     // Uma reserva Aprovada pode já ter sido avaliada (ver POST
     // /api/reservas/:id/avaliacao) - "avaliacoes.reserva_id" é uma FOREIGN
-    // KEY pra "reservas", então apagar a reserva sem apagar a avaliação
-    // ligada a ela primeiro quebraria essa restrição. Cancelar continua
-    // sendo gratuito "a qualquer momento" (a promessa do front-end), então
-    // a avaliação some junto.
+    // KEY pra "reservas". Cancelar continua sendo gratuito "a qualquer
+    // momento" (a promessa do front-end), então a avaliação some junto.
     db.prepare('DELETE FROM avaliacoes WHERE reserva_id = ?').run(req.params.id);
-    db.prepare('DELETE FROM reservas WHERE id = ?').run(req.params.id);
+    db.prepare('UPDATE reservas SET status = ?, motivo_recusa = ?, visto_pelo_cliente = 1 WHERE id = ?')
+        .run('Cancelado', motivoFinal, req.params.id);
     res.status(204).send();
+
+    // Avisa o PROPRIETÁRIO só quando era uma reserva já Aprovada que o
+    // cliente cancelou - ele já contava com essa data, então precisa saber
+    if (reserva.status === 'Aprovado') {
+        criarNotificacao(
+            reserva.dono_id,
+            'reserva_cancelada',
+            `O cliente cancelou a reserva aprovada no ${reserva.espaco_nome} (${formatarDataBR(reserva.data)}). Motivo: ${motivo}`,
+            '/frontend/paginas/dono/reservas-dono.html'
+        );
+    }
 });
 
 // --------------------------------------------------------------------------
@@ -206,7 +266,7 @@ router.put('/reservas/:id/status', autenticar, exigirProprietario, (req, res) =>
     // só o proprietário DAQUELE espaço específico pode aprovar/recusar
     const reserva = db
         .prepare(`
-            SELECT reservas.*, espacos.dono_id
+            SELECT reservas.*, espacos.dono_id, espacos.nome AS espaco_nome
             FROM reservas
             JOIN espacos ON espacos.id = reservas.espaco_id
             WHERE reservas.id = ?
@@ -225,10 +285,34 @@ router.put('/reservas/:id/status', autenticar, exigirProprietario, (req, res) =>
     // - se por algum motivo vier junto de "Aprovado", ignora (fica null)
     const motivoFinal = status === 'Cancelado' ? (motivo || null) : null;
 
-    db.prepare('UPDATE reservas SET status = ?, motivo_recusa = ? WHERE id = ?').run(status, motivoFinal, req.params.id);
+    // Cancelamento feito pelo PROPRIETÁRIO nasce "não visto" - o cliente só
+    // fica sabendo quando abrir "Minhas Reservas" (ver GET
+    // /api/minhas-reservas), então essa reserva continua aparecendo lá até
+    // esse momento, em vez de já ir direto pro histórico sem avisar ninguém.
+    db.prepare('UPDATE reservas SET status = ?, motivo_recusa = ?, visto_pelo_cliente = 0 WHERE id = ?')
+        .run(status, motivoFinal, req.params.id);
 
     const reservaAtualizada = db.prepare('SELECT * FROM reservas WHERE id = ?').get(req.params.id);
     res.json(reservaAtualizada);
+
+    // Avisa o CLIENTE que a decisão saiu - ele vê isso no sino/página de
+    // notificações dele, além do aviso que já aparece direto no card da
+    // reserva (em "Minhas Reservas")
+    if (status === 'Aprovado') {
+        criarNotificacao(
+            reserva.usuario_id,
+            'reserva_aprovada',
+            `Sua reserva no ${reserva.espaco_nome} (${formatarDataBR(reserva.data)}) foi aprovada! O proprietário vai entrar em contato por WhatsApp ou e-mail.`,
+            '/frontend/paginas/cliente/reservas.html'
+        );
+    } else {
+        criarNotificacao(
+            reserva.usuario_id,
+            'reserva_cancelada',
+            `Sua reserva no ${reserva.espaco_nome} (${formatarDataBR(reserva.data)}) foi cancelada pelo proprietário.`,
+            '/frontend/paginas/cliente/reservas.html'
+        );
+    }
 });
 
 module.exports = router;
