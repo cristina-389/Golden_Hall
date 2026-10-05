@@ -12,6 +12,7 @@
    ========================================================================== */
 
 let idEspacoAtual = null;
+let nomeEspacoAtual = ''; // usado em montarResumoReserva() (global.js), pro botão de compartilhar
 
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = obterUsuarioLogado();
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        nomeEspacoAtual = espaco.nome;
         document.getElementById('titulo-espaco-solicitacoes').textContent = espaco.nome;
         document.title = 'Solicitações de ' + espaco.nome + ' | Golden Hall';
     } catch (erro) {
@@ -96,6 +98,25 @@ function criarLinhaReserva(reserva) {
     const [ano, mes, dia] = reserva.data.split('-');
     const classeStatus = reserva.status === 'Aprovado' ? 'status-aprovado' : 'status-pendente';
 
+    // Reserva já Aprovada: o contato fica sempre em destaque (mesma caixa
+    // dourada que aparece na hora de aprovar) - o proprietário pode voltar
+    // aqui quantas vezes quiser pra ver o WhatsApp/e-mail do cliente, não
+    // é um aviso que só aparece uma vez. Pendente ainda não tem decisão
+    // tomada, então o contato fica só como um texto simples mesmo.
+    const blocoContato = reserva.status === 'Aprovado'
+        ? `
+            <p class="rotulo-contato-cliente"><i class="bi bi-person-lines-fill"></i> Contato do cliente</p>
+            <div class="card-aviso-email"><i class="bi bi-telephone-fill"></i><span>${reserva.telefone || 'Telefone não informado'}</span></div>
+            <div class="card-aviso-email"><i class="bi bi-envelope-fill"></i><span class="email-cliente"></span></div>
+            <button type="button" class="btn-compartilhar-reserva">
+                <i class="bi bi-share-fill"></i> Compartilhar dados da reserva
+            </button>
+          `
+        : `
+            <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
+            <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
+          `;
+
     const div = document.createElement('div');
     div.className = 'card-reserva';
     div.innerHTML = `
@@ -109,9 +130,8 @@ function criarLinhaReserva(reserva) {
                 <p><i class="bi bi-clock"></i> Horário: <strong>${formatarHorarioReserva(reserva)}</strong></p>
                 <p><i class="bi bi-award"></i> Evento: <strong>${reserva.tipo_evento || '-'}</strong></p>
                 <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'}</strong></p>
-                <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
-                <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
                 <p class="observacoes-reserva"><i class="bi bi-chat-left-text"></i> Observações: <strong class="observacoes-cliente"></strong></p>
+                ${blocoContato}
             </div>
         </div>
     `;
@@ -119,6 +139,13 @@ function criarLinhaReserva(reserva) {
     div.querySelector('.nome-cliente').textContent = reserva.cliente_nome;
     div.querySelector('.email-cliente').textContent = reserva.cliente_email;
     div.querySelector('.observacoes-cliente').textContent = reserva.observacoes || 'Nenhuma';
+
+    const btnCompartilhar = div.querySelector('.btn-compartilhar-reserva');
+    if (btnCompartilhar) {
+        btnCompartilhar.addEventListener('click', () => {
+            compartilharOuCopiar(montarResumoReserva(reserva, nomeEspacoAtual), btnCompartilhar);
+        });
+    }
 
     if (reserva.status === 'Pendente') {
         const botoes = document.createElement('div');
@@ -186,8 +213,15 @@ async function aprovarReserva(reserva, divCard) {
                 <p>Entre em contato com <strong>${reserva.cliente_nome}</strong> pra combinar os detalhes do evento:</p>
                 <div class="card-aviso-email"><i class="bi bi-telephone-fill"></i><span>${reserva.telefone || 'Telefone não informado'}</span></div>
                 <div class="card-aviso-email"><i class="bi bi-envelope-fill"></i><span>${reserva.cliente_email}</span></div>
+                <button type="button" class="btn-compartilhar-reserva">
+                    <i class="bi bi-share-fill"></i> Compartilhar dados da reserva
+                </button>
             </div>
         `;
+
+        divCard.querySelector('.btn-compartilhar-reserva').addEventListener('click', (event) => {
+            compartilharOuCopiar(montarResumoReserva(reserva, nomeEspacoAtual), event.currentTarget);
+        });
     } catch (erro) {
         alert(erro.message);
     }

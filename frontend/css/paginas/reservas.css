@@ -117,7 +117,7 @@ body.dark .conteudo-banner p {
 /* Fileira dos 3 cartõezinhos: Total, Pendentes, Aprovadas */
 .estatisticas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 20px;
     margin-bottom: 35px;
 }
@@ -263,7 +263,7 @@ body.dark .secao-titulo-grid h3 {
    -------------------------------------------------- */
 .grid-reservas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
     gap: 25px;
 }
 
@@ -451,20 +451,6 @@ body.dark .card-reserva-corpo strong {
     font-size: 0.85rem;
     font-weight: 600;
     color: #d4af37;
-    opacity: .85;
-}
-
-/* Reserva Aprovada, mas o evento ainda não aconteceu - mesmo visual do
-   "já avaliado", só que sem o dourado (não é uma conquista, é só um aviso) */
-.aviso-avaliacao-futura {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-light);
     opacity: .85;
 }
 

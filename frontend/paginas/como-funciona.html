@@ -44,9 +44,9 @@
       
         <nav>
       
-          <a href="../index.html">Início</a>
-          <a href="como-funciona.html" class="active">Como funciona</a>
-          <a href="duvidas.html">Dúvidas</a>
+          <a href="../index.html" onclick="rolarOuNavegar(event, this)">Início</a>
+          <a href="como-funciona.html" class="active" onclick="rolarOuNavegar(event, this)">Como funciona</a>
+          <a href="duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
       
         </nav>
       
@@ -103,7 +103,8 @@
             <h3>1. Pesquise</h3>
 
             <p>
-              Navegue pelos espaços disponíveis e encontre opções para
+              Descreva o que procura (tipo de evento, cidade, capacidade,
+              orçamento) na busca, ou navegue pelos espaços disponíveis para
               aniversários, casamentos, confraternizações e muito mais.
             </p>
 
@@ -118,8 +119,9 @@
             <h3>2. Compare</h3>
 
             <p>
-              Analise fotos, capacidade, localização e preços para escolher
-              o espaço que melhor atende ao seu evento.
+              Analise fotos, capacidade, localização, preços e as avaliações
+              de quem já reservou para escolher o espaço que melhor atende
+              ao seu evento. Salve os favoritos pra decidir com calma.
             </p>
 
           </div>
@@ -133,8 +135,9 @@
             <h3>3. Reserve</h3>
 
             <p>
-              Envie sua solicitação de reserva direto pelo site e acompanhe
-              a aprovação do proprietário do espaço.
+              Escolha uma data livre no calendário do espaço e envie sua
+              solicitação. O sino de notificações avisa assim que o
+              proprietário aprovar ou recusar o pedido.
             </p>
 
           </div>
@@ -177,7 +180,9 @@
             <h3>2. Cadastre seu espaço</h3>
 
             <p>
-              No seu painel, preencha nome, descrição, local, capacidade e valor do espaço.
+              No seu painel, preencha nome, descrição, local, capacidade,
+              valor, fotos e os tipos de evento permitidos - esses dados
+              são o que a busca usa pra encontrar seu espaço.
             </p>
 
           </div>
@@ -191,7 +196,9 @@
             <h3>3. Aprove as reservas</h3>
 
             <p>
-              Acompanhe os pedidos que chegarem e decida aprovar ou recusar cada um.
+              O sino de notificações avisa quando chega um pedido novo.
+              Aprove, ou recuse com uma breve justificativa - o cliente vê o
+              motivo em "Minhas Reservas" dele.
             </p>
 
           </div>
@@ -219,43 +226,68 @@
 
       <div class="info-card">
         <div class="icone-contorno">
-          <i class="bi bi-layers"></i>
+          <i class="bi bi-star-fill"></i>
         </div>
-        <h3>Variedade</h3>
-        <p>Diversos espaços para diferentes tipos de eventos.</p>
+        <h3>Avaliações reais</h3>
+        <p>Só dá pra avaliar um espaço depois que o evento realmente aconteceu.</p>
       </div>
-  
+
       <div class="info-card">
         <div class="icone-contorno">
-          <i class="bi bi-hammer"></i>
+          <i class="bi bi-bell-fill"></i>
         </div>
-        <h3>Segurança</h3>
-        <p>Informações claras para ajudar na sua escolha.</p>
+        <h3>Notificações</h3>
+        <p>Saiba na hora quando sua reserva for aprovada, recusada ou chegar um pedido novo.</p>
       </div>
-  
+
       <div class="info-card">
         <div class="icone-contorno">
-          <i class="bi bi-speedometer2"></i>
+          <i class="bi bi-clock-history"></i>
         </div>
-        <h3>Praticidade</h3>
-        <p>Encontre tudo em um único lugar.</p>
+        <h3>Histórico completo</h3>
+        <p>Acompanhe reservas já realizadas e canceladas a qualquer momento.</p>
       </div>
-  
+
       <div class="info-card">
         <div class="icone-contorno">
-          <i class="bi bi-stars"></i>
+          <i class="bi bi-heart-fill"></i>
         </div>
-        <h3>Confiança</h3>
-        <p>Plataforma desenvolvida para facilitar sua experiência.</p>
+        <h3>Favoritos</h3>
+        <p>Salve os espaços que mais gostou e compare com calma antes de decidir.</p>
       </div>
-  
+
     </section>
 
      <!-- ================= RODAPÉ ================= -->
      <footer>
+      <div class="rodape-conteudo">
 
-      <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
-  
+        <div class="rodape-coluna rodape-marca">
+          <div class="rodape-logo">
+            <img src="../Imagens/logo.png" alt="Logo Golden Hall">
+            <span>GOLDEN HALL</span>
+          </div>
+          <p>Conectamos quem procura o espaço perfeito para o seu evento com proprietários que querem anunciar salões, chácaras e espaços de festas.</p>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>Páginas</h4>
+          <a href="../index.html" onclick="rolarOuNavegar(event, this)">Início</a>
+          <a href="como-funciona.html" onclick="rolarOuNavegar(event, this)">Como funciona</a>
+          <a href="duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>Contato</h4>
+          <a href="mailto:goldenhall.tcc@gmail.com"><i class="bi bi-envelope-fill"></i> goldenhall.tcc@gmail.com</a>
+          <a href="https://instagram.com/golden.hall_" target="_blank" rel="noopener"><i class="bi bi-instagram"></i> @golden.hall_</a>
+        </div>
+
+      </div>
+
+      <div class="rodape-base">
+        <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
+      </div>
     </footer>
 
       <!--=======Cadrastro==========-->

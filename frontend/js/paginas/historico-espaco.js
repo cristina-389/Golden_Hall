@@ -8,6 +8,8 @@
    mesma rota já usada no modal de solicitações.
    ========================================================================== */
 
+let nomeEspacoAtual = ''; // usado em montarResumoReserva() (global.js), pro botão de compartilhar
+
 document.addEventListener('DOMContentLoaded', async () => {
     const usuario = obterUsuarioLogado();
     if (!usuario || usuario.tipo !== 'proprietario') {
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        nomeEspacoAtual = espaco.nome;
         document.getElementById('titulo-espaco-historico').textContent = espaco.nome;
         document.title = 'Histórico de ' + espaco.nome + ' | Golden Hall';
     } catch (erro) {
@@ -78,6 +81,24 @@ function criarLinhaHistorico(reserva) {
         ? 'status-aprovado'
         : (reserva.status === 'Cancelado' ? 'status-cancelado' : 'status-pendente');
 
+    // Reserva Aprovada: contato sempre em destaque, do mesmo jeito que na
+    // página de Reservas (ver criarLinhaReserva() em solicitacoes-espaco.js)
+    // - o proprietário pode voltar aqui quando quiser pra ver de novo o
+    // WhatsApp/e-mail do cliente, mesmo de um evento já realizado.
+    const blocoContato = reserva.status === 'Aprovado'
+        ? `
+            <p class="rotulo-contato-cliente"><i class="bi bi-person-lines-fill"></i> Contato do cliente</p>
+            <div class="card-aviso-email"><i class="bi bi-telephone-fill"></i><span>${reserva.telefone || 'Telefone não informado'}</span></div>
+            <div class="card-aviso-email"><i class="bi bi-envelope-fill"></i><span class="email-cliente"></span></div>
+            <button type="button" class="btn-compartilhar-reserva">
+                <i class="bi bi-share-fill"></i> Compartilhar dados da reserva
+            </button>
+          `
+        : `
+            <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
+            <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
+          `;
+
     const div = document.createElement('div');
     div.className = 'card-reserva';
     div.innerHTML = `
@@ -90,15 +111,21 @@ function criarLinhaHistorico(reserva) {
             <p><i class="bi bi-clock"></i> Horário: <strong>${formatarHorarioReserva(reserva)}</strong></p>
             <p><i class="bi bi-award"></i> Evento: <strong>${reserva.tipo_evento || '-'}</strong></p>
             <p><i class="bi bi-people"></i> Convidados: <strong>${reserva.convidados || '-'}</strong></p>
-            <p><i class="bi bi-telephone"></i> Contato: <strong>${reserva.telefone || '-'}</strong></p>
-            <p><i class="bi bi-envelope"></i> E-mail: <strong class="email-cliente"></strong></p>
             <p class="observacoes-reserva"><i class="bi bi-chat-left-text"></i> Observações: <strong class="observacoes-cliente"></strong></p>
+            ${blocoContato}
         </div>
     `;
 
     div.querySelector('.nome-cliente').textContent = reserva.cliente_nome;
     div.querySelector('.email-cliente').textContent = reserva.cliente_email;
     div.querySelector('.observacoes-cliente').textContent = reserva.observacoes || 'Nenhuma';
+
+    const btnCompartilhar = div.querySelector('.btn-compartilhar-reserva');
+    if (btnCompartilhar) {
+        btnCompartilhar.addEventListener('click', () => {
+            compartilharOuCopiar(montarResumoReserva(reserva, nomeEspacoAtual), btnCompartilhar);
+        });
+    }
 
     return div;
 }

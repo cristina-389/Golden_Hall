@@ -221,6 +221,61 @@
     margin-bottom: 10px;
 }
 
+/* E-mail do cliente (reserva ainda Pendente, mostrado num <p> comum) -
+   sem isso, um e-mail longo sem espaços estoura a largura da tela em
+   celulares estreitos */
+.email-cliente {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+/* Rótulo acima da caixa de contato nas reservas já Aprovadas (ver
+   criarLinhaReserva() em solicitacoes-espaco.js e criarLinhaHistorico() em
+   historico-espaco.js) - o contato fica sempre visível assim, não só na
+   hora de aprovar */
+.rotulo-contato-cliente {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    margin-top: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Botão "Compartilhar dados da reserva" - manda um resumo pronto (via
+   compartilhamento nativo do celular, ou copiado pra área de transferência
+   no computador - ver compartilharOuCopiar() em global.js), pra o
+   proprietário não precisar explicar a situação toda na mão ao falar com o
+   cliente */
+.btn-compartilhar-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 4px;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-compartilhar-reserva:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.btn-compartilhar-reserva:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
 /* --------------------------------------------------------------------------
    MODAL "VER AVALIAÇÕES DE QUAL ESPAÇO?"
    -------------------------------------------------------------------------- */

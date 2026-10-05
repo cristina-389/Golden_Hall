@@ -52,6 +52,47 @@ function toggleTheme() {
     }
 }
 
+// Clicar num link do menu (Início/Como funciona/Dúvidas, no cabeçalho ou
+// no rodapé) que aponta pra página ONDE A PESSOA JÁ ESTÁ não precisa
+// recarregar a página do zero - só rola suave até o topo. Clicar num link
+// que leva pra OUTRA página continua navegando normal - usado só nas
+// páginas públicas (index.html, como-funciona.html, duvidas.html).
+function rolarOuNavegar(event, link) {
+    const destino = new URL(link.href, window.location.href).pathname;
+    const atual = window.location.pathname;
+
+    if (destino === atual) {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Esconde a barra de navegação inferior ao rolar pra baixo numa página
+// comprida (ex: buscar.html com muitos resultados), e mostra de novo assim
+// que a pessoa rola um pouquinho pra cima - mesma ideia já usada no
+// cabeçalho das duas homes (ver ativarHeaderSomeAoRolar() em
+// index-logado.js/index-logado-dono.js). Roda em TODA página que tiver a
+// barra (a maioria das páginas logadas) - só não faz nada nas que não têm.
+document.addEventListener('DOMContentLoaded', function () {
+    const barra = document.querySelector('.barra-navegacao-inferior');
+    if (!barra) return;
+
+    let ultimoScroll = window.scrollY;
+
+    window.addEventListener('scroll', function () {
+        const scrollAtual = window.scrollY;
+        const rolandoParaBaixo = scrollAtual > ultimoScroll;
+
+        if (rolandoParaBaixo && scrollAtual > 80) {
+            barra.classList.add('barra-escondida');
+        } else {
+            barra.classList.remove('barra-escondida');
+        }
+
+        ultimoScroll = scrollAtual;
+    });
+});
+
 // Botão de "olhinho" nos campos de senha (cadastro, login, e a troca de
 // senha do perfil) - alterna o campo entre escondido (type="password") e
 // visível (type="text"), e troca o ícone pra indicar o estado atual. Uma
@@ -322,6 +363,66 @@ function formatarPreco(preco) {
 function formatarHorarioReserva(reserva) {
     if (!reserva.horario) return '-';
     return reserva.horario_termino ? `${reserva.horario} às ${reserva.horario_termino}` : reserva.horario;
+}
+
+/* ==========================================================================
+   COMPARTILHAR/COPIAR OS DADOS DE UMA RESERVA (usado pelo proprietário, ao
+   entrar em contato com o cliente - ver criarLinhaReserva() em
+   solicitacoes-espaco.js e criarLinhaHistorico() em historico-espaco.js)
+   Monta um texto pronto com o resumo da reserva, pra não precisar explicar
+   tudo na mão no WhatsApp/e-mail.
+   ========================================================================== */
+
+// Reserva + nome do espaço -> texto pronto pra mandar no WhatsApp/e-mail
+function montarResumoReserva(reserva, nomeEspaco) {
+    const [ano, mes, dia] = reserva.data.split('-');
+
+    let texto = `Olá, ${reserva.cliente_nome}! Aqui é sobre sua reserva no ${nomeEspaco}:\n\n`;
+    texto += `📅 Data: ${dia}/${mes}/${ano}\n`;
+    texto += `🕐 Horário: ${formatarHorarioReserva(reserva)}\n`;
+    texto += `🎉 Evento: ${reserva.tipo_evento || '-'}\n`;
+    texto += `👥 Convidados: ${reserva.convidados || '-'}\n`;
+    if (reserva.observacoes) texto += `💬 Observações: ${reserva.observacoes}\n`;
+    texto += `\nVim entrar em contato pra combinarmos os detalhes!`;
+
+    return texto;
+}
+
+// Tenta abrir o compartilhamento nativo do celular (manda direto pro
+// WhatsApp, Mensagens, E-mail...); se o navegador não suportar (comum no
+// computador), copia o texto pra área de transferência e avisa no próprio
+// botão, sem precisar de um alert() interrompendo a pessoa.
+async function compartilharOuCopiar(texto, botao) {
+    if (navigator.share) {
+        try {
+            await navigator.share({ text: texto });
+            return;
+        } catch (erro) {
+            if (erro.name === 'AbortError') return; // a pessoa cancelou o compartilhamento, tudo bem
+        }
+    }
+
+    try {
+        await navigator.clipboard.writeText(texto);
+        avisarBotaoCopiado(botao);
+    } catch (erro) {
+        alert('Não foi possível copiar automaticamente. Copie o texto abaixo:\n\n' + texto);
+    }
+}
+
+// Troca o texto do botão por "Copiado!" por 2 segundos, só pra confirmar
+// visualmente - sem interromper a pessoa com um alert()
+function avisarBotaoCopiado(botao) {
+    if (!botao) return;
+
+    const conteudoOriginal = botao.innerHTML;
+    botao.innerHTML = '<i class="bi bi-check2"></i> Copiado!';
+    botao.disabled = true;
+
+    setTimeout(() => {
+        botao.innerHTML = conteudoOriginal;
+        botao.disabled = false;
+    }, 2000);
 }
 
 /* ==========================================================================

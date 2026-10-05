@@ -206,15 +206,8 @@
    com no mínimo 320px */
 .perfil-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 30px;
-}
-
-/* Hoje só existe o card "Dados Pessoais" - centraliza ele em vez de
-   esticar pra largura toda da grade */
-.perfil-grid-unico {
-    grid-template-columns: minmax(320px, 480px);
-    justify-content: center;
 }
 
 /* Coluna flexível (em vez de bloco comum) pra poder empurrar o botão
@@ -592,5 +585,4 @@ body:not(.dark) .campo-grupo label {
 
 .perfil-logado-premium .perfil-espaco-item:hover {
     box-shadow: 0 0 18px hsla(46, 100%, 55%, 0.2);
-}
 }

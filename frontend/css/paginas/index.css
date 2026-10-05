@@ -313,7 +313,7 @@ nav a.active::after {
     margin: 50px auto;
     padding: 0 30px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 35px;
 }
   
@@ -380,13 +380,92 @@ nav a.active::after {
     transform: scale(1.03);
 }
   
+/* ================= RODAPÉ (index.html, como-funciona.html, duvidas.html) =================
+   3 colunas (marca+descrição / páginas / contato) que empilham em telas
+   estreitas, com uma linha de copyright separada embaixo. */
 footer {
     width: 100%;
     background: var(--bg);
     border-top: 1px solid var(--border);
-    padding: 25px;
+    padding: 50px 40px 25px;
+}
+
+.rodape-conteudo {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 40px;
+}
+
+.rodape-marca .rodape-logo {
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.rodape-logo img {
+    height: 40px;
+}
+
+.rodape-logo span {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+}
+
+.rodape-marca p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+.rodape-coluna h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: var(--gold);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rodape-coluna a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.2s ease;
+}
+
+.rodape-coluna a:hover {
+    color: var(--gold);
+}
+
+.rodape-base {
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.rodape-base p {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+@media (max-width: 720px) {
+    .rodape-conteudo {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
 }
 
 /* Container de texto genérico, usado nas páginas simples de conteúdo
@@ -423,6 +502,15 @@ footer {
     padding: 20px 60px 60px;
 }
 
+/* Em celulares, 60px de cada lado sobra pouquíssimo espaço pra pergunta e
+   resposta - reduz bastante nesse caso, senão as palavras maiores (tipo
+   "automaticamente") não cabem numa linha só e ficam cortando a tela */
+@media (max-width: 600px) {
+    .main-duvidas {
+        padding: 20px 16px 60px;
+    }
+}
+
 .secao-topo-duvidas {
     margin-top: 10px;
 }
@@ -450,6 +538,12 @@ button.faq-pergunta {
     padding: 0;
 }
 
+/* Sem isso, o texto da pergunta (filho de um flex) se recusa a quebrar
+   linha em telas estreitas e empurra a seta pra fora do card */
+button.faq-pergunta span {
+    min-width: 0;
+}
+
 button.faq-pergunta:hover {
     background: none;
     color: var(--gold);
@@ -475,6 +569,17 @@ button.faq-pergunta:hover {
     margin-top: 15px;
 }
 
+/* ".cards" é um grid (ver acima) que, por padrão, estica todo item da
+   mesma linha pra ficar com a MESMA altura (align-items: stretch, o padrão
+   do CSS Grid) - isso fica ótimo nos cards comuns, mas no acordeão de
+   dúvidas fazia a pergunta do lado "crescer" junto quando só UMA pergunta
+   abria (a caixa dela ficava mais alta mesmo sem a resposta aparecer,
+   parecendo que as duas tinham aberto). Aqui cada pergunta cresce sozinha,
+   do tamanho do próprio conteúdo. */
+.cards-faq {
+    align-items: start;
+}
+
 /* RESPONSIVIDADE DA HOME: em telas médias (tablet) o hero vira 1 coluna
    só, e em telas pequenas (celular) os espaçamentos diminuem e os cards
    de espaço passam de várias colunas pra 2 e depois pra 1 */
@@ -488,7 +593,11 @@ button.faq-pergunta:hover {
 @media(max-width:700px) {
     header, .hero, .search-section, .info { padding: 20px; }
     .hero-text h2 { font-size: 40px; }
+    .search-section h2 { font-size: 32px; }
     nav { gap: 20px; }
+    /* Nos 22px originais, pergunta grande (tipo "notificações", "aprovação")
+       não cabe numa linha só no card estreito do celular e estourava a tela */
+    button.faq-pergunta { font-size: 18px; }
 }
 
 @media (max-width: 992px) {

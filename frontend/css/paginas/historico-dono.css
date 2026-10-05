@@ -13,3 +13,56 @@
 #lista-historico-reservas .card-reserva:last-child {
     margin-bottom: 0;
 }
+
+/* Rótulo acima da caixa de contato nas reservas Aprovadas (ver
+   criarLinhaHistorico() em historico-espaco.js) - mesma regra que já
+   existe em reservas-dono.css, repetida aqui porque esta página não
+   importa aquele arquivo */
+.rotulo-contato-cliente {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    margin-top: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Botão "Compartilhar dados da reserva" - mesma regra que já existe em
+   reservas-dono.css, repetida aqui porque esta página não importa aquele
+   arquivo (ver compartilharOuCopiar() em global.js) */
+.btn-compartilhar-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 4px;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-compartilhar-reserva:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.btn-compartilhar-reserva:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
+/* E-mail do cliente (reserva ainda Pendente, mostrado num <p> comum) -
+   sem isso, um e-mail longo sem espaços estoura a largura da tela em
+   celulares estreitos */
+.email-cliente {
+    min-width: 0;
+    overflow-wrap: break-word;
+}

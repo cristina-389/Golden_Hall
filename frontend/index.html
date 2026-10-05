@@ -52,9 +52,9 @@
 
     <nav>
 
-      <a href="index.html" class="active">Início</a>
-      <a href="../frontend/paginas/como-funciona.html">Como funciona</a>
-      <a href="../frontend/paginas/duvidas.html">Dúvidas</a>
+      <a href="index.html" class="active" onclick="rolarOuNavegar(event, this)">Início</a>
+      <a href="../frontend/paginas/como-funciona.html" onclick="rolarOuNavegar(event, this)">Como funciona</a>
+      <a href="../frontend/paginas/duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
       
     </nav>
 
@@ -290,7 +290,34 @@
   </section>
 
   <footer>
-    <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
+    <div class="rodape-conteudo">
+
+      <div class="rodape-coluna rodape-marca">
+        <div class="rodape-logo">
+          <img src="./Imagens/logo.png" alt="Logo Golden Hall">
+          <span>GOLDEN HALL</span>
+        </div>
+        <p>Conectamos quem procura o espaço perfeito para o seu evento com proprietários que querem anunciar salões, chácaras e espaços de festas.</p>
+      </div>
+
+      <div class="rodape-coluna">
+        <h4>Páginas</h4>
+        <a href="index.html" onclick="rolarOuNavegar(event, this)">Início</a>
+        <a href="../frontend/paginas/como-funciona.html" onclick="rolarOuNavegar(event, this)">Como funciona</a>
+        <a href="../frontend/paginas/duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
+      </div>
+
+      <div class="rodape-coluna">
+        <h4>Contato</h4>
+        <a href="mailto:goldenhall.tcc@gmail.com"><i class="bi bi-envelope-fill"></i> goldenhall.tcc@gmail.com</a>
+        <a href="https://instagram.com/golden.hall_" target="_blank" rel="noopener"><i class="bi bi-instagram"></i> @golden.hall_</a>
+      </div>
+
+    </div>
+
+    <div class="rodape-base">
+      <p>© 2026 Golden Hall - Todos os direitos reservados.</p>
+    </div>
   </footer>
 
   <!-- Divs vazias que servem de "gaveta": js/modais.js busca o HTML de

@@ -684,6 +684,13 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     margin-bottom: 20px;
     color: #555;
   }
+
+  /* Sem isso, um e-mail longo (que não tem espaços pra quebrar linha
+     sozinho) empurra a caixa pra fora da tela em celulares estreitos */
+  .card-aviso-email span {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
   
   body.dark .card-aviso-email {
     color: #ccc;

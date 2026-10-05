@@ -407,7 +407,6 @@ body.dark .avaliacao-carrossel { background: #161616; }
 }
 
 .localizacao-info h3 { font-size: 2rem; margin-bottom: 20px; }
-.descricao-localizacao { font-size: 1.1rem; line-height: 1.8; margin-bottom: 35px; }
 .localizacao-mapa iframe { width: 100%; height: 600px; border: none; border-radius: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, .15); }
 
 body:not(.dark) .localizacao-section { background: #fdfdfd; border: 1px solid rgba(212, 175, 55, .4); }
@@ -415,15 +414,6 @@ body:not(.dark) .localizacao-section { background: #fdfdfd; border: 1px solid rg
 body.dark .localizacao-section { background: #111; border: 1px solid rgba(212, 175, 55, .3); }
 body.dark .localizacao-info { color: #f5f5f5; }
 body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
-
-/* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
-   a ter só 1 coluna, ficando uma embaixo da outra. */
-@media(max-width:900px) {
-    .hero-detalhe, .info-rapida, .localizacao-section, .grid-box, .pontos-referencia-grid { grid-template-columns: 1fr; }
-    .hero-info h1 { font-size: 40px; }
-    .localizacao-section { padding: 25px; }
-    .localizacao-mapa iframe { height: 350px; }
-}
 
 /* PONTOS DE REFERÊNCIA: pequenos "chips" com os destaques da localização,
    logo abaixo do botão "Ver no mapa" (ver preencherPagina() em detalhes.js) */
@@ -446,4 +436,17 @@ body.dark .localizacao-mapa iframe { box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 
 .ponto-referencia-item i {
     color: #d4af37;
+}
+
+/* Responsivo: em telas de até 900px, as seções em grid (2 colunas) passam
+   a ter só 1 coluna, ficando uma embaixo da outra. Essa regra precisa vir
+   DEPOIS das regras de cima no arquivo - com a mesma especificidade, quem
+   vem depois no CSS ganha, estar dentro de um @media não dá prioridade
+   sozinho (foi isso que antes deixava o .pontos-referencia-grid sempre
+   com 2 colunas no celular, estourando a tela). */
+@media(max-width:900px) {
+    .hero-detalhe, .info-rapida, .localizacao-section, .grid-box, .pontos-referencia-grid { grid-template-columns: 1fr; }
+    .hero-info h1 { font-size: 40px; }
+    .localizacao-section { padding: 25px; }
+    .localizacao-mapa iframe { height: 350px; }
 }

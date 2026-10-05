@@ -7,30 +7,6 @@
    navegação inferior fica em componentes/navegacao.css, não aqui.
    ========================================================================== */
 
-/* Cabeçalho fino e fixo no topo (fica "colado" mesmo rolando a página,
-   por causa do position: sticky) */
-.header-logado {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 4%;
-    height: 50px;
-    position: sticky;
-    top: 0;
-    background-color: var(--bg);
-    z-index: 100;
-    border-bottom: 1px solid rgba(255, 204, 0, 0.1);
-    box-sizing: border-box;
-}
-
-/* Logo um pouco menor aqui do que no cabeçalho padrão do site, pra caber
-   dentro dos 50px de altura do cabeçalho logado */
-.header-logado .logo img {
-    height: 70px;
-    width: auto;
-    display: block;
-}
-
 /* Esconde o cabeçalho ao rolar pra baixo e mostra de novo ao rolar pra
    cima - a classe é ligada/desligada via scroll em js/paginas/index-logado.js.
    Fica só nesta página (não mexe no "header" das outras) porque só o JS
@@ -296,7 +272,7 @@ header {
    igual não importa quantos cards de estatística tiverem dentro */
 .grafico-estatisticas {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
     gap: 20px;
     text-align: center;
 }
@@ -457,7 +433,7 @@ header {
 
 .grid-acesso-rapido {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
     gap: 20px;
 }
 

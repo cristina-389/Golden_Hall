@@ -37,7 +37,14 @@ body:not(.dark) {
     box-shadow: 0 -10px 30px var(--item-nav-sombra);
     padding: 0 10px;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Some ao rolar pra baixo numa página comprida, e volta assim que a pessoa
+   rola um pouquinho pra cima - mesma ideia do cabeçalho que já some/aparece
+   na home (ver ativarBarraNavegacaoSomeAoRolar() em global.js) */
+.barra-navegacao-inferior.barra-escondida {
+    transform: translateY(100%);
 }
 
 /* Cada item da barra (ícone + texto pequeno embaixo, ex: "Início", "Buscar") */
@@ -97,24 +104,6 @@ body:not(.dark) {
     transform: translateY(-2px);
 }
 
-.btn-gold-outline {
-    background: transparent;                
-    color: #e1bc26bf;                         
-    border: 1px solid #ebbf0d54;              
-    border-radius: 12px;                    
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 24px;                      
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-gold-outline:hover {
-    background-color: rgba(255, 204, 0, 0.05); 
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); 
-}
-
 /* Botão redondo de sol/lua que troca o tema (onclick="toggleTheme()" no global.js) */
 .theme-toggle {
     width: 55px;
@@ -129,19 +118,4 @@ body:not(.dark) {
 
 .theme-toggle:hover {
     transform: rotate(180deg); /* gira o ícone ao passar o mouse, só um efeito visual */
-}
-
-/* Versão menor do botão de tema, usada no cabeçalho das páginas "logadas" */
-.btn-darkmode-toggle {
-    background: none;
-    border: 1px solid rgba(255, 204, 0, 0.3);
-    width: 32px;  
-    height: 32px; 
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    transition: all 0.3s ease;
 }
