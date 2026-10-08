@@ -42,30 +42,46 @@
       
         </div>
       
-        <nav>
-      
-          <a href="../index.html" onclick="rolarOuNavegar(event, this)">Início</a>
-          <a href="como-funciona.html" class="active" onclick="rolarOuNavegar(event, this)">Como funciona</a>
-          <a href="duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
-      
-        </nav>
-      
+        <div class="nav-mobile-wrapper" id="nav-mobile-wrapper">
+
+          <nav>
+
+            <a href="../index.html" onclick="rolarOuNavegar(event, this)">Início</a>
+            <a href="como-funciona.html" class="active" onclick="rolarOuNavegar(event, this)">Como funciona</a>
+            <a href="duvidas.html" onclick="rolarOuNavegar(event, this)">Dúvidas</a>
+
+          </nav>
+
+          <!-- No celular o botão de tema sai da barra fixa (deu lugar aos
+               botões Entrar/Criar conta - ver .header-buttons) e fica
+               guardado aqui dentro do menu sanduíche, pra continuar
+               acessível -->
+          <button class="theme-toggle theme-toggle-menu-mobile" onclick="toggleTheme()">
+            🌙
+          </button>
+
+        </div>
+
         <div class="header-buttons">
-      
+
           <button class="theme-toggle" onclick="toggleTheme()">
             🌙
           </button>
-      
+
           <button class="btn btn-outline" onclick="abrirModalLogin()">
             Entrar
           </button>
-      
+
           <button class="btn btn-gold" onclick="abrirModalTipoConta()">
             Criar conta
           </button>
-      
+
         </div>
-      
+
+        <button class="btn-menu-mobile" onclick="alternarMenuMobile()" aria-label="Abrir menu">
+          <i class="bi bi-list"></i>
+        </button>
+
       </header>
 
      <!-- ================= HERO ================= -->

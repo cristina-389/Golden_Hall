@@ -9,7 +9,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const body = document.body;
     const heroImg = document.getElementById("heroImg"); // imagem grande que troca de cor conforme o tema (só existe na home)
-    const button = document.querySelector(".theme-toggle"); // botão de sol/lua que troca o tema
+    // No celular existem DOIS botões de tema (cabeçalho + dentro do menu
+    // sanduíche) - atualiza os dois, não só o primeiro que aparece no DOM
+    const botoes = document.querySelectorAll(".theme-toggle");
 
     // Recupera o tema salvo ou usa "dark" como padrão (se for a primeira visita, ainda não tem nada salvo)
     const theme = localStorage.getItem("theme") || "dark";
@@ -21,12 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // pai pra filho, então um "dark" só no <body> nunca chegaria nela
         document.documentElement.classList.remove("dark");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-light.png";
-        if (button) button.innerHTML = "☀️";
+        botoes.forEach(botao => botao.innerHTML = "☀️");
     } else {
         body.classList.add("dark");
         document.documentElement.classList.add("dark");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-dark.png";
-        if (button) button.innerHTML = "🌙";
+        botoes.forEach(botao => botao.innerHTML = "🌙");
     }
 });
 
@@ -34,7 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
 function toggleTheme() {
     const body = document.body;
     const heroImg = document.getElementById("heroImg");
-    const button = document.querySelector(".theme-toggle");
+    // No celular agora existem DOIS botões de tema (um no cabeçalho, outro
+    // guardado dentro do menu sanduíche) - querySelectorAll+forEach atualiza
+    // os dois juntos, senão só o primeiro mudava e ficavam dessincronizados
+    const botoes = document.querySelectorAll(".theme-toggle");
 
     body.classList.toggle("dark"); // inverte: se tinha a classe "dark", tira; se não tinha, coloca
     // Mantém o <html> sempre igual ao <body> (ver comentário acima, no DOMContentLoaded)
@@ -44,11 +49,11 @@ function toggleTheme() {
     if (body.classList.contains("dark")) {
         localStorage.setItem("theme", "dark");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-dark.png";
-        if (button) button.innerHTML = "🌙";
+        botoes.forEach(botao => botao.innerHTML = "🌙");
     } else {
         localStorage.setItem("theme", "light");
         if (heroImg) heroImg.src = "./Imagens/goldenhall-light.png";
-        if (button) button.innerHTML = "☀️";
+        botoes.forEach(botao => botao.innerHTML = "☀️");
     }
 }
 
@@ -66,6 +71,39 @@ function rolarOuNavegar(event, link) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
+
+// Abre/fecha o painel do menu "sanduíche" do celular (ver botão
+// ".btn-menu-mobile" e ".nav-mobile-wrapper" em index.html/como-funciona.html/
+// duvidas.html). Fecha sozinho quando a pessoa toca em qualquer link ou
+// botão de dentro do menu, pra não ficar aberto cobrindo a tela depois de
+// escolher uma opção.
+function alternarMenuMobile() {
+    const menu = document.getElementById('nav-mobile-wrapper');
+    if (menu) menu.classList.toggle('aberto');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const menu = document.getElementById('nav-mobile-wrapper');
+    if (!menu) return;
+
+    menu.querySelectorAll('a, button').forEach(function (elemento) {
+        elemento.addEventListener('click', function () {
+            menu.classList.remove('aberto');
+        });
+    });
+
+    // Fecha o menu se a pessoa tocar em qualquer lugar fora dele (menos no
+    // próprio ícone do sanduíche, que já tem seu próprio clique pra abrir/
+    // fechar - sem esse "menos", os dois cliques se atropelavam e o menu
+    // fechava e abria na mesma hora)
+    document.addEventListener('click', function (evento) {
+        const botaoHamburguer = evento.target.closest('.btn-menu-mobile');
+        const dentroDoMenu = evento.target.closest('#nav-mobile-wrapper');
+        if (!botaoHamburguer && !dentroDoMenu) {
+            menu.classList.remove('aberto');
+        }
+    });
+});
 
 // Esconde a barra de navegação inferior ao rolar pra baixo numa página
 // comprida (ex: buscar.html com muitos resultados), e mostra de novo assim

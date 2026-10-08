@@ -93,6 +93,37 @@ nav a.active::after {
     font-size: 0.9rem;
 }
 
+/* Em telas grandes esse bloco "desaparece" (display: contents) - o nav e
+   os header-buttons voltam a ser filhos diretos do header, exatamente
+   como antes, pro espaçamento entre logo/menu/botões (justify-content:
+   space-between do header) continuar idêntico ao do computador. Só no
+   celular (ver media query abaixo) é que ele vira de fato um bloco só,
+   que é o que se transforma no painel do menu "sanduíche" */
+.nav-mobile-wrapper {
+    display: contents;
+}
+
+/* Ícone de menu "sanduíche" - só aparece no celular (ver media query
+   abaixo). alternarMenuMobile() em global.js liga/desliga a classe
+   "aberto" no .nav-mobile-wrapper quando a pessoa toca nele */
+.btn-menu-mobile {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--gold);
+    cursor: pointer;
+    line-height: 0;
+}
+
+/* Cópia do botão de tema guardada dentro do menu sanduíche - só existe
+   (visualmente) no celular, com o painel aberto; no computador fica
+   sempre escondida (o botão de verdade ali é o de dentro de
+   .header-buttons) */
+.theme-toggle-menu-mobile {
+    display: none;
+}
+
 /* HERO SECTION: primeira seção grande da home, com o título de impacto de
    um lado e uma foto grande do outro */
 .hero {
@@ -149,6 +180,13 @@ nav a.active::after {
 
 .search-btn:hover {
     transform: scale(1.05);
+}
+
+/* Botão "Criar conta" só existe pro celular - no computador continua
+   escondido e aparece o "Cadastre seu espaço" de sempre (ver media query
+   mobile mais abaixo que inverte isso) */
+.btn-criar-conta-mobile {
+    display: none;
 }
 
 .hero-image {
@@ -587,17 +625,335 @@ button.faq-pergunta:hover {
     .hero { flex-direction: column; }
     .hero-text, .hero-image { width: 100%; }
     .hero-text h2 { font-size: 52px; }
-    header { flex-direction: column; gap: 20px; }
 }
 
 @media(max-width:700px) {
     header, .hero, .search-section, .info { padding: 20px; }
-    .hero-text h2 { font-size: 40px; }
-    .search-section h2 { font-size: 32px; }
+    /* Os 80px de margem em cima/embaixo (pensados pro computador) deixavam
+       um vão grande de fundo preto entre o banner da capa e o título
+       "Por que usar o Golden Hall?" */
+    .search-section { margin: 15px auto; padding: 8px 20px; }
+    .search-section h2 { font-size: 24px; }
+    .section-subtitle { font-size: 14px; margin-bottom: 25px; }
+
+    /* "Veja como seu espaço vai aparecer" (título + card de prévia +
+       legenda explicando) só some no celular - no computador continua
+       tudo normal */
+    .titulo-central-separador,
+    .preview-fluxo,
+    .legenda-exemplo {
+        display: none;
+    }
+
+    /* No celular troca "Cadastre seu espaço" por "Criar conta" nesse CTA
+       (ver os dois botões em index.html, dentro de .cta-centralizado) */
+    .btn-cadastre-espaco-desktop {
+        display: none;
+    }
+
+    .btn-criar-conta-mobile {
+        display: inline-block;
+    }
+
+    /* Rodapé no celular: texto um pouco menor e tudo centralizado (os
+       links têm ícone+texto lado a lado, por isso justify-content:center
+       neles também, não só text-align). Reduz também o respiro entre
+       logo/descrição/Páginas/Contato, que ficava exagerado empilhado */
+    .rodape-conteudo {
+        text-align: center;
+        gap: 28px;
+    }
+
+    .rodape-marca .rodape-logo {
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    .rodape-marca p {
+        font-size: 0.8rem;
+        margin: 0 auto;
+    }
+
+    .rodape-coluna h4 {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .rodape-coluna a {
+        font-size: 0.8rem;
+        justify-content: center;
+        margin-bottom: 6px;
+    }
+
+    .rodape-base {
+        margin-top: 18px;
+        padding-top: 14px;
+    }
+
+    .rodape-base p {
+        font-size: 0.75rem;
+    }
     nav { gap: 20px; }
+
+    /* HERO no celular: a foto vira o FUNDO da seção toda, e o título +
+       texto ficam flutuando por cima dela (em vez de ficar cada um no seu
+       quadrado, um do lado/embaixo do outro). ".hero-image" fica
+       posicionada cobrindo tudo (position:absolute + inset:0) atrás de
+       ".hero-text" (position:relative + z-index:1 fica por cima). O
+       degradê escuro em cima da foto (".hero-image::after") é o que
+       garante que o texto branco continue legível em qualquer parte da
+       imagem, clara ou escura. */
+    .hero {
+        position: relative;
+        flex-direction: column;
+        min-height: 420px;
+        border-radius: 0;
+        overflow: hidden;
+        padding: 0;
+    }
+
+    .hero-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        z-index: 0;
+        /* Fundo atrás da foto - já que a imagem agora aparece inteira
+           (object-fit: contain, ver abaixo) em vez de cortada preenchendo
+           tudo, pode sobrar uma faixa sem foto nas laterais/topo-embaixo;
+           essa cor garante que essa faixa não fique "transparente"
+           mostrando o preto puro da página por trás */
+        background: var(--bg-secondary);
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        /* "cover" preenche o quadro cortando as bordas da foto pra não
+           sobrar vão - troquei pra "contain" pra foto aparecer inteira,
+           sem cortar nada (pode sobrar uma friso sem foto na lateral ou
+           em cima/embaixo, dependendo da proporção da imagem) */
+        object-fit: contain;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+    .hero-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0.85) 100%);
+    }
+
+    .hero-text {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 30px 24px;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .hero-text h2,
+    .hero-text p {
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-text h2 { font-size: 28px; margin-bottom: 10px; line-height: 1.25; }
+    .hero-text p { font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+    .line { width: 70px; margin: 12px auto; }
+    .search-btn { padding: 12px 24px; font-size: 15px; }
+
+    /* Mockup "Veja como seu espaço vai aparecer" - mesma ideia, a foto de
+       220px de altura (tamanho pensado pro computador) fica grande demais
+       sozinha na tela do celular */
+    .card img { height: 160px; }
+
+    /* 2 cartões por linha em vez de 1 por linha - com 12 benefícios ao
+       todo (6+6), empilhar tudo numa coluna só deixava a página gigante
+       (quase 6600px de altura). Em 2 colunas a página fica bem mais curta
+       e compacta, mais parecido com uma grade de ícones de app.
+       style.css também tem ".info" sem media query (display:flex) com a
+       MESMA especificidade - mesmo com !important nos dois, quem vem
+       depois no arquivo final ainda ganharia (é o style.css). Por isso
+       ".info.info" aqui (repete a classe só pra aumentar a especificidade,
+       continua sendo o mesmo elemento) - assim essa regra sempre ganha,
+       não importa a ordem */
+    .info.info {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        padding: 10px 14px 10px !important;
+    }
+
+    /* Com 3 cartões por linha, a moldura (fundo + borda dourada) ficava
+       pesada/apertada demais pro tamanho pequeno de cada um - aqui fica só
+       ícone + texto soltos, sem caixa ao redor (igual já era o estilo
+       original em style.css, só reaproveitando esse espaçamento) */
+    .info .info-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        min-width: 0;
+        padding: 10px 6px !important;
+    }
+
+    /* Círculo do ícone um pouco menor (era 65px, pensado pro computador) -
+       e o ícone dentro dele acompanha, ver regra ".icone-contorno .bi"
+       logo abaixo. Com 3 por linha (em vez de 2), cada cartão fica bem
+       mais estreito, então o ícone precisa ser ainda menor - mas todos
+       continuam no mesmo tamanho entre si (largura/altura fixas, não é
+       proporcional ao cartão de cada um) */
+    .info-card .icone-contorno {
+        width: 28px !important;
+        height: 28px !important;
+        margin-bottom: 6px;
+    }
+
+    .info-card .icone-contorno .bi {
+        font-size: 12px !important;
+    }
+
+    .info-card h3 {
+        font-size: 0.7rem !important;
+    }
+
+    .info-card p {
+        max-width: none;
+        font-size: 0.6rem !important;
+    }
     /* Nos 22px originais, pergunta grande (tipo "notificações", "aprovação")
        não cabe numa linha só no card estreito do celular e estourava a tela */
     button.faq-pergunta { font-size: 18px; }
+
+    /* CABEÇALHO DO CELULAR: logo à esquerda, "Entrar"/"Criar conta" +
+       ícone de menu à direita, tudo numa barra mais baixa e enxuta do que
+       no computador. Os links (Início/Como funciona/Dúvidas) ficam
+       escondidos dentro do menu "sanduíche" - ver .nav-mobile-wrapper
+       abaixo - e o botão de tema sai da barra (sem espaço pros 3: tema +
+       entrar + criar conta) e também vai pro menu sanduíche. */
+    header {
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .logo {
+        margin-right: auto;
+        gap: 6px;
+    }
+
+    .logo img {
+        width: 22px;
+    }
+
+    .logo-text h1 {
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .logo-text p {
+        font-size: 5px;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+
+    .header-buttons {
+        gap: 6px;
+    }
+
+    .header-buttons .theme-toggle {
+        display: none;
+    }
+
+    /* Só "Entrar" na barra do celular - quem não tem conta ainda consegue
+       chegar no cadastro pelo link "Cadastre-se aqui" dentro do próprio
+       modal de login (ver login-modal.html) */
+    .header-buttons .btn-gold {
+        display: none;
+    }
+
+    .header-buttons .btn {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
+
+    .btn-menu-mobile {
+        display: block;
+        font-size: 22px;
+    }
+
+    .nav-mobile-wrapper {
+        display: none;
+    }
+
+    .nav-mobile-wrapper.aberto {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        /* Fundo "vidro fosco": semi-transparente (em vez de uma cor sólida)
+           + backdrop-filter, que desfoca o que está por trás do painel
+           (o resto da página, ainda visível e rolando atrás dele) */
+        background:
+            linear-gradient(180deg, rgba(212, 175, 55, 0.12), transparent 70%),
+            rgba(12, 12, 12, 0.55);
+        backdrop-filter: blur(9px);
+        -webkit-backdrop-filter: blur(9px);
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        z-index: 999;
+    }
+
+    /* A cor acima (rgba 12,12,12) é pensada pro tema escuro - no tema
+       claro usa uma versão clara, senão o painel fica escuro com texto
+       escuro em cima (ilegível) */
+    body:not(.dark) .nav-mobile-wrapper.aberto {
+        background:
+            linear-gradient(180deg, rgba(212, 175, 55, 0.08), transparent 70%),
+            rgba(255, 255, 255, 0.55);
+    }
+
+    /* Tira o sublinhado dourado do link da página atual aqui dentro do
+       menu - a cor dourada sozinha já indica qual é, sem precisar da
+       linha (que só existe no menu do computador) */
+    .nav-mobile-wrapper.aberto nav a.active::after {
+        display: none;
+    }
+
+    .nav-mobile-wrapper.aberto nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+    }
+
+    /* Os links do menu usam o mesmo tamanho de fonte do computador
+       (17px) - no celular, com o menu abrindo como um painel por cima da
+       página, isso deixava o painel alto demais, quase cobrindo a tela
+       toda */
+    .nav-mobile-wrapper.aberto nav a {
+        font-size: 13px;
+    }
+
+    .nav-mobile-wrapper.aberto .theme-toggle-menu-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+        line-height: 1;
+        padding: 0;
+    }
 }
 
 @media (max-width: 992px) {
