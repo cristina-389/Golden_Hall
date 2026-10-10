@@ -141,6 +141,20 @@ body:not(.dark) {
     gap: 15px 20px;
 }
 
+/* No celular, 2 colunas deixava cada campo (principalmente o de e-mail)
+   estreito demais - o texto do placeholder cortava. 1 campo por linha. */
+@media (max-width: 480px) {
+    /* Trocado de "grid" pra "flex" aqui no celular - o grid-template-
+       columns:1fr sozinho não estava bastando pra desfazer o layout de
+       2 colunas (os itens com "grid-column: span 2" continuavam forçando
+       uma 2ª coluna a existir mesmo só com 1 definida). Com flex-direction
+       column, cada campo vira uma linha, sem essa complicação. */
+    .form-grid {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 /* Os dois botões grandes do modal "Como você quer usar o Golden Hall?"
    (tipo-conta-modal.html) - cada um é um <button> inteiro clicável, não só
    um texto, pra área de clique ficar bem generosa. */

@@ -391,7 +391,7 @@ nav a.active::after {
     font-size: 17px;
     opacity: .8;
 }
-  
+
 .price {
     display: block;
     margin: 18px 0;
@@ -417,7 +417,49 @@ nav a.active::after {
     color: black;
     transform: scale(1.03);
 }
-  
+
+/* Botão do "Passo a passo" (como-funciona.html) - no computador funciona
+   só como um título comum (o texto abaixo já fica sempre visível, ver
+   ".passo-resposta" sem nenhuma regra escondendo no desktop); no celular
+   vira de verdade um acordeão clicável (ver media query mobile).
+   "button.passo-pergunta" precisa vir DEPOIS de ".card button" aqui no
+   arquivo - com a mesma especificidade (1 elemento + 1 classe nos dois),
+   quem vem depois é que ganha, não tem como só a ordem das regras
+   "parecer mais específica" resolver sozinha. Mesma solução já usada no
+   "button.faq-pergunta" de duvidas.html. */
+button.passo-pergunta {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    padding: 0;
+    cursor: default;
+}
+
+button.passo-pergunta:hover {
+    background: none;
+    color: inherit;
+    transform: none;
+}
+
+.passo-pergunta h3 {
+    margin-bottom: 0;
+}
+
+/* A setinha só faz sentido quando dá pra clicar pra abrir/fechar - no
+   computador o texto já fica visível direto, então ela fica escondida */
+.passo-seta {
+    display: none;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform .25s ease;
+}
+
 /* ================= RODAPÉ (index.html, como-funciona.html, duvidas.html) =================
    3 colunas (marca+descrição / páginas / contato) que empilham em telas
    estreitas, com uma linha de copyright separada embaixo. */
@@ -545,7 +587,7 @@ footer {
    "automaticamente") não cabem numa linha só e ficam cortando a tela */
 @media (max-width: 600px) {
     .main-duvidas {
-        padding: 20px 16px 60px;
+        padding: 20px 16px 20px;
     }
 }
 
@@ -633,13 +675,66 @@ button.faq-pergunta:hover {
        um vão grande de fundo preto entre o banner da capa e o título
        "Por que usar o Golden Hall?" */
     .search-section { margin: 15px auto; padding: 8px 20px; }
-    .search-section h2 { font-size: 24px; }
+    .search-section h2,
+    .search-section h2.titulo-discreto {
+        font-size: 24px;
+    }
+
+    .badge-secao {
+        padding: 5px 14px;
+        font-size: 0.7rem;
+        gap: 6px;
+    }
+
+    .badge-secao .bi {
+        font-size: 14px;
+    }
+
+    /* Acordeão do "Passo a passo" (1. Pesquise, 2. Compare, 3. Reserve) -
+       só o título fica visível, o texto abre ao tocar (ver .passo-resposta
+       mais abaixo). O visual (botão, seta) é quase idêntico ao acordeão
+       de Dúvidas (.faq-pergunta/.faq-seta), só com nome de classe
+       diferente pra não embaralhar com as perguntas de verdade */
+    .passo-pergunta {
+        cursor: pointer;
+    }
+
+    .passo-seta {
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    .passo-resposta {
+        display: none;
+    }
+
+    .passo-item.aberta .passo-resposta {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .passo-item.aberta .passo-seta {
+        transform: rotate(180deg);
+    }
+
+    .card-content h3 {
+        font-size: 1.05rem;
+        margin-bottom: 0;
+    }
+
+    .card-content p {
+        font-size: 0.9rem;
+    }
+
     .section-subtitle { font-size: 14px; margin-bottom: 25px; }
 
     /* "Veja como seu espaço vai aparecer" (título + card de prévia +
        legenda explicando) só some no celular - no computador continua
-       tudo normal */
-    .titulo-central-separador,
+       tudo normal. Usa "h3.titulo-central-separador" (não só a classe
+       sozinha) porque duvidas.html reaproveita essa MESMA classe no selo
+       "Para quem vai anunciar" (que é um <span>, não um <h3>) - sem essa
+       especificidade, esse selo também sumia sem querer */
+    h3.titulo-central-separador,
     .preview-fluxo,
     .legenda-exemplo {
         display: none;
@@ -651,8 +746,19 @@ button.faq-pergunta:hover {
         display: none;
     }
 
+    /* ".search-btn" (usado também no botão da capa) tem a mesma
+       especificidade e vem depois no arquivo, então ganharia sem o
+       !important aqui */
     .btn-criar-conta-mobile {
         display: inline-block;
+        padding: 9px 18px !important;
+        font-size: 13px !important;
+    }
+
+    /* Os 50px de padding em cima (pensados pro computador) deixavam um
+       vão grande entre o fim do conteúdo da página e o rodapé */
+    footer {
+        padding: 20px 20px 25px;
     }
 
     /* Rodapé no celular: texto um pouco menor e tudo centralizado (os
@@ -703,37 +809,62 @@ button.faq-pergunta:hover {
        degradê escuro em cima da foto (".hero-image::after") é o que
        garante que o texto branco continue legível em qualquer parte da
        imagem, clara ou escura. */
+    /* Esse banner (foto de fundo + texto flutuando por cima) é usado só na
+       capa da home (index.html), que tem uma ".hero-image" de verdade
+       dentro da ".hero". Em como-funciona.html e duvidas.html, a mesma
+       classe ".hero" é reaproveitada só pro título+texto de introdução,
+       sem nenhuma imagem - por isso as regras de banner (altura mínima,
+       texto branco fixo, etc.) ficam todas dentro de ":has(.hero-image)",
+       pra só valerem quando realmente existe uma foto ali dentro */
     .hero {
         position: relative;
         flex-direction: column;
-        min-height: 420px;
         border-radius: 0;
         overflow: hidden;
         padding: 0;
     }
 
-    .hero-image {
+    /* Versão sem foto (como-funciona.html/duvidas.html): só centraliza o
+       texto, sem empurrar nada pra baixo nem exigir cor branca forçada -
+       o texto usa a cor normal do tema, que já tem contraste de sobra
+       direto no fundo escuro da página */
+    .hero:not(:has(.hero-image)) {
+        padding: 24px;
+    }
+
+    /* A troca pela foto de teste (só no celular) acontece em JS agora -
+       ver imagemHeroParaTela() em global.js. "content: url()" no CSS não
+       funciona de forma confiável pra substituir a imagem de um <img>
+       nesse navegador (a imagem antiga continuava carregada por baixo). */
+
+    /* Proporção real das fotos novas (clara + escura, ambas 1408x1760 -
+       ver imagemHeroParaTela() em global.js) */
+    .hero:has(.hero-image) .hero-image {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1408 / 1760;
+        /* Sem isso, o flex (".hero" é flex-direction:column) estica/encolhe
+           um pouquinho a altura calculada pelo aspect-ratio, o que fazia a
+           foto cortar uma fatia fina dos lados sem necessidade */
+        flex-shrink: 0;
+        z-index: 0;
+    }
+
+    /* "position: absolute" aqui (em vez de só width/height: 100%) é de
+       propósito - um <img> com height:100% dentro de um quadro que usa
+       aspect-ratio confundia o cálculo da altura do quadro (a imagem
+       "empurrava" o pai pra ficar um pouco mais alto que devia, cortando
+       uma fatia fina dos lados sem necessidade). Como elemento absoluto,
+       ele nunca influencia o tamanho do pai - só ocupa o espaço que já
+       foi definido pelo aspect-ratio. */
+    .hero-image img {
         position: absolute;
         inset: 0;
         width: 100%;
-        z-index: 0;
-        /* Fundo atrás da foto - já que a imagem agora aparece inteira
-           (object-fit: contain, ver abaixo) em vez de cortada preenchendo
-           tudo, pode sobrar uma faixa sem foto nas laterais/topo-embaixo;
-           essa cor garante que essa faixa não fique "transparente"
-           mostrando o preto puro da página por trás */
-        background: var(--bg-secondary);
-    }
-
-    .hero-image img {
-        width: 100%;
         height: 100%;
         max-height: none;
-        /* "cover" preenche o quadro cortando as bordas da foto pra não
-           sobrar vão - troquei pra "contain" pra foto aparecer inteira,
-           sem cortar nada (pode sobrar uma friso sem foto na lateral ou
-           em cima/embaixo, dependendo da proporção da imagem) */
-        object-fit: contain;
+        object-fit: cover;
+        object-position: bottom;
         border-radius: 0;
         border: none;
         box-shadow: none;
@@ -747,21 +878,30 @@ button.faq-pergunta:hover {
     }
 
     .hero-text {
-        position: relative;
-        z-index: 1;
         width: 100%;
-        padding: 30px 24px;
-        margin-top: auto;
         text-align: center;
     }
 
-    .hero-text h2,
-    .hero-text p {
+    /* Só no banner com foto: flutua por cima da imagem (mesma área exata,
+       position:absolute + inset:0) empurrado pro rodapé dela com
+       justify-content, e com texto branco (pro contraste contra a foto) */
+    .hero:has(.hero-image) .hero-text {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 30px 24px;
+    }
+
+    .hero:has(.hero-image) .hero-text h2,
+    .hero:has(.hero-image) .hero-text p {
         color: #ffffff;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
     }
 
-    .hero-text h2 { font-size: 28px; margin-bottom: 10px; line-height: 1.25; }
+    .hero-text h2 { font-size: 24px; margin-bottom: 10px; line-height: 1.25; }
     .hero-text p { font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
     .line { width: 70px; margin: 12px auto; }
     .search-btn { padding: 12px 24px; font-size: 15px; }
@@ -786,6 +926,17 @@ button.faq-pergunta:hover {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 8px !important;
         padding: 10px 14px 10px !important;
+    }
+
+    /* Quando sobra só 1 cartão sozinho na última linha de um grid de 3
+       colunas (como em como-funciona.html, que tem só 4 benefícios: 3 numa
+       linha + 1 sozinho), ele fica grudado na coluna da esquerda por
+       padrão - isso aqui empurra ele pra coluna do meio, centralizado.
+       Só vale pro 4º item SE ele também for o último (:last-child) - nas
+       seções com 6 itens (index.html), o 4º item não é o último, então
+       essa regra não encosta nelas */
+    .info .info-card:nth-child(4):last-child {
+        grid-column: 2;
     }
 
     /* Com 3 cartões por linha, a moldura (fundo + borda dourada) ficava
@@ -828,7 +979,31 @@ button.faq-pergunta:hover {
     }
     /* Nos 22px originais, pergunta grande (tipo "notificações", "aprovação")
        não cabe numa linha só no card estreito do celular e estourava a tela */
-    button.faq-pergunta { font-size: 18px; }
+    button.faq-pergunta { font-size: 12px; }
+
+    /* Os cards de pergunta ficavam "quadrados"/inchados com os 22px de
+       padding padrão do .card-content - deixa cada pergunta mais fina
+       (uma barra comprida), com menos respiro em cima/embaixo */
+    .faq-item {
+        border-radius: 12px;
+    }
+
+    .faq-item .card-content {
+        padding: 10px 14px;
+    }
+
+    /* Deixa o cartão de pergunta mais largo, encostando mais perto da
+       borda da tela - só nas seções que têm perguntas de FAQ dentro
+       (":has"), pra não alargar sem querer outras seções/páginas que já
+       estavam aprovadas (como-funciona.html, index.html) */
+    .search-section:has(.faq-item) {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .faq-resposta p {
+        font-size: 0.78rem;
+    }
 
     /* CABEÇALHO DO CELULAR: logo à esquerda, "Entrar"/"Criar conta" +
        ícone de menu à direita, tudo numa barra mais baixa e enxuta do que
@@ -879,6 +1054,17 @@ button.faq-pergunta:hover {
     .header-buttons .btn {
         padding: 6px 10px;
         font-size: 0.7rem;
+    }
+
+    /* Com "Criar conta" escondido, o "Entrar" fica sozinho como a única
+       ação de acesso na barra - deixa ele preenchido (igual o .btn-gold),
+       em vez de só contornado, pra chamar mais atenção. Só no cabeçalho
+       do celular - o "Entrar" nos outros lugares do site (modais etc.)
+       continua com o visual de sempre */
+    .header-buttons .btn-outline {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #000000;
+        font-weight: 600;
     }
 
     .btn-menu-mobile {

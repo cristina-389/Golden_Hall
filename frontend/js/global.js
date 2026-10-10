@@ -2,6 +2,19 @@
    GOLDEN HALL - ARQUIVO GLOBAL (TEMAS E CONTROLE DE SESSÃO)
    ========================================================================== */
 
+// Decide qual foto usar na capa: no celular (tela estreita), uma foto
+// própria pra esse formato vertical (uma por tema, clara/escura); no
+// computador, a goldenhall-dark/light.png de sempre. Fica num lugar só
+// porque é chamada tanto na carga da página quanto toda vez que a pessoa
+// troca o tema (ver os dois lugares abaixo).
+function imagemHeroParaTela(tema) {
+    const celular = window.innerWidth <= 700;
+    if (celular) {
+        return tema === "light" ? "./Imagens/goldenhall-mobile-light.webp" : "./Imagens/goldenhall-mobile-dark.webp";
+    }
+    return tema === "light" ? "./Imagens/goldenhall-light.png" : "./Imagens/goldenhall-dark.png";
+}
+
 // Aplica o tema salvo assim que a estrutura da página carrega.
 // Esse bloco roda em TODAS as páginas (por isso "heroImg" e "button" podem
 // não existir em algumas delas - só a index.html tem essa imagem/botão -
@@ -22,12 +35,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // rolagem do navegador pertence a ele - variável CSS só desce de
         // pai pra filho, então um "dark" só no <body> nunca chegaria nela
         document.documentElement.classList.remove("dark");
-        if (heroImg) heroImg.src = "./Imagens/goldenhall-light.png";
+        if (heroImg) heroImg.src = imagemHeroParaTela("light");
         botoes.forEach(botao => botao.innerHTML = "☀️");
     } else {
         body.classList.add("dark");
         document.documentElement.classList.add("dark");
-        if (heroImg) heroImg.src = "./Imagens/goldenhall-dark.png";
+        if (heroImg) heroImg.src = imagemHeroParaTela("dark");
         botoes.forEach(botao => botao.innerHTML = "🌙");
     }
 });
@@ -48,11 +61,11 @@ function toggleTheme() {
     // Depois de trocar a classe, salva a escolha no localStorage pra lembrar na próxima visita
     if (body.classList.contains("dark")) {
         localStorage.setItem("theme", "dark");
-        if (heroImg) heroImg.src = "./Imagens/goldenhall-dark.png";
+        if (heroImg) heroImg.src = imagemHeroParaTela("dark");
         botoes.forEach(botao => botao.innerHTML = "🌙");
     } else {
         localStorage.setItem("theme", "light");
-        if (heroImg) heroImg.src = "./Imagens/goldenhall-light.png";
+        if (heroImg) heroImg.src = imagemHeroParaTela("light");
         botoes.forEach(botao => botao.innerHTML = "☀️");
     }
 }
@@ -70,6 +83,15 @@ function rolarOuNavegar(event, link) {
         event.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+}
+
+// Acordeão do "Passo a passo" em como-funciona.html - mesma ideia do
+// alternarFaq() em duvidas.js, cada passo abre/fecha independente dos
+// outros. No computador o conteúdo já fica sempre visível (só no celular
+// o CSS esconde o texto até a pessoa tocar no passo).
+function alternarPasso(botaoPasso) {
+    const item = botaoPasso.closest('.passo-item');
+    if (item) item.classList.toggle('aberta');
 }
 
 // Abre/fecha o painel do menu "sanduíche" do celular (ver botão
@@ -429,7 +451,12 @@ function montarResumoReserva(reserva, nomeEspaco) {
 // Tenta abrir o compartilhamento nativo do celular (manda direto pro
 // WhatsApp, Mensagens, E-mail...); se o navegador não suportar (comum no
 // computador), copia o texto pra área de transferência e avisa no próprio
-// botão, sem precisar de um alert() interrompendo a pessoa.
+// botão. Se nem isso der certo - "navigator.clipboard" só existe em
+// conexões seguras (https ou localhost); acessando o site por http através
+// do IP da rede local (ex: celular testando http://192.168.x.x:3000), ela
+// nem existe, e antes isso fazia a função "morrer" em silêncio sem avisar
+// nada - mostra um painel com o texto pra pessoa copiar na mão, que
+// funciona em QUALQUER navegador, sem depender de nenhuma API especial.
 async function compartilharOuCopiar(texto, botao) {
     if (navigator.share) {
         try {
@@ -437,15 +464,52 @@ async function compartilharOuCopiar(texto, botao) {
             return;
         } catch (erro) {
             if (erro.name === 'AbortError') return; // a pessoa cancelou o compartilhamento, tudo bem
+            // qualquer outro erro (não é cancelamento) cai pros fallbacks abaixo
         }
     }
 
-    try {
-        await navigator.clipboard.writeText(texto);
-        avisarBotaoCopiado(botao);
-    } catch (erro) {
-        alert('Não foi possível copiar automaticamente. Copie o texto abaixo:\n\n' + texto);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+            await navigator.clipboard.writeText(texto);
+            avisarBotaoCopiado(botao);
+            return;
+        } catch (erro) {
+            // cai pro fallback final abaixo
+        }
     }
+
+    mostrarTextoParaCopiar(texto);
+}
+
+// Fallback final de compartilharOuCopiar() - um painel simples com o texto
+// já selecionado, pra pessoa copiar manualmente (toque e segure). Não
+// depende de nenhuma API do navegador, então sempre funciona.
+function mostrarTextoParaCopiar(texto) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay ativo';
+    overlay.innerHTML = `
+        <div class="modal-box" style="max-width: 420px;">
+            <button class="fechar-modal" type="button">&times;</button>
+            <h2 style="font-size: 1.3rem;">Copie o texto abaixo</h2>
+            <p style="font-size: 0.85rem; color: #888; margin-bottom: 12px;">
+                Toque e segure o texto pra selecionar e copiar.
+            </p>
+            <textarea readonly style="width: 100%; min-height: 160px; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); color: inherit; border: 1px solid var(--border, #444); font-family: inherit; font-size: 0.9rem; resize: vertical;"></textarea>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const textarea = overlay.querySelector('textarea');
+    textarea.value = texto;
+
+    const fechar = () => overlay.remove();
+    overlay.querySelector('.fechar-modal').addEventListener('click', fechar);
+    overlay.addEventListener('click', (evento) => {
+        if (evento.target === overlay) fechar();
+    });
+
+    textarea.focus();
+    textarea.select();
 }
 
 // Troca o texto do botão por "Copiado!" por 2 segundos, só pra confirmar
