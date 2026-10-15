@@ -428,3 +428,48 @@ body:not(.dark) .alerta-vazio-texto h3 { color: #111111; }
     opacity: 1;
     pointer-events: auto;
 }
+
+/* ==========================================================================
+   CELULAR
+   ========================================================================== */
+@media (max-width: 700px) {
+    .central-busca {
+        margin: 30px auto 20px auto;
+        padding: 0 16px;
+    }
+
+    .central-busca h2 {
+        font-size: 26px;
+        /* .central-busca é flex (column) com align-items:center - sem
+           width:100%, o h2 (item flex) encolhe pro tamanho "natural" do
+           texto (shrink-to-fit) em vez de usar a largura toda disponível,
+           o que fazia quebrar em várias linhas estreitas mesmo sobrando
+           espaço nas laterais */
+        width: 100%;
+    }
+
+    .central-busca .linha-elegante::before,
+    .central-busca .linha-elegante::after {
+        width: 40px;
+    }
+
+    .section-subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    /* Barra de busca mais fina (menos altura) e mais larga (menos
+       preenchimento interno sobrando pros lados) */
+    .busca-container-box {
+        padding: 4px 16px;
+    }
+
+    .busca-linha-principal input {
+        font-size: 14px;
+    }
+
+    .btn-buscar-principal {
+        padding: 10px 28px;
+        font-size: 14px;
+    }
+}

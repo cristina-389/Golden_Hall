@@ -248,6 +248,18 @@ nav a.active::after {
     padding: 0 30px;
 }
 
+/* No computador, quando a seção vem logo depois do ".hero" sem foto
+   (como-funciona.html/duvidas.html, que reaproveitam essa mesma classe só
+   pro título+texto de introdução), os 70px de padding do hero somados aos
+   80px de margem daqui deixavam um vão enorme até "Para quem vai alugar".
+   Só reduz nesse caso específico - a index.html (hero COM foto) e o
+   celular (que já tem seu próprio ajuste) não são afetados. */
+@media (min-width: 701px) {
+    .hero:not(:has(.hero-image)) + .search-section {
+        margin-top: 20px;
+    }
+}
+
 .search-section h2 {
     text-align: center;
     font-family: "Cinzel", serif;
@@ -671,6 +683,16 @@ button.faq-pergunta:hover {
 
 @media(max-width:700px) {
     header, .hero, .search-section, .info { padding: 20px; }
+
+    /* .page-content tem 40px de preenchimento dos dois lados (pensado pro
+       computador) - em buscar.html/historico.html/reservas.html (cliente),
+       que usam essa classe como wrapper genérico, isso somava com o
+       padding do próprio container de cada página e apertava demais o
+       conteúdo no celular (cards ficando bem mais estreitos que a tela,
+       títulos quebrando palavra por palavra). */
+    .page-content {
+        padding: 0 16px;
+    }
     /* Os 80px de margem em cima/embaixo (pensados pro computador) deixavam
        um vão grande de fundo preto entre o banner da capa e o título
        "Por que usar o Golden Hall?" */

@@ -182,6 +182,17 @@
     white-space: nowrap;
 }
 
+/* Em telas muito estreitas, o texto do botão "Ver solicitações de
+   reserva" não cabia numa linha só e estourava a largura da tela */
+@media (max-width: 340px) {
+    .acao-espaco-reservas .btn {
+        white-space: normal;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
 /* --------------------------------------------------------------------------
    PÁGINA DE SOLICITAÇÕES DE UM ESPAÇO (solicitacoes-espaco.html) - espaço
    entre os cards, mesma ideia de "#lista-historico-reservas" em

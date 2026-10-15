@@ -9,6 +9,7 @@
 document.addEventListener('DOMContentLoaded', carregarPerfil);
 
 let emEdicao = false; // controla se os campos estão liberados pra digitar ou travados
+let valoresOriginaisPerfil = null; // guardado ao entrar em edição, pra "Cancelar" poder restaurar
 
 async function carregarPerfil() {
     const usuario = obterUsuarioLogado();
@@ -331,18 +332,48 @@ function alternarEdicaoPerfil() {
         const inputTelefone = document.getElementById('perfil-input-telefone');
         const inputCidade = document.getElementById('perfil-input-cidade');
 
+        valoresOriginaisPerfil = {
+            nome: inputNome.value,
+            telefone: inputTelefone.value,
+            cidade: inputCidade.value,
+        };
+
         inputNome.removeAttribute('readonly');
         inputTelefone.removeAttribute('readonly');
         inputCidade.removeAttribute('readonly');
         inputNome.focus();
 
         document.getElementById('btn-editar-dados').textContent = 'Salvar Dados';
+        document.getElementById('btn-cancelar-dados').style.display = 'inline-block';
         document.getElementById('btn-abrir-trocar-senha').style.display = 'flex';
         emEdicao = true;
         return;
     }
 
     salvarPerfil();
+}
+
+// Desfaz a edição em andamento - devolve os campos pros valores de antes
+// de clicar em "Editar Dados" (sem chamar a API) e trava tudo de novo.
+function cancelarEdicaoPerfil() {
+    const inputNome = document.getElementById('perfil-input-nome');
+    const inputTelefone = document.getElementById('perfil-input-telefone');
+    const inputCidade = document.getElementById('perfil-input-cidade');
+
+    if (valoresOriginaisPerfil) {
+        inputNome.value = valoresOriginaisPerfil.nome;
+        inputTelefone.value = valoresOriginaisPerfil.telefone;
+        inputCidade.value = valoresOriginaisPerfil.cidade;
+    }
+
+    inputNome.setAttribute('readonly', true);
+    inputTelefone.setAttribute('readonly', true);
+    inputCidade.setAttribute('readonly', true);
+
+    document.getElementById('btn-editar-dados').textContent = 'Editar Dados';
+    document.getElementById('btn-cancelar-dados').style.display = 'none';
+    document.getElementById('btn-abrir-trocar-senha').style.display = 'none';
+    emEdicao = false;
 }
 
 async function salvarPerfil() {
@@ -368,6 +399,7 @@ async function salvarPerfil() {
         inputTelefone.setAttribute('readonly', true);
         inputCidade.setAttribute('readonly', true);
         botao.textContent = 'Editar Dados';
+        document.getElementById('btn-cancelar-dados').style.display = 'none';
         document.getElementById('btn-abrir-trocar-senha').style.display = 'none';
         emEdicao = false;
 

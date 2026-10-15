@@ -78,6 +78,25 @@ body:not(.dark) {
     transform: translateY(-2px);
 }
 
+/* Barra inferior um pouco menor no celular - no computador fica tudo
+   igual (só esse componente, vale pra todas as páginas que usam a barra:
+   cliente e proprietário, já que é a mesma barra reaproveitada em todas). */
+@media (max-width: 700px) {
+    .barra-navegacao-inferior {
+        height: 56px;
+        padding: 0 4px;
+    }
+
+    .item-nav {
+        font-size: 10px;
+        gap: 1px;
+    }
+
+    .item-nav .icone {
+        font-size: 17px;
+    }
+}
+
 /* BOTÕES REUTILIZÁVEIS - classes genéricas (.btn, .btn-outline, .btn-gold)
    usadas em vários lugares do site, não só na navegação */
 .btn {

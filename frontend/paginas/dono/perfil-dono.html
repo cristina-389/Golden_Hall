@@ -72,7 +72,10 @@
                         <i class="bi bi-lock-fill"></i> Alterar senha
                     </button>
 
-                    <button class="btn-ajuste" id="btn-editar-dados" onclick="alternarEdicaoPerfil()">Editar Dados</button>
+                    <div class="grupo-botoes-edicao-perfil">
+                        <button class="btn-ajuste" id="btn-editar-dados" onclick="alternarEdicaoPerfil()">Editar Dados</button>
+                        <button class="btn-ajuste btn-cancelar-edicao" id="btn-cancelar-dados" onclick="cancelarEdicaoPerfil()" style="display: none;">Cancelar</button>
+                    </div>
                 </div>
 
                 <div class="perfil-card">

@@ -514,3 +514,43 @@ body.dark .reservas-vazias p {
 .aviso-motivo-recusa i {
     margin-top: 2px;
 }
+
+/* ==========================================================================
+   CELULAR
+   ========================================================================== */
+@media (max-width: 480px) {
+    /* Nomes de espaço longos (ex: "Salão Golden Demonstração") empurravam
+       a tag de status (Pendente/Aprovado) pra fora da caixa, porque o
+       flex não deixava o h3 encolher nem quebrar linha. Isso acontecia
+       tanto em reservas.html (cliente) quanto em solicitacoes-espaco.html
+       (dono), que reaproveita essa mesma classe. */
+    .card-reserva-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .card-reserva-header h3 {
+        font-size: 1rem;
+        min-width: 0;
+    }
+
+    .status-tag {
+        flex-shrink: 0;
+    }
+
+    /* Linhas "Convidados: 100 pessoas", "Contato: (11) 98888-7777" etc -
+       o "display:flex" junta ícone + texto + valor (<strong>) como itens
+       de flex separados; em telas estreitas, sem espaço pro valor ficar
+       ao lado do texto, ele encolhia e quebrava de um jeito estranho
+       (texto espremido numa coluna fina à direita). Com flex-wrap, o
+       valor desce pra uma nova linha inteira em vez de espremer. */
+    .card-reserva-corpo p {
+        flex-wrap: wrap;
+        row-gap: 2px;
+    }
+
+    .card-reserva-corpo p strong {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}

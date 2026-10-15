@@ -448,26 +448,21 @@ function montarResumoReserva(reserva, nomeEspaco) {
     return texto;
 }
 
-// Tenta abrir o compartilhamento nativo do celular (manda direto pro
-// WhatsApp, Mensagens, E-mail...); se o navegador não suportar (comum no
-// computador), copia o texto pra área de transferência e avisa no próprio
-// botão. Se nem isso der certo - "navigator.clipboard" só existe em
-// conexões seguras (https ou localhost); acessando o site por http através
-// do IP da rede local (ex: celular testando http://192.168.x.x:3000), ela
-// nem existe, e antes isso fazia a função "morrer" em silêncio sem avisar
-// nada - mostra um painel com o texto pra pessoa copiar na mão, que
-// funciona em QUALQUER navegador, sem depender de nenhuma API especial.
+// Copia o texto pra área de transferência e avisa no próprio botão. Se nem
+// isso der certo - "navigator.clipboard" só existe em conexões seguras
+// (https ou localhost); acessando o site por http através do IP da rede
+// local (ex: celular testando http://192.168.x.x:3000), ela nem existe -
+// mostra um painel com o texto pra pessoa copiar na mão, que funciona em
+// QUALQUER navegador, sem depender de nenhuma API especial.
+//
+// Antes isso tentava primeiro o "navigator.share()" (compartilhamento
+// nativo do celular, pro WhatsApp/Mensagens direto), mas em alguns
+// aparelhos/navegadores ele fica travado esperando um app de
+// compartilhamento pra sempre (abre uma aba em branco que nunca termina
+// de carregar) - como isso aconteceu tanto no celular quanto no
+// computador, foi removido: copiar o texto é menos "bonito" mas sempre
+// funciona.
 async function compartilharOuCopiar(texto, botao) {
-    if (navigator.share) {
-        try {
-            await navigator.share({ text: texto });
-            return;
-        } catch (erro) {
-            if (erro.name === 'AbortError') return; // a pessoa cancelou o compartilhamento, tudo bem
-            // qualquer outro erro (não é cancelamento) cai pros fallbacks abaixo
-        }
-    }
-
     if (navigator.clipboard && navigator.clipboard.writeText) {
         try {
             await navigator.clipboard.writeText(texto);

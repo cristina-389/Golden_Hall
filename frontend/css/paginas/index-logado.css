@@ -68,6 +68,12 @@ header {
     color: var(--text);
 }
 
+/* Nome da pessoa destacado em dourado dentro do "Olá, Nome!" */
+.secao-saudacao h2 .gold-text {
+    color: var(--gold);
+    font-weight: 700;
+}
+
 .secao-saudacao .linha-elegante {
     justify-content: flex-start;
     margin: 15px 0 0;
@@ -496,13 +502,217 @@ header {
    espremer os dois lado a lado */
 @media (max-width: 700px) {
     .grafico-estatisticas {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         row-gap: 30px;
+        column-gap: 8px;
     }
 
     .cta-proximo-evento {
         flex-direction: column;
         align-items: flex-start;
+        padding: 20px 20px;
+    }
+
+    /* Título "Vamos planejar o seu próximo evento?" do mesmo tamanho do
+       título "Seu desenvolvimento" (card do gráfico), só no celular */
+    .cta-texto h3 {
+        font-size: 14px;
+    }
+
+    .cta-texto p {
+        font-size: 12px;
+    }
+
+    /* Botão "Buscar espaços" do convite final - menor só aqui, não mexe
+       nas classes genéricas .btn/.btn-gold usadas no resto do site */
+    .cta-proximo-evento .btn {
+        padding: 9px 18px;
+        font-size: 13px;
+    }
+
+    /* "Olá, Nome!" quebrava em 2 linhas no celular (o avatar de 70px +
+       título de 32px não cabiam lado a lado) - avatar e fonte menores
+       deixam tudo numa linha só */
+    .avatar-saudacao {
+        width: 48px;
+        height: 48px;
+    }
+
+    .avatar-saudacao-icone {
+        font-size: 24px;
+    }
+
+    .secao-saudacao-topo {
+        gap: 12px;
+    }
+
+    .secao-saudacao h2 {
+        font-size: 20px;
+    }
+
+    /* O "white-space: nowrap" (garantir "Olá, Nome!" numa linha só) não
+       pode ser geral - outras páginas reaproveitam esse mesmo ".secao-
+       saudacao h2" pra títulos bem mais longos (ex: "Solicitações de
+       [nome do espaço]" em solicitacoes-espaco.html), e forçar uma linha
+       só nelas estourava o texto pra fora da tela. ":has(.avatar-saudacao)"
+       restringe isso só pras duas homes logadas, que são as únicas que
+       têm esse avatar de foto de perfil ao lado do título. */
+    .secao-saudacao:has(.avatar-saudacao) h2 {
+        white-space: nowrap;
+    }
+
+    .secao-saudacao .linha-elegante::before,
+    .secao-saudacao .linha-elegante::after {
+        width: 50px;
+    }
+
+    .secao-saudacao {
+        margin-top: 24px;
+    }
+
+    /* Título "Seu desenvolvimento/desempenho no Golden Hall" quebrava em
+       2 linhas no celular - menos preenchimento no card + fonte um pouco
+       menor cabe tudo numa linha só */
+    .card-desenvolvimento {
+        padding: 22px 20px;
+    }
+
+    .card-desenvolvimento h3 {
+        font-size: 14px;
+        white-space: nowrap;
+        /* Segurança: se mesmo assim não coubesse numa linha só (fonte
+           diferente no aparelho, tela bem estreita), corta com "..." em
+           vez de vazar pra fora do card */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .card-desenvolvimento .subtitulo {
+        font-size: 11px;
+    }
+
+    /* Seção "Acesso rápido" só no celular - no computador continua igual */
+    .secao-acesso-rapido {
+        display: none;
+    }
+
+    /* "Acesso rápido": título menor, cards sempre 2 por linha (o
+       auto-fit/minmax padrão virava 1 coluna só em telas bem estreitas,
+       tipo 320px) e cards mais compactos */
+    .secao-acesso-rapido h3 {
+        font-size: 15px;
+    }
+
+    .grid-acesso-rapido {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .card-acesso {
+        padding: 16px 10px;
+        gap: 8px;
+        font-size: 12px;
+    }
+
+    /* !important necessário aqui: a regra base ".home-logado-premium
+       .card-acesso .icone-contorno" (mais abaixo no arquivo, fora de
+       media query) tem a mesma especificidade e vem depois no CSS final,
+       então sem isso ela sempre vencia e o ícone continuava 60x60 */
+    .home-logado-premium .card-acesso .icone-contorno {
+        width: 34px !important;
+        height: 34px !important;
+        /* Reduzindo o círculo, o ícone preto por dentro (que antes era
+           proporcional aos 60px) passou a "vazar" pra fora da bolinha
+           dourada em alguns dos ícones, deixando o fundo com um corte
+           estranho - isso aqui garante que nada escape do círculo */
+        overflow: hidden;
+    }
+
+    .home-logado-premium .card-acesso .icone-contorno .bi {
+        font-size: 15px !important;
+    }
+
+    /* Resumo "Espaços cadastrados / Reservas pendentes / Avaliação média"
+       (home do PROPRIETÁRIO) - mesmo problema do gráfico da home do
+       cliente: os 3 itens quebravam em 2+1 no celular. Agora ficam
+       sempre numa linha só, com ícones e textos menores. */
+    .home-logado-premium .resumo-numeros-dono {
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+
+    .home-logado-premium .numero-resumo {
+        min-width: 0 !important;
+    }
+
+    .home-logado-premium .numero-resumo-icone {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 14px !important;
+        margin-bottom: 6px;
+    }
+
+    .home-logado-premium .numero-resumo-valor {
+        font-size: 20px !important;
+    }
+
+    .numero-resumo-label {
+        font-size: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    /* Rótulos embaixo de cada coluna do gráfico (Favoritados, Reservas
+       feitas, Visualizados, Comentários) - fonte menor pra caber as 4
+       colunas lado a lado numa linha só */
+    .barra-label {
+        font-size: 9px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    /* Barras do gráfico um pouco menores - combina melhor com as 4
+       colunas lado a lado em telas estreitas */
+    .barra-coluna {
+        max-width: 28px;
+        height: 70px;
+    }
+
+    .barra-valor {
+        font-size: 16px;
+    }
+
+    /* O sino de notificações ficava do tamanho normal (42x42) mesmo no
+       celular, deixando o cabeçalho desta página mais alto que o da
+       index.html (que reduz os botões do cabeçalho nessa mesma largura -
+       ver .header-buttons .btn em css/paginas/index.css) */
+    .btn-sino {
+        width: 27px;
+        height: 27px;
+        font-size: 13px;
+    }
+
+    /* index.css esconde o .theme-toggle do cabeçalho no celular (porque a
+       index.html tem uma cópia dele dentro do menu sanduíche) - mas essa
+       página não tem menu sanduíche nenhum, então sem essa regra o botão
+       de tema sumia e não dava pra trocar entre claro/escuro.
+       Escopado com ".home-logado-premium" pra não reaparecer em outras
+       páginas que também usam ".header-buttons .theme-toggle" (ex:
+       index.html) - bug encontrado depois: sem esse escopo, essa regra
+       (sem @media aqui dentro, mas igual especificidade e vinda depois no
+       CSS final) sobrescrevia o "display:none" da index.html também. */
+    .home-logado-premium .header-buttons .theme-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 27px;
+        height: 27px;
+        font-size: 13px;
     }
 }
 

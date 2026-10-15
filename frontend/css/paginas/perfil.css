@@ -337,6 +337,29 @@
     box-shadow: 0 4px 15px rgba(212, 164, 55, 0.3);
 }
 
+/* Agrupa "Editar Dados"/"Salvar Dados" + "Cancelar" lado a lado, no
+   rodapé do card (mesmo lugar onde o botão sozinho já ficava) */
+.grupo-botoes-edicao-perfil {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.grupo-botoes-edicao-perfil .btn-ajuste {
+    margin-top: 0;
+}
+
+.btn-cancelar-edicao {
+    border-color: var(--border, #555);
+    color: var(--text-light, #999999);
+}
+
+.btn-cancelar-edicao:hover {
+    background: rgba(231, 76, 60, 0.12);
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
 /* CONTAINER DOS BOTÕES - EMPILHADOS, ENCOSTADOS NO CANTO DIREITO */
 .perfil-actions {
     display: flex;

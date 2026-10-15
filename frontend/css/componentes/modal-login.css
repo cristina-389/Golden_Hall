@@ -153,6 +153,135 @@ body:not(.dark) {
         display: flex;
         flex-direction: column;
     }
+
+    /* Título e texto do modal "Entrar" um pouco menores - só nesse modal
+       (#modal-login), não mexe no título dos outros modais */
+    #modal-login h2 {
+        font-size: 19px;
+        /* Em vez de abrir espaço do lado (o que tirava o título do centro),
+           empurra o título pra baixo do botão "×" de fechar - assim ele
+           continua perfeitamente centralizado e o "×" fica acima dele */
+        margin-top: 32px;
+    }
+
+    #modal-login .subtitulo-form {
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+
+    /* Caixa do modal "Entrar" um pouco mais compacta - menos preenchimento
+       e menos espaço entre a linha dourada/subtítulo e o resto, só nesse
+       modal (os outros continuam com o padding padrão de 30px 40px) */
+    #modal-login .modal-box {
+        padding: 22px 24px;
+    }
+
+    #modal-login .linha-dourada-form {
+        margin: 8px auto;
+    }
+
+    #modal-login .form-grid {
+        gap: 12px;
+    }
+
+    /* Título, texto e botão do modal "Recuperar Senha" um pouco menores -
+       só nesse modal (#modal-recuperar-senha) */
+    #modal-recuperar-senha h2 {
+        font-size: 19px;
+        margin-top: 32px;
+    }
+
+    #modal-recuperar-senha .subtitulo-form {
+        font-size: 12px;
+    }
+
+    #modal-recuperar-senha .btn-bloco {
+        font-size: 12px;
+        padding: 9px;
+    }
+
+    /* Mesmo ajuste do modal "Entrar" (título, texto e caixa menores), agora
+       no modal "Criar Conta" (#modal-cadastro) */
+    #modal-cadastro h2 {
+        font-size: 19px;
+        margin-top: 32px;
+    }
+
+    #modal-cadastro .subtitulo-form {
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+
+    #modal-cadastro .modal-box {
+        padding: 22px 24px;
+    }
+
+    #modal-cadastro .linha-dourada-form {
+        margin: 8px auto;
+    }
+
+    #modal-cadastro .form-grid {
+        gap: 12px;
+    }
+
+    #modal-cadastro .alternativa-form {
+        display: none;
+    }
+
+    /* Modal "Como você quer usar o Golden Hall?" (#modal-tipo-conta):
+       título/texto menores, e nas caixinhas de opção fica só o ícone e o
+       título (sem a frase de descrição embaixo), caixas mais compactas pra
+       caber lado a lado no celular */
+    #modal-tipo-conta h2 {
+        font-size: 19px;
+        margin-top: 32px;
+    }
+
+    #modal-tipo-conta .subtitulo-form {
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+
+    /* Menos preenchimento nas laterais do modal (padrão era 30px 40px) pra
+       sobrar mais largura pras caixinhas de opção */
+    #modal-tipo-conta .modal-box {
+        padding: 20px 16px;
+    }
+
+    #modal-tipo-conta .opcoes-tipo-conta {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    #modal-tipo-conta .opcao-tipo-conta {
+        width: 100%;
+        min-width: 0;
+        padding: 14px 6px;
+    }
+
+    #modal-tipo-conta .opcao-tipo-conta .bi {
+        font-size: 24px;
+        margin-bottom: 6px;
+    }
+
+    #modal-tipo-conta .opcao-tipo-conta h3 {
+        font-size: 12px;
+        margin-bottom: 0;
+        white-space: nowrap;
+        /* Em telas bem estreitas ou com fonte maior no aparelho, o texto
+           pode não caber - sem isso ele "vazava" pra fora da caixa; com
+           overflow:hidden + ellipsis, no pior caso ele só corta com "..."
+           em vez de estourar a borda */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    #modal-tipo-conta .opcao-tipo-conta p {
+        display: none;
+    }
 }
 
 /* Os dois botões grandes do modal "Como você quer usar o Golden Hall?"
