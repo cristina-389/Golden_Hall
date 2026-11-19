@@ -175,7 +175,7 @@ function confirmarSaida() {
     const certeza = confirm("Tem certeza que deseja sair da sua conta no Golden Hall?");
     if (certeza) {
         limparSessao(); // apaga o token guardado - a partir daqui a pessoa não está mais "logada"
-        window.location.href = '/index.html'; // caminho absoluto, funciona de qualquer página
+        window.location.href = '/Golden_Hall/index.html'; // caminho absoluto, funciona de qualquer página
     }
 }
 
@@ -197,8 +197,8 @@ function salvarSessao(usuario, token) {
 // mandar a pessoa pro lugar certo assim que ela cadastra/loga
 function caminhoHomeDoUsuario(usuario) {
     return usuario.tipo === 'proprietario'
-        ? '/paginas/dono/index-logado-dono.html'
-        : '/paginas/cliente/index-logado.html';
+        ? '/Golden_Hall/paginas/dono/index-logado-dono.html'
+        : '/Golden_Hall/paginas/cliente/index-logado.html';
 }
 
 // Retorna o token guardado, ou null se ninguém estiver logado
@@ -236,7 +236,7 @@ async function chamarAPI(caminho, opcoes = {}) {
     const cabecalhos = { 'Content-Type': 'application/json', ...opcoes.headers };
     if (token) cabecalhos.Authorization = `Bearer ${token}`;
 
-    const resposta = await fetch(caminho, { ...opcoes, headers: cabecalhos });
+    const resposta = await fetch('https://golden-hall.onrender.com' + caminho, { ...opcoes, headers: cabecalhos });
 
     // 204 (No Content, usado no DELETE) não tem corpo pra converter em JSON
     const dados = resposta.status === 204 ? null : await resposta.json().catch(() => null);
@@ -375,7 +375,7 @@ function ajustarNavegacaoParaDono() {
     if (!nav) return;
 
     // Caminho absoluto - funciona de qualquer página, sem calcular "níveis"
-    const caminhoPainel = '/paginas/dono/painel-dono.html';
+    const caminhoPainel = '/Golden_Hall/paginas/dono/painel-dono.html';
 
     nav.querySelectorAll('.item-nav').forEach(item => {
         const icone = item.querySelector('.icone');
