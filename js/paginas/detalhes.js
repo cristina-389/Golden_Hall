@@ -31,7 +31,7 @@ function voltarOrigem() {
     if (document.referrer && document.referrer.startsWith(window.location.origin) && window.history.length > 1) {
         window.history.back();
     } else {
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
     }
 }
 
@@ -322,7 +322,7 @@ function inicializarBotaoFavoritoDetalhe(espaco) {
         local: espaco.local || '',
         capacidade: formatarCapacidade(espaco.capacidade),
         preco: formatarPreco(espaco.preco),
-        link: '/frontend/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug
+        link: '/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug
     };
 
     if (isFavorito(espaco.slug)) {

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuario = obterUsuarioLogado();
     if (!usuario || usuario.tipo !== 'proprietario') {
         alert('Esta área é exclusiva para contas de proprietário de espaço.');
-        window.location.href = '/frontend/paginas/cliente/index-logado.html';
+        window.location.href = '/paginas/cliente/index-logado.html';
         return;
     }
 

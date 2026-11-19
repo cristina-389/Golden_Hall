@@ -15,7 +15,7 @@ async function carregarHistorico() {
     if (!container) return;
 
     if (!obterUsuarioLogado()) {
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
         return;
     }
 

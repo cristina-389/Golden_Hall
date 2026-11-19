@@ -12,11 +12,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const usuario = obterUsuarioLogado();
     if (!usuario) {
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
         return;
     }
     if (usuario.tipo === 'proprietario') {
-        window.location.href = '/frontend/paginas/dono/notificacoes-dono.html';
+        window.location.href = '/paginas/dono/notificacoes-dono.html';
         return;
     }
 

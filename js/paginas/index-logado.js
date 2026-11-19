@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const usuario = obterUsuarioLogado();
 
     if (!usuario) {
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
         return;
     }
 
     // Essa home foi pensada só pro cliente - proprietário que cair aqui
     // (ex: digitando a URL direto) vai pra home dele
     if (usuario.tipo === 'proprietario') {
-        window.location.href = '/frontend/paginas/dono/index-logado-dono.html';
+        window.location.href = '/paginas/dono/index-logado-dono.html';
         return;
     }
 

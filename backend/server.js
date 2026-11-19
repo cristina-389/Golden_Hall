@@ -47,11 +47,11 @@ app.use(express.json({ limit: '8mb' }));
 // tipo "/frontend/js/global.js" que já existem no HTML continuam funcionando
 // (só o "backend/" nunca é exposto, porque só a pasta frontend/ é servida).
 // --------------------------------------------------------------------------
-app.use('/frontend', express.static(path.join(__dirname, '..', 'frontend')));
+app.use('/', express.static(path.join(__dirname, '..')));
 
 // Quem acessar só "http://localhost:3000/" cai direto na home do site
 app.get('/', (req, res) => {
-    res.redirect('/frontend/index.html');
+    res.redirect('/index.html');
 });
 
 // --------------------------------------------------------------------------

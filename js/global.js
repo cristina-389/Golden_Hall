@@ -175,7 +175,7 @@ function confirmarSaida() {
     const certeza = confirm("Tem certeza que deseja sair da sua conta no Golden Hall?");
     if (certeza) {
         limparSessao(); // apaga o token guardado - a partir daqui a pessoa não está mais "logada"
-        window.location.href = '/frontend/index.html'; // caminho absoluto, funciona de qualquer página
+        window.location.href = '/index.html'; // caminho absoluto, funciona de qualquer página
     }
 }
 
@@ -197,8 +197,8 @@ function salvarSessao(usuario, token) {
 // mandar a pessoa pro lugar certo assim que ela cadastra/loga
 function caminhoHomeDoUsuario(usuario) {
     return usuario.tipo === 'proprietario'
-        ? '/frontend/paginas/dono/index-logado-dono.html'
-        : '/frontend/paginas/cliente/index-logado.html';
+        ? '/paginas/dono/index-logado-dono.html'
+        : '/paginas/cliente/index-logado.html';
 }
 
 // Retorna o token guardado, ou null se ninguém estiver logado
@@ -375,7 +375,7 @@ function ajustarNavegacaoParaDono() {
     if (!nav) return;
 
     // Caminho absoluto - funciona de qualquer página, sem calcular "níveis"
-    const caminhoPainel = '/frontend/paginas/dono/painel-dono.html';
+    const caminhoPainel = '/paginas/dono/painel-dono.html';
 
     nav.querySelectorAll('.item-nav').forEach(item => {
         const icone = item.querySelector('.icone');

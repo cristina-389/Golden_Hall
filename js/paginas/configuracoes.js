@@ -8,7 +8,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!obterUsuarioLogado()) {
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
     }
 });
 
@@ -46,7 +46,7 @@ async function confirmarExclusaoConta(event) {
 
         limparSessao();
         alert('Sua conta foi excluída. Sentiremos sua falta!');
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
     } catch (erro) {
         alert(erro.message);
     }
