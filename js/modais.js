@@ -15,7 +15,7 @@ function abrirModalTipoConta() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        fetch('/paginas/tipo-conta-modal.html')
+        fetch('/Golden_Hall/paginas/tipo-conta-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -77,7 +77,7 @@ function abrirModal(tipoPreSelecionado = null) {
         // de "quantos níveis subir" (../, ../../, etc.). O servidor Express
         // serve a pasta frontend/ inteira sob o prefixo "/" (ver
         // server.js), então esse caminho sempre aponta pro mesmo arquivo.
-        fetch('/paginas/cadastro-modal.html')
+        fetch('/Golden_Hall/paginas/cadastro-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -168,7 +168,7 @@ function abrirModalLogin() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        fetch('/paginas/login-modal.html')
+        fetch('/Golden_Hall/paginas/login-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -230,7 +230,7 @@ function abrirModalRecuperarSenha() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        fetch('/paginas/recuperar-senha-modal.html')
+        fetch('/Golden_Hall/paginas/recuperar-senha-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -304,7 +304,7 @@ function abrirModalAgenda() {
     if (!container) return;
 
     if (container.innerHTML === "") {
-        fetch('/paginas/cliente/agenda-modal.html')
+        fetch('/Golden_Hall/paginas/cliente/agenda-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -478,7 +478,7 @@ function abrirModalReserva(dataPreSelecionada = null) {
     };
 
     if (container.innerHTML === "") {
-        fetch('/paginas/cliente/reserva-modal.html')
+        fetch('/Golden_Hall/paginas/cliente/reserva-modal.html')
             .then(resposta => resposta.text())
             .then(html => {
                 container.innerHTML = html;
@@ -644,7 +644,7 @@ async function confirmarReservaFinal() {
         } else {
             // Fallback caso o modal-sucesso não esteja no HTML
             alert('✅ Solicitação enviada com sucesso!');
-            window.location.href = '/paginas/cliente/reservas.html';
+            window.location.href = '/Golden_Hall/paginas/cliente/reservas.html';
         }
     } catch (erro) {
         // Ex: "Essa data já está ocupada para este espaço" (409, quando duas
@@ -657,7 +657,7 @@ async function confirmarReservaFinal() {
 
 // PASSO 3: Botão de ir para Minhas Reservas no Modal de Sucesso
 function irParaMinhasReservas() {
-    window.location.href = '/paginas/cliente/reservas.html';
+    window.location.href = '/Golden_Hall/paginas/cliente/reservas.html';
 }
 
 
