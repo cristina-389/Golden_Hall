@@ -31,7 +31,7 @@ function voltarOrigem() {
     if (document.referrer && document.referrer.startsWith(window.location.origin) && window.history.length > 1) {
         window.history.back();
     } else {
-        window.location.href = '/index.html';
+        window.location.href = '../../index.html';
     }
 }
 
