@@ -17,14 +17,14 @@ async function carregarPerfil() {
     // Sem login, não tem perfil nenhum pra mostrar
     if (!usuario) {
         alert('Você precisa entrar na sua conta para ver o perfil.');
-        window.location.href = '/index.html';
+        window.location.href = '../../index.html';
         return;
     }
 
     // Essa página é a versão do cliente - proprietário que cair aqui (ex:
     // digitando a URL direto) vai pro perfil dele
     if (usuario.tipo === 'proprietario') {
-        window.location.href = '/paginas/dono/perfil-dono.html';
+        window.location.href = './../paginas/dono/perfil-dono.html';
         return;
     }
 
