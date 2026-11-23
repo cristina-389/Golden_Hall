@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuario = obterUsuarioLogado();
     if (!usuario || usuario.tipo !== 'proprietario') {
         alert('Esta área é exclusiva para contas de proprietário de espaço.');
-        window.location.href = '/paginas/cliente/index-logado.html';
+        window.location.href = '../../paginas/cliente/index-logado.html';
         return;
     }
 
@@ -162,7 +162,7 @@ function criarCardEspacoReservas(espaco) {
     card.querySelector('h3').textContent = espaco.nome;
     card.querySelector('.texto-local').textContent = espaco.local || 'Local a definir';
     card.querySelector('.btn-ver-solicitacoes').addEventListener('click', () => {
-        window.location.href = `/paginas/dono/solicitacoes-espaco.html?id=${espaco.id}`;
+        window.location.href = `../../paginas/dono/solicitacoes-espaco.html?id=${espaco.id}`;
     });
 
     return card;
@@ -206,14 +206,14 @@ function abrirEscolhaEspaco(titulo, gerarUrl) {
 function abrirEscolhaAvaliacoes() {
     abrirEscolhaEspaco(
         'Ver avaliações de qual espaço?',
-        espaco => `/paginas/dono/avaliacoes-espaco.html?slug=${espaco.slug}`
+        espaco => `../../paginas/dono/avaliacoes-espaco.html?slug=${espaco.slug}`
     );
 }
 
 function abrirEscolhaHistorico() {
     abrirEscolhaEspaco(
         'Ver histórico de qual espaço?',
-        espaco => `/paginas/dono/historico-espaco.html?id=${espaco.id}`
+        espaco => `../../paginas/dono/historico-espaco.html?id=${espaco.id}`
     );
 }
 
