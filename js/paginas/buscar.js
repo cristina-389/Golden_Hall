@@ -223,7 +223,7 @@ function criarCardEspaco(espaco) {
     const capacidadeTexto = formatarCapacidade(espaco.capacidade);
     const precoTexto = formatarPreco(espaco.preco);
     const imagem = espaco.imagem || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600&auto=format&fit=crop';
-    const link = '/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
+    const link = '../../paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
 
     const card = document.createElement('div');
     card.className = 'card';
