@@ -8,7 +8,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!obterUsuarioLogado()) {
-        window.location.href = '/index.html';
+        window.location.href = '../../index.html';
     }
 });
 
