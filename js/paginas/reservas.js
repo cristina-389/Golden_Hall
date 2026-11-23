@@ -53,14 +53,14 @@ async function carregarMinhasReservas() {
                 <div class="reservas-vazias">
                     <i class="bi bi-calendar-x"></i>
                     <p>Você ainda não possui nenhuma reserva realizada no Golden Hall.</p>
-                    <a href="/paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-search"></i> Explorar Espaços Disponíveis</a>
+                    <a href="../../paginas/cliente/buscar.html" class="btn-novo-espaco"><i class="bi bi-search"></i> Explorar Espaços Disponíveis</a>
                 </div>
             `
             : `
                 <div class="reservas-vazias">
                     <i class="bi bi-calendar-check"></i>
                     <p>Você não tem nenhuma reserva em andamento agora.</p>
-                    <a href="/paginas/cliente/historico.html" class="btn-novo-espaco"><i class="bi bi-clock-history"></i> Ver histórico de reservas</a>
+                    <a href="../../paginas/cliente/historico.html" class="btn-novo-espaco"><i class="bi bi-clock-history"></i> Ver histórico de reservas</a>
                 </div>
             `;
         return;
