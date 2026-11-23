@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     if (usuario.tipo === 'proprietario') {
-        window.location.href = '/paginas/dono/notificacoes-dono.html';
+        window.location.href = '../../paginas/dono/notificacoes-dono.html';
         return;
     }
 
