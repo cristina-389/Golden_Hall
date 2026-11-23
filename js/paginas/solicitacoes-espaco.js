@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const usuario = obterUsuarioLogado();
     if (!usuario || usuario.tipo !== 'proprietario') {
         alert('Esta área é exclusiva para contas de proprietário de espaço.');
-        window.location.href = '/paginas/cliente/index-logado.html';
+        window.location.href = '../../paginas/cliente/index-logado.html';
         return;
     }
 
     idEspacoAtual = new URLSearchParams(window.location.search).get('id');
     if (!idEspacoAtual) {
-        window.location.href = '/paginas/dono/reservas-dono.html';
+        window.location.href = '../../paginas/dono/reservas-dono.html';
         return;
     }
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!espaco) {
             alert('Não foi possível encontrar esse espaço.');
-            window.location.href = '/paginas/dono/reservas-dono.html';
+            window.location.href = '../../paginas/dono/reservas-dono.html';
             return;
         }
 
