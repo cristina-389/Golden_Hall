@@ -18,14 +18,14 @@ async function carregarPerfil() {
 
     if (!usuario) {
         alert('Você precisa entrar na sua conta para ver o perfil.');
-        window.location.href = '/index.html';
+        window.location.href = '../../index.html';
         return;
     }
 
     // Essa página é a versão do proprietário - cliente que cair aqui (ex:
     // digitando a URL direto) vai pro perfil dele
     if (usuario.tipo !== 'proprietario') {
-        window.location.href = '/paginas/cliente/perfil.html';
+        window.location.href = '../../paginas/cliente/perfil.html';
         return;
     }
 
@@ -79,7 +79,7 @@ async function carregarMeusEspacos() {
         espacos.forEach(espaco => {
             const item = document.createElement('a');
             item.className = 'perfil-espaco-item';
-            item.href = '/paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
+            item.href = '../../paginas/cliente/detalhes/detalhes.html?slug=' + espaco.slug;
 
             const icone = document.createElement('i');
             icone.className = 'bi bi-shop';
